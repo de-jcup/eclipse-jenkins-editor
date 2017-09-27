@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <!-- ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
+   <!--                          KEYWORDS                                    -->
+   <!-- ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
+   <extension point="org.eclipse.ui.keywords">
+     <keyword
+   		id="jenkinseditor.preferences.keyword.jenkins"
+   		label="jenkins">
+     </keyword>
+      <keyword
+   		id="jenkinseditor.preferences.keyword.color"
+   		label="color">
+     </keyword>
+     <keyword
+   		id="jenkinseditor.preferences.keyword.editor"
+   		label="editor">
+     </keyword>
+   </extension>
+   <!-- ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
+   <!--                          EDITOR                                      -->
+   <!-- ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
+   <extension
+         point="org.eclipse.ui.editors">
+      <editor
+      		name="Jenkins Editor"
+            filenames="Jenkinsfile"
+            icon="icons/jenkins-editor.png"
+            contributorClass="org.eclipse.ui.texteditor.BasicTextEditorActionContributor"
+            class="de.jcup.jenkinseditor.JenkinsEditor"
+            id="jenkinseditor.editors.JenkinsEditor">
+      </editor>
+   </extension>
+   
+    <!-- ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
+   <!--                          MARKER                          			 -->
+   <!-- ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ --> 
+   <extension 
+   		id="de.jcup.jenkinseditor.script.problem"
+    	point="org.eclipse.core.resources.markers"
+    	name="Jenkins editor script problem">
+        <super type="org.eclipse.core.resources.problemmarker"/>
+        <super type="org.eclipse.core.resources.textmarker"/>
+        <persistent value="false"/>
+    </extension>
+   
+   <!-- ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
+   <!--                          CONTEXT                                     -->
+   <!-- ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
+   <extension point="org.eclipse.ui.contexts">
+	  <context
+	        name="Jenkins context"
+	        description="Editing jenkins files"
+	        parentId="org.eclipse.ui.textEditorScope"
+	        id="org.jenkinseditor.editors.JenkinsEditor.context">
+	        
+	  </context>
+   </extension>
+   <!-- ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
+   <!--                          COMMANDS                                    -->
+   <!-- ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->^
+   <extension
+         point="org.eclipse.ui.commands">
+      <category
+            description="Jenkins editor"
+            id="jenkinseditor.commands.category"
+            name="Jenkins editor">
+      </category>
+   </extension>
+   
+   <extension point="org.eclipse.ui.commands">
+      <command
+            name="Toggle comment"
+            description="Toggle comment in selected line(s)"
+            categoryId="jenkinseditor.commands.category"
+            id="jenkinseditor.editor.commands.source.toggleComment">
+      </command>
+      <command
+            name="Goto matching bracket"
+            description="Goto matching bracket inside jenkins document"
+            categoryId="jenkinseditor.commands.category"
+            id="jenkinseditor.editor.commands.gotomatchingbracket">
+      </command>
+	</extension>
+	<extension point="org.eclipse.ui.handlers">
+      <handler
+            commandId="jenkinseditor.editor.commands.source.toggleComment"
+            class="de.jcup.jenkinseditor.handlers.ToggleCommentHandler">
+      </handler>
+       <handler
+            commandId="jenkinseditor.editor.commands.gotomatchingbracket"
+            class="de.jcup.jenkinseditor.handlers.GotoMatchingBracketHandler">
+      </handler>
+    </extension> 
+    
+   <!-- ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
+   <!--                          KEY BINDING                                 -->
+   <!-- ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
+   <extension point="org.eclipse.ui.bindings">
+		<key
+            sequence="M1+7"
+            contextId="org.jenkinseditor.editors.JenkinsEditor.context"
+            commandId="jenkinseditor.editor.commands.source.toggleComment"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration">	  
+		</key>
+		<key
+            sequence="M1+M2+P"
+            contextId="org.jenkinseditor.editors.JenkinsEditor.context"
+            commandId="jenkinseditor.editor.commands.gotomatchingbracket"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration">	  
+		</key>
+    </extension> 
+    
+   <!-- ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
+   <!--                          MENU                                 -->
+   <!-- ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
+    <extension point="org.eclipse.ui.menus">
+      <menuContribution
+            locationURI="menu:org.eclipse.ui.main.menu?after=edit">
+            
+         <menu
+               id="jenkinseditor.editor.menu.sourceMenu"
+               label="Source"
+               mnemonic="S"
+               >
+               <visibleWhen checkEnabled="true">
+                     <with variable="activeEditor">
+                     	<instanceof
+                            value="de.jcup.jenkinseditor.JenkinsEditor"/>
+                     </with>
+               </visibleWhen>
+            <command commandId="jenkinseditor.editor.commands.source.toggleComment">
+            </command>
+         </menu>
+      </menuContribution>
+      
+      </extension> 
+   <!-- ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
+   <!--                          PREFERENCES                                 -->
+   <!-- ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
+   <extension
+      point = "org.eclipse.ui.preferencePages">
+      <page
+         id="jenkinseditor.eclipse.gradleeditor.preferences.JenkinsEditorEditorPreferencePage"
+         class="de.jcup.jenkinseditor.preferences.JenkinsEditorPreferencePage"
+         name="Jenkins Editor"
+         >
+         <keywordReference
+               id="jenkinseditor.preferences.keyword.jenkins">
+         </keywordReference>
+          <keywordReference
+               id="jenkinseditor.preferences.keyword.editor">
+         </keywordReference>
+      </page>
+      <page
+         id="jenkinseditor.eclipse.gradleeditor.preferences.JenkinsEditorEditorSyntaxColorPreferencePage"
+         class="de.jcup.jenkinseditor.preferences.JenkinsEditorSyntaxColorPreferencePage"
+         name="Syntax coloring"
+         category="jenkinseditor.eclipse.gradleeditor.preferences.JenkinsEditorEditorPreferencePage">
+         <keywordReference
+               id="jenkinseditor.preferences.keyword.jenkins">
+         </keywordReference>
+          <keywordReference
+               id="jenkinseditor.preferences.keyword.color">
+         </keywordReference>
+      </page>
+    </extension>
+    <extension
+         point="org.eclipse.core.runtime.preferences">
+      <initializer
+            class="de.jcup.jenkinseditor.preferences.JenkinsEditorPreferenceInitializer">
+      </initializer>
+   </extension>
+   <!-- ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
+   <!--                          MARKER                          			 -->
+   <!-- ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ --> 
+   <extension 
+   		id="de.jcup.jenkinseditor.parse.error"
+    	point="org.eclipse.core.resources.markers"
+    	name="Jenkins editor parse error">
+        <super type="org.eclipse.core.resources.problemmarker"/>
+        <super type="org.eclipse.core.resources.textmarker"/>
+        <persistent value="true"/>
+    </extension>
+    
+   <!-- ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
+   <!--                          HELP                                         -->
+   <!-- ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
+   <extension
+         point="org.eclipse.help.toc">
+      <toc
+            file="toc.xml">
+      </toc>
+      <toc
+            file="EditorToc.xml"
+            primary="true">
+      </toc>
+   </extension>
+   
+</plugin>

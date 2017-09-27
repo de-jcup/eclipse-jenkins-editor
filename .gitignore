@@ -1,0 +1,16 @@
+.metadata
+.lck
+.gradle/
+.classpath
+.project
+.settings/
+*.class
+build/
+*.jar
+*.log
+*.bak
+# we do not want to have bin or gen folders in any of our projects inside git!
+bin/
+gen/
+src-gen/
+rebel.xml
