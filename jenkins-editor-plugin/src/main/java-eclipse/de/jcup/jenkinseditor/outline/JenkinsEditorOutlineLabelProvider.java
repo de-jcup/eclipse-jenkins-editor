@@ -299,7 +299,10 @@ public class JenkinsEditorOutlineLabelProvider extends BaseLabelProvider
 	
 	
 	private Image getOutlineImage(String name) {
-		return EclipseUtil.getImage("/icons/outline/" + name, JenkinsEditorActivator.PLUGIN_ID);
+		/* important: we use /icons/jenkinseditor as start so no conflicts with egradle editor parts
+		 * (The eclipse util implementation does cache images, so same pathes will make conflicts)
+		 */
+		return EclipseUtil.getImage("/icons/jenkinseditor/outline/" + name, JenkinsEditorActivator.PLUGIN_ID);
 	}
 
 }

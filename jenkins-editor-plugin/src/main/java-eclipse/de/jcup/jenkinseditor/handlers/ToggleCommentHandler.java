@@ -13,21 +13,15 @@
  * and limitations under the License.
  *
  */
- package de.jcup.jenkinseditor.document;
+ package de.jcup.jenkinseditor.handlers;
 
-import de.jcup.egradle.core.text.DocumentIdentifier;
+import de.jcup.jenkinseditor.JenkinsEditor;
 
-public enum JenkinsDocumentIdentifiers implements DocumentIdentifier {
-	
-	JENKINS_KEYWORD,
-	
-	JENKINS_VARIABLE,
-	;
-
-
+public class ToggleCommentHandler extends AbstractJenkinsEditorHandler{
 	@Override
-	public String getId() {
-		return name();
+	protected void executeOnActiveJenkinsEditor(JenkinsEditor editor) {
+		editor.toggleComment();
 	}
+
 
 }

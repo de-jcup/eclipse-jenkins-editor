@@ -35,7 +35,7 @@ import de.jcup.jenkinseditor.preferences.JenkinsEditorPreferences;
 
 public class JenkinsEditor extends AbstractGroovyBasedEditor {
 	/** The COMMAND_ID of this editor as defined in plugin.xml */
-	public static final String EDITOR_ID = "org.egradle.editors.GradleEditor";
+	public static final String EDITOR_ID = "de.jcup.jenkinseditor.editors.JenkinsEditor";
 	/** The COMMAND_ID of the editor context menu */
 	public static final String EDITOR_CONTEXT_MENU_ID = EDITOR_ID + ".context";
 	/** The COMMAND_ID of the editor ruler context menu */
@@ -86,11 +86,11 @@ public class JenkinsEditor extends AbstractGroovyBasedEditor {
 		return JenkinsEditorActivator.getDefault().getColorManager();
 	}
 
-	protected String getEditorInstanceContextMenuId() {
+	protected String getEditorInstanceRulerContextId() {
 		return EDITOR_RULER_CONTEXT_MENU_ID;
 	}
 
-	protected String getEditorInstanceMenuId() {
+	protected String getEditorInstanceContextId() {
 		return EDITOR_CONTEXT_MENU_ID;
 	}
 
@@ -99,4 +99,11 @@ public class JenkinsEditor extends AbstractGroovyBasedEditor {
 		return JenkinsEditorActivator.PLUGIN_ID;
 	}
 
+	protected String getEditorIconPath() {
+		return "icons/jenkinseditor/jenkins-editor.png";
+	}
+
+	protected String getEditorIconPathOnError() {
+		return "icons/jenkinseditor/jenkins-editor-with-error.png";
+	}
 }

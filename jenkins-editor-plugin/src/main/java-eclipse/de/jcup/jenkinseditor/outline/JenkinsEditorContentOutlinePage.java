@@ -29,10 +29,10 @@ import de.jcup.jenkinseditor.JenkinsEditorActivator;
 
 public class JenkinsEditorContentOutlinePage extends AbstractGroovyBasedContentOutlinePage {
 
-	private static ImageDescriptor IMG_DESC_LINKED = EclipseUtil.createImageDescriptor("/icons/outline/synced.png",
+	private static ImageDescriptor IMG_DESC_LINKED = EclipseUtil.createImageDescriptor("/icons/jenkinseditor/outline/synced.png",
 			JenkinsEditorActivator.PLUGIN_ID);
 	private static ImageDescriptor IMG_DESC_NOT_LINKED = EclipseUtil
-			.createImageDescriptor("/icons/outline/sync_broken.png", JenkinsEditorActivator.PLUGIN_ID);
+			.createImageDescriptor("/icons/jenkinseditor/outline/sync_broken.png", JenkinsEditorActivator.PLUGIN_ID);
 
 	public JenkinsEditorContentOutlinePage(IAdaptable adaptable) {
 		super(adaptable);
@@ -111,6 +111,11 @@ public class JenkinsEditorContentOutlinePage extends AbstractGroovyBasedContentO
 			return JenkinsModelTypes.GROOVY_FULL_ANTLR;
 		}
 
+	}
+
+	@Override
+	protected String getOutlineImageRootPath() {
+		return "/icons/jenkinseditor/outline/";
 	}
 
 }

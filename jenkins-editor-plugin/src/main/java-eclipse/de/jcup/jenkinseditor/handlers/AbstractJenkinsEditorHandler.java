@@ -13,21 +13,22 @@
  * and limitations under the License.
  *
  */
- package de.jcup.jenkinseditor.document;
+ package de.jcup.jenkinseditor.handlers;
 
-import de.jcup.egradle.core.text.DocumentIdentifier;
+import org.eclipse.ui.IEditorPart;
 
-public enum JenkinsDocumentIdentifiers implements DocumentIdentifier {
-	
-	JENKINS_KEYWORD,
-	
-	JENKINS_VARIABLE,
-	;
+import de.jcup.egradle.eclipse.ui.AbstractActiveEditorHandler;
+import de.jcup.jenkinseditor.JenkinsEditor;
 
+public abstract class AbstractJenkinsEditorHandler extends AbstractActiveEditorHandler {
 
 	@Override
-	public String getId() {
-		return name();
+	protected void executeOnActiveEditor(IEditorPart editor) {
+		if (editor instanceof JenkinsEditor){
+			executeOnActiveJenkinsEditor((JenkinsEditor)editor);
+		}
+		
 	}
 
+	protected abstract void executeOnActiveJenkinsEditor(JenkinsEditor editor) ;
 }

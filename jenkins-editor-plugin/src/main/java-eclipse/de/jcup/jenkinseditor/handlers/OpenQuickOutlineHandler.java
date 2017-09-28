@@ -13,9 +13,18 @@
  * and limitations under the License.
  *
  */
- package de.jcup.jenkinseditor.document;
+ package de.jcup.jenkinseditor.handlers;
 
-public interface JenkinsDocumentIdentifier {
+import de.jcup.jenkinseditor.JenkinsEditor;
 
-	public String getId();
+public class OpenQuickOutlineHandler extends AbstractJenkinsEditorHandler {
+
+	public static final String COMMAND_ID = "jenkinseditor.editor.commands.quickoutline";
+	
+	@Override
+	protected void executeOnActiveJenkinsEditor(JenkinsEditor editor) {
+		editor.openQuickOutline();
+	}
+
+
 }

@@ -26,10 +26,10 @@
       <editor
       		name="Jenkins Editor"
             filenames="Jenkinsfile"
-            icon="icons/jenkins-editor.png"
+            icon="icons/jenkinseditor/jenkins-editor.png"
             contributorClass="org.eclipse.ui.texteditor.BasicTextEditorActionContributor"
             class="de.jcup.jenkinseditor.JenkinsEditor"
-            id="jenkinseditor.editors.JenkinsEditor">
+            id="de.jcup.jenkinseditor.JenkinsEditor">
       </editor>
    </extension>
    
@@ -53,7 +53,7 @@
 	        name="Jenkins context"
 	        description="Editing jenkins files"
 	        parentId="org.eclipse.ui.textEditorScope"
-	        id="org.jenkinseditor.editors.JenkinsEditor.context">
+	        id="de.jcup.jenkinseditor.editors.JenkinsEditor.context">
 	        
 	  </context>
    </extension>
@@ -82,7 +82,17 @@
             categoryId="jenkinseditor.commands.category"
             id="jenkinseditor.editor.commands.gotomatchingbracket">
       </command>
+	  
+	  <command
+            name="Quick outline"
+            description="Show quick outline dialog"
+            categoryId="jenkinseditor.commands.category"
+            id="jenkinseditor.editor.commands.quickoutline">
+      </command>
+	
 	</extension>
+	
+	
 	<extension point="org.eclipse.ui.handlers">
       <handler
             commandId="jenkinseditor.editor.commands.source.toggleComment"
@@ -92,6 +102,10 @@
             commandId="jenkinseditor.editor.commands.gotomatchingbracket"
             class="de.jcup.jenkinseditor.handlers.GotoMatchingBracketHandler">
       </handler>
+      <handler
+            commandId="jenkinseditor.editor.commands.quickoutline"
+            class="de.jcup.jenkinseditor.handlers.OpenQuickOutlineHandler">
+      </handler>
     </extension> 
     
    <!-- ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
@@ -100,14 +114,20 @@
    <extension point="org.eclipse.ui.bindings">
 		<key
             sequence="M1+7"
-            contextId="org.jenkinseditor.editors.JenkinsEditor.context"
+            contextId="de.jcup.jenkinseditor.editors.JenkinsEditor.context"
             commandId="jenkinseditor.editor.commands.source.toggleComment"
             schemeId="org.eclipse.ui.defaultAcceleratorConfiguration">	  
 		</key>
 		<key
             sequence="M1+M2+P"
-            contextId="org.jenkinseditor.editors.JenkinsEditor.context"
+            contextId="de.jcup.jenkinseditor.editors.JenkinsEditor.context"
             commandId="jenkinseditor.editor.commands.gotomatchingbracket"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration">	  
+		</key>
+		<key
+            sequence="M1+O"
+            contextId="de.jcup.jenkinseditor.editors.JenkinsEditor.context"
+            commandId="jenkinseditor.editor.commands.quickoutline"
             schemeId="org.eclipse.ui.defaultAcceleratorConfiguration">	  
 		</key>
     </extension> 

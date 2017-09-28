@@ -26,7 +26,7 @@ import de.jcup.egradle.eclipse.util.ColorManager;
 public class JenkinsEditorActivator extends AbstractUIPlugin {
 
 	// The plug-in COMMAND_ID
-	public static final String PLUGIN_ID = "de.jcup.jenkinseditor"; //$NON-NLS-1$
+	public static final String PLUGIN_ID = "de.jcup.jenkinseditor.plugin"; //$NON-NLS-1$
 
 	// The shared instance
 	private static JenkinsEditorActivator plugin;

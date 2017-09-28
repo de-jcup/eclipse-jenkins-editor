@@ -13,16 +13,20 @@
  * and limitations under the License.
  *
  */
- package de.jcup.jenkinseditor.document;
+package de.jcup.jenkinseditor.document;
+
+import de.jcup.egradle.core.text.DocumentIdentifier;
+import de.jcup.egradle.eclipse.document.GroovyDocumentIdentifiers;
 
 public class JenkinsPartionerFactory {
 
-	public static JenkinsPartitioner create(){
-		String[] legalContentTypes = JenkinsDocumentIdentifiers.allIdsToStringArray();
+	public static JenkinsPartitioner create() {
+		String[] legalContentTypes = DocumentIdentifier.createStringIdBuilder()
+				.addAll(GroovyDocumentIdentifiers.values()).addAll(JenkinsDocumentIdentifiers.values()).build();
 
 		JenkinsDocumentPartitionScanner scanner = new JenkinsDocumentPartitionScanner();
 		JenkinsPartitioner partitioner = new JenkinsPartitioner(scanner, legalContentTypes);
-		
+
 		return partitioner;
 	}
 }

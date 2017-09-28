@@ -2,7 +2,7 @@ package de.jcup.jenkinseditor;
 
 import static de.jcup.jenkinseditor.document.JenkinsDocumentIdentifiers.*;
 import static de.jcup.jenkinseditor.preferences.JenkinsEditorSyntaxColorPreferenceConstants.*;
-
+import static de.jcup.egradle.eclipse.document.GroovyDocumentIdentifiers.*;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.hyperlink.IHyperlinkDetector;
 import org.eclipse.jface.text.hyperlink.URLHyperlinkDetector;
@@ -11,8 +11,11 @@ import org.eclipse.jface.text.presentation.PresentationReconciler;
 import org.eclipse.jface.text.source.ISourceViewer;
 import org.eclipse.swt.SWT;
 
+import de.jcup.egradle.core.text.DocumentIdentifier;
 import de.jcup.egradle.eclipse.AbstractGroovySourceViewerConfiguration;
+import de.jcup.egradle.eclipse.document.GroovyDocumentIdentifiers;
 import de.jcup.egradle.eclipse.preferences.IEditorPreferences;
+import de.jcup.jenkinseditor.document.JenkinsDocumentIdentifiers;
 import de.jcup.jenkinseditor.preferences.JenkinsEditorPreferences;
 
 public class JenkinsSourceViewerConfiguration extends AbstractGroovySourceViewerConfiguration {
@@ -56,11 +59,14 @@ public class JenkinsSourceViewerConfiguration extends AbstractGroovySourceViewer
 		return JenkinsEditorPreferences.getInstance();
 	}
 
-	@Override
-	public String[] getConfiguredContentTypes(ISourceViewer sourceViewer) {
+	protected String[] createDefaultConfiguredContentTypes() {
 		/* @formatter:off */
-		return allIdsToStringArray( 
-				IDocument.DEFAULT_CONTENT_TYPE);
+		return DocumentIdentifier.createStringIdBuilder().
+				add(IDocument.DEFAULT_CONTENT_TYPE). 
+				addAll(GroovyDocumentIdentifiers.values()).
+				addAll(JenkinsDocumentIdentifiers.values())
+				
+				.build();
 		/* @formatter:on */
 	}
 
