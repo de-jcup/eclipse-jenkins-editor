@@ -5,10 +5,5 @@
 
   <topic label="Overview" href="html/toc.html">
   </topic>
-  <topic href="html/syntax_coloring.html" label="Syntax coloring">
-		</topic>
-  <topic href="html/outline.html" label="Outline">
-  </topic>
-  <topic href="html/validation.html" label="Validation">
-  </topic>
+  
 </toc>
