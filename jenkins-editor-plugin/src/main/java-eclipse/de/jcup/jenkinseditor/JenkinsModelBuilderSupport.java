@@ -19,6 +19,8 @@ import antlr.collections.AST;
 import de.jcup.egradle.core.model.Item;
 import de.jcup.egradle.core.model.groovyantlr.AbstractGroovyModelBuilderSupport;
 
+@Deprecated
+/* unused class - if no longer necessary - remove */
 class JenkinsModelBuilderSupport extends AbstractGroovyModelBuilderSupport {
 
 	public Item handleDependencyAndReturnItem(AST methodCall, Item item) {

@@ -1,4 +1,19 @@
-package de.jcup.jenkinseditor.preferences;
+/*
+ * Copyright 2017 Albert Tregnaghi
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *		http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions
+ * and limitations under the License.
+ *
+ */
+ package de.jcup.jenkinseditor.preferences;
 
 import static de.jcup.jenkinseditor.preferences.JenkinsEditorPreferenceConstants.*;
 
@@ -7,13 +22,9 @@ import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.preferences.ScopedPreferenceStore;
 
-import de.jcup.jenkinseditor.JenkinsEditor;
-import de.jcup.jenkinseditor.preferences.JenkinsEditorPreferenceConstants;
-import de.jcup.jenkinseditor.preferences.JenkinsEditorPreferences;
-import de.jcup.jenkinseditor.preferences.JenkinsEditorSyntaxColorPreferenceConstants;
 import de.jcup.egradle.eclipse.preferences.AbstractEditorPreferences;
-import de.jcup.egradle.eclipse.ui.AbstractGroovyBasedEditor;
 import de.jcup.egradle.eclipse.util.PreferenceIdentifiable;
+import de.jcup.jenkinseditor.JenkinsEditor;
 import de.jcup.jenkinseditor.JenkinsEditorActivator;
 
 public class JenkinsEditorPreferences extends AbstractEditorPreferences {
@@ -28,7 +39,7 @@ public class JenkinsEditorPreferences extends AbstractEditorPreferences {
 	}
 
 	protected void updateEditorColors(IEditorPart editor) {
-		if (! (editor instanceof AbstractGroovyBasedEditor)){
+		if (! (editor instanceof JenkinsEditor)){
 			return;
 		}
 		JenkinsEditor geditor = (JenkinsEditor) editor;

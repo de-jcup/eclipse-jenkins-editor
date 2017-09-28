@@ -50,6 +50,8 @@ public class JenkinsEditorOutlineContentProvider extends AbstractGroovyBasedEdit
 		return JenkinsModelTypes.JENKINS;
 	}
 
+	@Deprecated
+	/* FIXME ATR, 28.09.2017: check if this and the builder support should be removed (except the groovy class rendering does need it!):currently not really necessary - same as Jenkins model builder */
 	Object[] buildJenkinsModel(String charset, InputStream is,boolean filteringEnabled) throws Exception {
 		GradleModelBuilder builder = new GradleModelBuilder(is);
 		if (filteringEnabled){

@@ -17,11 +17,65 @@
 
 import de.jcup.egradle.eclipse.document.DocumentKeyWord;
 
+/**
+ * See https://jenkins.io/doc/book/pipeline/syntax/ for syntax information
+ * @author Albert Tregnaghi
+ *
+ */
 public enum JenkinsSpecialVariableKeyWords implements DocumentKeyWord {
 
 	SYSTEM("System"),
 	
 	JUNIT("junit"),
+	
+	
+	/* agent parameters: */
+	
+	ANY("any"),
+	NONE("none"),
+	IMAGE("image"),
+	LABEL("label"),
+	ARGS("args"),
+	CUSTOM_WORKSPACE("customWorkspace"),
+	REUSE_NODE("reuseNode"),
+	
+	ECHO("echo"),
+	SH("sh"),
+	
+	CREDENTIALS("credentials"),
+	
+	BUILDDISCARDER("buildDiscarder"),
+	
+	DISABLECONCURRENTBUILDS("disableConcurrentBuilds"),
+	
+	OVERRIDEINDEXTRIGGERS("overrideIndexTriggers"),
+	
+	SKIPDEFAULTCHECKOUT("skipDefaultCheckout"),
+	
+	SKIPSTAGESAFTERUNSTABLE("skipStagesAfterUnstable"),
+	
+	TIMEOUT("timeout"),
+	
+	RETRY("retry"),
+	
+	TIMESTAMPS("timestamps"),
+	
+	
+	/* available parameters */
+	PARAM_STRING("string"),
+	
+	PARAM_BOOLEAN("booleanParam"),
+	
+	/* triggers */
+	CRON("cron"),
+	
+	POLLSCM("pollSCM"),
+	
+	/* tools */
+	MAVEN("maven"),
+	JDK("jdk"),
+	GRADLE("gradle"),
+	
 	
 	;
 

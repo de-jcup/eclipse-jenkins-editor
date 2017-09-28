@@ -17,16 +17,100 @@
 
 import de.jcup.egradle.eclipse.document.DocumentKeyWord;
 
+/**
+ * See https://jenkins.io/doc/book/pipeline/syntax/ for dedicated information about syntax
+ * @author Albert Tregnaghi
+ *
+ */
 public enum JenkinsDefaultClosureKeyWords implements DocumentKeyWord {
+	PIPELINE("pipeline"),
+	
+	AGENT("agent"),
+
+	NODE("node"),
+	
+	DOCKER("docker"),
+	
+	DOCKERFILE("dockerfile"),
+	
+	/* -------------------------------------------- */
+	/* ---------------- POST parts ---------------- */
+	/* -------------------------------------------- */
+	POST("post"),
+	
+	/* conditions */
+	ALWAYS("always"),
+	
+	CHANGED("changed"),
+	
+	FAILURE("failure"),
+	
+	SUCCESS("success"),
+	
+	UNSTABLE("unstable"),
+	
+	ABORTED("aborted"),
+	
+	/* -------------------------------------------- */
+	/* ---------------- STAGES parts -------------- */
+	/* -------------------------------------------- */
+	STAGES("stages"),
 
 	STAGE("stage"),
 	
+	STEPS("steps"),
+	
+	
+	/* -------------------------------------------- */
+	/* ---------------- ENVIRONMENT parts --------- */
+	/* -------------------------------------------- */
+	ENVIRONMENT("environment"),
+	
+	/* -------------------------------------------- */
+	/* ---------------- OPTION parts -------------- */
+	/* -------------------------------------------- */
+	OPTIONS("options"),// 0:1 inside pipeline block
+	
+	/* -------------------------------------------- */
+	/* ---------------- PARAM parts -------------- */
+	/* -------------------------------------------- */
+	PARAMETERS("parameters"),
+	
+	/* -------------------------------------------- */
+	/* ---------------- TRIGGER parts ------------- */
+	/* -------------------------------------------- */
+	TRIGGERS("triggers"),
+	
+	/* -------------------------------------------- */
+	/* ---------------- TOOLS parts --------------- */
+	/* -------------------------------------------- */
+	TOOLS("tools"),
+	
+	/* -------------------------------------------- */
+	/* ---------------- WHEN parts ---------------- */
+	/* -------------------------------------------- */
+	WHEN("when"),
+
+	BRANCH("branch"),
+	// environment
+	EXPRESSION("expression"),
+	NOT("not"),
+	ALLOF("allOf"),
+	ANYOF("anyOf"),
+	
+	/* -------------------------------------------- */
+	/* ---------------- PARALLEL parts ------------ */
+	/* -------------------------------------------- */
 	PARALLEL("parallel"),
 	
-	NODE("node"),
+	
+	/* -------------------------------------------- */
+	/* ---------------- SCRIPT parts -------------- */
+	/* -------------------------------------------- */
+	SCRIPT("script"),
+	
 	
 	;
-
 	private String text;
 
 	private JenkinsDefaultClosureKeyWords(String text) {

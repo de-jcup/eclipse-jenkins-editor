@@ -62,9 +62,9 @@ public class JenkinsEditorPreferenceInitializer extends AbstractPreferenceInitia
 		getPreferences().setDefaultColor(COLOR_GSTRING, JenkinsEditorColorConstants.ROYALBLUE);
 		getPreferences().setDefaultColor(COLOR_COMMENT, JenkinsEditorColorConstants.GREEN_JAVA);
 		
-		getPreferences().setDefaultColor(COLOR_JENKINS_KEYWORDS, JenkinsEditorColorConstants.KEYWORD_DEFAULT_PURPLE);
+		getPreferences().setDefaultColor(COLOR_JENKINS_KEYWORDS, JenkinsEditorColorConstants.RED_KEYWORD);
 		
-		getPreferences().setDefaultColor(COLOR_JENKINS_VARIABLES, JenkinsEditorColorConstants.DARK_GRAY);
+		getPreferences().setDefaultColor(COLOR_JENKINS_VARIABLES, JenkinsEditorColorConstants.DARK_BLUE);
 		getPreferences().setDefaultColor(COLOR_JAVA_LITERAL, JenkinsEditorColorConstants.KEYWORD_DEFAULT_PURPLE);
 	}
 

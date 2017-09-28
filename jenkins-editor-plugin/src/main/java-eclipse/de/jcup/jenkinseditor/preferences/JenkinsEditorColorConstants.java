@@ -69,6 +69,7 @@ public interface JenkinsEditorColorConstants {
 
 	public static final RGB BLACK = rgb(0, 0, 0);
 	public static final RGB RED = rgb(170, 0, 0);
+	public static final RGB RED_KEYWORD = rgb(191,0,0);
 	public static final RGB GREEN = rgb(0, 170, 0);
 	public static final RGB BROWN = rgb(170, 85, 0);
 	public static final RGB BLUE = rgb(0, 0, 170);

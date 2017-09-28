@@ -25,14 +25,13 @@ import org.eclipse.jface.text.rules.IToken;
 import de.jcup.egradle.eclipse.document.AbstractGroovyBasedDocumentPartitionScanner;
 public class JenkinsDocumentPartitionScanner extends AbstractGroovyBasedDocumentPartitionScanner {
 
-
 	@Override
 	protected void addOtherRules(List<IPredicateRule> rules) {
-		IToken gradleClosureKeywords = createToken(JENKINS_KEYWORD);
-		IToken gradleVariable = createToken(JENKINS_VARIABLE);
+		IToken jenkinsDefaultClosureKeywords = createToken(JENKINS_KEYWORD);
+		IToken jenkinsVariables = createToken(JENKINS_VARIABLE);
 		
-		buildWordRules(rules, gradleClosureKeywords, JenkinsDefaultClosureKeyWords.values(),onlyLettersWordDetector);
-		buildWordRules(rules, gradleVariable, JenkinsSpecialVariableKeyWords.values(),onlyLettersWordDetector);
+		buildWordRules(rules, jenkinsDefaultClosureKeywords, JenkinsDefaultClosureKeyWords.values(),onlyLettersWordDetector);
+		buildWordRules(rules, jenkinsVariables, JenkinsSpecialVariableKeyWords.values(),onlyLettersWordDetector);
 	}
 
 }
