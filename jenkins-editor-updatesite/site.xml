@@ -1,4 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <site>
-   
+   <feature url="features/de.jcup.jenkinseditor.feature_0.2.0.jar" id="de.jcup.jenkinseditor.feature" version="0.2.0"/>
 </site>

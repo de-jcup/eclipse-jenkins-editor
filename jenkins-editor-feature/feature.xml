@@ -1,16 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <feature
-      id="de.jcup.basheditor"
-      label="Bash Editor"
-      version="0.9.3"
+      id="de.jcup.jenkinseditor.feature"
+      label="Jenkins Editor"
+      version="0.2.0"
       provider-name="Albert Tregnaghi">
 
-   <description url="https://marketplace.eclipse.org/content/bash-editor">
-      Jenkis Editor is a plugin for eclipse to edit jenkins build files (JenkinsFile)
-
-It supports
-
-Syntax coloring, customizeable, additional defaults for dark theme
+   <description url="https://github.com/de-jcup/eclipse-jenkins-editor">
+      Jenkis Editor is a plugin for eclipse to edit jenkins build files
+(Jenkinsfile)
    </description>
 
    <copyright>
@@ -232,11 +229,18 @@ and limitations under the License.
    </license>
 
    <url>
-      <update label="Jenkins Editor update site" url="https://dl.bintray.com/de-jcup/jenkinseditor"/>
+      <update label="Jenkins Editor update site" url="https://bintray.com/de-jcup/jenkinseditor"/>
    </url>
 
    <plugin
-         id="de.jcup.jenkinseditor"
+         id="de.jcup.egradle.eclipse.plugin.main"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="de.jcup.jenkinseditor.plugin"
          download-size="0"
          install-size="0"
          version="0.0.0"
