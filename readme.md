@@ -1,18 +1,18 @@
-## In a nutshell
-Jenkins Editor is a plugin for eclipse to edit jenkins build files (JenkinsFile).
+# In a nutshell
+![Jenkins Editor Logo](https://github.com/de-jcup/eclipse-jenkins-editor/raw/master/jenkins-editor-plugin/html/images/jenkins-editor-logo.png)
 
-It supports
-- Syntax coloring, customizeable, additional defaults for dark theme
+Is a eclipse plugin to edit jenkins files named as `Jenkinsfile` . See https://jenkins.io/doc/book/pipeline/jenkinsfile/ for more information about syntax etc.
 
+## Installation by eclipse marketplace
+The editor is currently in a BETA phase and will become available at
+https://marketplace.eclipse.org/content/jenkins-editor
 
-## Dependencies
-It is based on EGradle parts and needs at least the egradle-main plugin at runtime.
-If you want to build it yourself you should checkout egradle and this repository inside ONE workspace.
-
-Currently you must use the https://github.com/de-jcup/egradle/tree/feature/291-egradle-parts-for-jenkins-editor branch and NOT the master
-
-## State
-Alpha
+## Features
+- Syntax highlighting (customizable) + default colors for dark theme
+- Outline + Quick outline (CTRL + o)
+- Simple groovy script validation support
+- Bracket switching (CTRL + p)
+- Block commenting (CTRL + 7)
 
 ## License
 Jenkins Editor is under Apache 2.0 license (http://www.apache.org/licenses/LICENSE-2.0)
