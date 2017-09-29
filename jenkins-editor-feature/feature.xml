@@ -229,7 +229,7 @@ and limitations under the License.
    </license>
 
    <url>
-      <update label="Jenkins Editor update site" url="https://bintray.com/de-jcup/jenkinseditor"/>
+      <update label="Jenkins Editor update site" url="https://dl.bintray.com/de-jcup/jenkinseditor"/>
    </url>
 
    <plugin
