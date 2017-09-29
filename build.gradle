@@ -37,8 +37,8 @@ subprojects {
 	}
 	apply plugin: "maven"
 		
-	group = "de.jcup.basheditor" 
-	version = "0.8.0"
+	group = "de.jcup.jenkinseditor" 
+	version = "0.3.0"
 	def buildNr = System.getenv('ci.buildNumber')
 	// use build number in version
 	if (buildNr != null && ! buildNr.isEmpty()){
