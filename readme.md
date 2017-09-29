@@ -14,6 +14,18 @@ https://marketplace.eclipse.org/content/jenkins-editor
 - Bracket switching (CTRL + p)
 - Block commenting (CTRL + 7)
 
+## Development
+### Setup 
+- Checkout EGradle projects in same Workspace (as dependency for plugin development)
+- Checkout Jenkins Editor projects
+### Build
+- At the moment there exists a gradle setup, but it's not really used (maybe in future for tests)
+  and can be ignored currently
+- To build the editor plugin, please open "jenkins-editor-updatesite/site.xml"
+  with eclipse site editor and build Jenkins editor feature by pressing "Build" button inside.
+### Execute
+- Simply start as Eclipse Application by a new launch configuration in eclipse 
+
 ## License
 Jenkins Editor is under Apache 2.0 license (http://www.apache.org/licenses/LICENSE-2.0)
 
