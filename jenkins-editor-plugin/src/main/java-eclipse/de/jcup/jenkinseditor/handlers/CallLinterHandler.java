@@ -16,9 +16,13 @@ import de.jcup.jenkinseditor.JenkinsEditorActivator;
 import de.jcup.jenkinseditor.JenkinsEditorMessageDialogSupport;
 import de.jcup.jenkinseditor.JenkinsEditorUtil;
 import de.jcup.jenkinseditor.preferences.JenkinsEditorPreferences;
-
+import org.eclipse.equinox.security.storage.ISecurePreferences;
+import org.eclipse.equinox.security.storage.SecurePreferencesFactory;
+import org.eclipse.equinox.security.storage.StorageException;
+import static de.jcup.jenkinseditor.JenkinsEditorConstants.*;
 public class CallLinterHandler extends AbstractJenkinsEditorHandler {
 
+	
 	private JenkinsLinterErrorBuilder errorBuilder = new JenkinsLinterErrorBuilder();
 
 	@Override
@@ -50,23 +54,43 @@ public class CallLinterHandler extends AbstractJenkinsEditorHandler {
 			/* fall back to embedded variant */
 			pathToJenkinsCLIJar = createPathToEmbeddedCLIJar();
 		}
-		/* FIXME ATR, 31.10.2017:  remove... */
-		configuration.setUser("albert");
-		configuration.setAPIToken("xxxx");
-		if (linterJenkinsURL==null || linterJenkinsURL.trim().length()==0){
-			linterJenkinsURL="http://localhost:8080";
+		/* FIXME ATR, 31.10.2017: remove... */
+		
+		ISecurePreferences preferences = SecurePreferencesFactory.getDefault();
+
+		if (preferences.nodeExists(ID_SECURED_CREDENTIALS)) {
+			ISecurePreferences node = preferences.node(ID_SECURED_CREDENTIALS);
+			try {
+				String user = node.get("user", "anonymous");
+				String apiToken = node.get("apiToken", "");
+				
+				configuration.setUser(user);
+				configuration.setAPIToken(apiToken);
+				
+			} catch (StorageException e1) {
+				e1.printStackTrace();
+			}
+		}
+
+		if (linterJenkinsURL == null || linterJenkinsURL.trim().length() == 0) {
+			linterJenkinsURL = "http://localhost:8080";
 		}
 		configuration.setJenkinsURL(linterJenkinsURL);
 		configuration.setAuthMode(AuthMode.APIKEY);// currently we support only
 													// API KEY- in future maybe
-													// more/ changeable in preferences
+													// more/ changeable in
+													// preferences
 		configuration.setPathToJenkinsCLIJar(pathToJenkinsCLIJar);
-		
+
 		configuration.setTimeoutInSeconds(10);
 
 		JenkinsLinterCLICommand command = new JenkinsLinterCLICommand();
 		try {
 			JenkinsLinterCLIResult result = command.execute(configuration, code);
+			if (! result.wasCLICallSuccessFul()){
+				JenkinsEditorMessageDialogSupport.INSTANCE.showError("Jenkins CLI call failed:\n"+result.getCLICallFailureMessage());
+				return;
+			}
 			/* remove former linter errors (after call was possible ) */
 			JenkinsEditorUtil.removeLinterErrors(editor);
 
@@ -78,15 +102,16 @@ public class CallLinterHandler extends AbstractJenkinsEditorHandler {
 				}
 				/* add linter error */
 				JenkinsEditorUtil.addLinterError(editor, error);
-				foundAtLeastOneError=true;
+				foundAtLeastOneError = true;
 			}
 
-			if (foundAtLeastOneError){
+			if (foundAtLeastOneError) {
 				JenkinsEditorMessageDialogSupport.INSTANCE.showWarning("This script has errors inside!");
-			}else{
-				JenkinsEditorMessageDialogSupport.INSTANCE.showInfo("Your Jenkins server did found no lint errors for this script!");
+			} else {
+				JenkinsEditorMessageDialogSupport.INSTANCE
+						.showInfo("Your Jenkins server did found no lint errors for this script!");
 			}
-			
+
 		} catch (IOException e) {
 			JenkinsEditorMessageDialogSupport.INSTANCE.showError("Linter action failed" + e.getMessage());
 		}

@@ -8,6 +8,7 @@ import java.io.OutputStreamWriter;
 
 /**
  * Transfers given code on execution time to jenkins server for validation
+ * 
  * @author Albert Tregnaghi
  *
  */
@@ -23,6 +24,9 @@ public class JenkinsLinterCLICommand extends AbstractJenkinsCLICommand<JenkinsLi
 
 		JenkinsLinterCLIResult result = new JenkinsLinterCLIResult();
 		if (!process.isAlive()) {
+			int exitValue = process.exitValue();
+			result.exitValue = exitValue;
+			result.cliCallFailureMessage = "Was not able to start process.";
 			return result;
 		}
 		/* give code data as input */
@@ -36,7 +40,22 @@ public class JenkinsLinterCLICommand extends AbstractJenkinsCLICommand<JenkinsLi
 				result.appendOutput(line);
 			}
 		}
-
+		while (process.isAlive()) {
+			try {
+				Thread.sleep(100);
+			} catch (InterruptedException e) {
+				break;
+			}
+		}
+		int exitValue = process.exitValue();
+		if (exitValue != 0) {
+			if (exitValue == -1) {
+				result.cliCallFailureMessage = "Maybe credentials not valid. Please setup in preferences";
+			}else{
+				result.cliCallFailureMessage = "Process did not return 0 but "+exitValue;
+			}
+		}
+		result.exitValue = exitValue;
 		return result;
 	}
 

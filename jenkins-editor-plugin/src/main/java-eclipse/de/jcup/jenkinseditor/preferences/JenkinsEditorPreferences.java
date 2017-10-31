@@ -74,7 +74,7 @@ public class JenkinsEditorPreferences extends AbstractEditorPreferences {
 	}
 
 	public String getJenkinsURL(){
-		return getStringPreference(JenkinsEditorPreferenceConstants.P_EDITOR_JENKINS_URL);
+		return getStringPreference(JenkinsEditorPreferenceConstants.P_JENKINS_URL);
 	}
 	
 	@Override
@@ -107,7 +107,7 @@ public class JenkinsEditorPreferences extends AbstractEditorPreferences {
 	}
 
 	public String getPathToJenkinsCLIJar() {
-		return getStringPreference(P_EDITOR_PATH_TO_JENKINS_CLI_JAR);
+		return getStringPreference(P_PATH_TO_JENKINS_CLI_JAR);
 	}
 
 }

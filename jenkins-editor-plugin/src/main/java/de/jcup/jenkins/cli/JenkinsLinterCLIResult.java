@@ -4,9 +4,10 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class JenkinsLinterCLIResult implements JenkinsCLIResult{
+public class JenkinsLinterCLIResult extends AbstractJenkinsCLIResult{
 	
 	private List<String> list = new ArrayList<>();
+	
 
 	void appendOutput(String line) {
 		list.add(line);

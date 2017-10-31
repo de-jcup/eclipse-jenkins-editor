@@ -71,11 +71,11 @@ public abstract class AbstractJenkinsCLICommand<T extends JenkinsCLIResult, P> i
 
 		list.add(getCLICommand());
 
-		// special handling for password auth mode
+		// special handling for secret auth mode
 		if (AuthMode.PASSWORD.equals(configuration.getAuthMode())) {
 			list.add("--username");
 			list.add("" + configuration.getUser());
-			list.add("--password");
+			list.add("--secret");
 			list.add("" + configuration.getPassword());
 		}
 

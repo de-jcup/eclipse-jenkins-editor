@@ -17,10 +17,14 @@ package de.jcup.jenkinseditor;
 
 import static de.jcup.egradle.eclipse.util.EclipseUtil.*;
 
+import java.util.Map;
+
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Shell;
 
 import de.jcup.egradle.eclipse.util.EclipseUtil;
+import de.jcup.jenkinseditor.preferences.UserCredentials;
+import de.jcup.jenkinseditor.preferences.UserCredentialsDialog;
 
 public class JenkinsEditorMessageDialogSupport {
 
@@ -64,6 +68,23 @@ public class JenkinsEditorMessageDialogSupport {
 
 		});
 
+	}
+
+	public UserCredentials showUsernamePassword(String labelForPassword) {
+		final UserCredentials result = new UserCredentials();
+		EclipseUtil.safeSyncExec(new Runnable() {
+
+			@Override
+			public void run() {
+				Shell shell = getActiveWorkbenchShell();
+				
+				UserCredentialsDialog dialog = new UserCredentialsDialog(shell,labelForPassword,result);
+				dialog.open();
+			}
+
+		});
+		return result;
+		
 	}
 
 }

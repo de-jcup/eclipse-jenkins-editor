@@ -20,9 +20,15 @@ import static de.jcup.jenkinseditor.preferences.JenkinsEditorPreferenceConstants
 import java.util.ArrayList;
 
 import org.eclipse.core.runtime.Assert;
+import org.eclipse.equinox.security.storage.ISecurePreferences;
+import org.eclipse.equinox.security.storage.SecurePreferencesFactory;
+import org.eclipse.equinox.security.storage.StorageException;
 import org.eclipse.jface.preference.BooleanFieldEditor;
 import org.eclipse.jface.preference.ColorFieldEditor;
 import org.eclipse.jface.preference.FieldEditorPreferencePage;
+import org.eclipse.jface.preference.FileFieldEditor;
+import org.eclipse.jface.preference.RadioGroupFieldEditor;
+import org.eclipse.jface.preference.StringFieldEditor;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -32,11 +38,22 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 
 import de.jcup.egradle.eclipse.preferences.AbstractEditorPreferences;
+import de.jcup.egradle.eclipse.preferences.EGradleCallType;
+import de.jcup.egradle.eclipse.util.ColorManager;
+import de.jcup.egradle.eclipse.util.EclipseUtil;
+import de.jcup.jenkins.cli.JenkinsCLIConfiguration.AuthMode;
+import de.jcup.jenkinseditor.JenkinsEditorMessageDialogSupport;
+import de.jcup.jenkinseditor.JenkinsEditorUtil;
+import de.jcup.jenkinseditor.handlers.CallLinterHandler;
+
+import static de.jcup.jenkinseditor.JenkinsEditorConstants.*;
 
 /**
  * Parts are inspired by <a href=
@@ -60,7 +77,7 @@ public class JenkinsEditorPreferencePage extends FieldEditorPreferencePage imple
 	private Button matchingBracketRadioButton;
 
 	private BooleanFieldEditor linkEditorWithOutline;
-	
+
 	private ColorFieldEditor matchingBracketsColor;
 
 	private ArrayList<MasterButtonSlaveSelectionListener> masterSlaveListeners = new ArrayList<>();
@@ -69,6 +86,10 @@ public class JenkinsEditorPreferencePage extends FieldEditorPreferencePage imple
 	private boolean highlightBracketAtCaretLocation;
 	private boolean matchingBrackets;
 	private BooleanFieldEditor autoCreateEndBrackets;
+	private StringFieldEditor jenkinsUrl;
+	private FileFieldEditor jarFileLocation;
+	private RadioGroupFieldEditor authorizationType;
+	private UserCredentials credentials;
 
 	public JenkinsEditorPreferencePage() {
 		super(GRID);
@@ -107,10 +128,106 @@ public class JenkinsEditorPreferencePage extends FieldEditorPreferencePage imple
 
 	@Override
 	protected void createFieldEditors() {
+
+		/* -------------------------------------------------------------- */
+		/* ------------------------ JENKINS CLI ------------------------- */
+		/* -------------------------------------------------------------- */
+		Group jenkinsCLIComposite = new Group(getFieldEditorParent(), SWT.NONE);
+		jenkinsCLIComposite.setText("Jenkins CLI setup");
+		GridLayout jenkinsCLICompositeLayout = new GridLayout(3, true);
+		jenkinsCLICompositeLayout.marginWidth = 10;
+		jenkinsCLICompositeLayout.marginHeight = 0;
+		jenkinsCLICompositeLayout.marginLeft = 20;
+		jenkinsCLIComposite.setLayout(jenkinsCLICompositeLayout);
+
+		GridData jenkinsCLICompositeLayoutData = new GridData();
+		jenkinsCLICompositeLayoutData.horizontalAlignment = GridData.FILL;
+		jenkinsCLICompositeLayoutData.verticalAlignment = GridData.BEGINNING;
+		jenkinsCLICompositeLayoutData.grabExcessHorizontalSpace = true;
+		jenkinsCLICompositeLayoutData.grabExcessVerticalSpace = false;
+//		jenkinsCLICompositeLayoutData.verticalSpan = 2;
+		jenkinsCLICompositeLayoutData.horizontalSpan = 3;
+
+		jenkinsCLIComposite.setLayoutData(jenkinsCLICompositeLayoutData);
+
+		jenkinsUrl = new StringFieldEditor(P_JENKINS_URL.getId(), "Jenkins URL", jenkinsCLIComposite);
+		jenkinsUrl.getTextControl(jenkinsCLIComposite)
+				.setToolTipText("Set jenkins URL - when empty http://localhost:8080 will be used as default");
+		jenkinsUrl.setEmptyStringAllowed(true);
+		addField(jenkinsUrl);
+
+		jarFileLocation = new FileFieldEditor(P_PATH_TO_JENKINS_CLI_JAR.getId(), "Path to jenkins-cli.jar (optional)",
+				jenkinsCLIComposite);
+		jarFileLocation.setFileExtensions(new String[] { "*.jar" });
+		jarFileLocation.getTextControl(jenkinsCLIComposite).setToolTipText(
+				"You can set here the location of another jenkins-cli.jar which you can download by your running Jenkins instance.");
+		addField(jarFileLocation);
+
+		String[][] entryNamesAndValues = new String[][] { new String[] { "API Key", AuthMode.APIKEY.getId() },
+				new String[] { "Anonymous", AuthMode.ANONYMOUS.getId() }, };
+
+//		authorizationType = new RadioGroupFieldEditor(P_PATH_TO_JENKINS_CLI_JAR.getId(), "Authentification type", 2,
+//				entryNamesAndValues, jenkinsCLIComposite);
+//		
+//		addField(authorizationType);
+//		
+//		Label spacer3 = new Label(jenkinsCLIComposite, SWT.LEFT);
+//		GridData gd3 = new GridData(GridData.HORIZONTAL_ALIGN_FILL);
+//		gd3.horizontalSpan = 2;
+//		gd3.heightHint = convertHeightInCharsToPixels(1) / 2;
+//		spacer3.setLayoutData(gd3);
+		
+		Label passwordLabel = new Label(jenkinsCLIComposite, SWT.LEFT);
+		passwordLabel.setText("User credentials : ");
+		
+		Text passwordField = new Text(jenkinsCLIComposite, SWT.SINGLE | SWT.PASSWORD);
+		GridData data = new GridData(GridData.FILL_HORIZONTAL);
+		passwordField.setLayoutData(data);
+		passwordField.setText("encryptedthings");
+		
+		Button buttonPut = new Button(jenkinsCLIComposite, SWT.PUSH);
+		buttonPut.setText("Credentials ...");
+		buttonPut.addSelectionListener(new SelectionAdapter() {
+
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				ISecurePreferences preferences = SecurePreferencesFactory.getDefault();
+				ISecurePreferences node = preferences.node(ID_SECURED_CREDENTIALS);
+				try {
+					credentials = JenkinsEditorMessageDialogSupport.INSTANCE.showUsernamePassword("API Key");
+					if (credentials.username==null || credentials.secret==null){
+						return;
+					}
+					node.put(ID_SECURED_USER_KEY, credentials.username, true);
+					node.put(ID_SECURED_API_KEY, credentials.secret, true);
+				} catch (StorageException e1) {
+					JenkinsEditorUtil.logError("Wasn't able to store credentials", e1);
+				}
+			}
+		});
+
+		Label spacer2 = new Label(getFieldEditorParent(), SWT.LEFT);
+		GridData gd2 = new GridData(GridData.HORIZONTAL_ALIGN_FILL);
+		gd2.horizontalSpan = 2;
+		gd2.heightHint = convertHeightInCharsToPixels(1) / 2;
+		spacer2.setLayoutData(gd2);
+
+		/* -------------------------------------------------------------- */
+		/* ------------------------ APPEARANCE -------------------------- */
+		/* -------------------------------------------------------------- */
+		GridData appearanceLayoutData = new GridData();
+		appearanceLayoutData.horizontalAlignment = GridData.FILL;
+		appearanceLayoutData.verticalAlignment = GridData.BEGINNING;
+		appearanceLayoutData.grabExcessHorizontalSpace = true;
+		appearanceLayoutData.grabExcessVerticalSpace = false;
+		appearanceLayoutData.verticalSpan = 2;
+		appearanceLayoutData.horizontalSpan = 3;
+
 		Composite appearanceComposite = new Composite(getFieldEditorParent(), SWT.NONE);
 		GridLayout layout = new GridLayout();
 		layout.numColumns = 2;
 		appearanceComposite.setLayout(layout);
+		appearanceComposite.setLayoutData(appearanceLayoutData);
 
 		/* OTHER */
 		Composite otherComposite = new Composite(appearanceComposite, SWT.NONE);
@@ -128,7 +245,7 @@ public class JenkinsEditorPreferencePage extends FieldEditorPreferencePage imple
 
 		/* BRACKETS */
 		/*
-		 * Why so ugly implemented and not using field editors ? Because 
+		 * Why so ugly implemented and not using field editors ? Because
 		 * SourceViewerDecorationSupport needs 3 different preference keys to do
 		 * its job, so this preference doing must be same as on Java editor
 		 * preferences.
@@ -144,7 +261,7 @@ public class JenkinsEditorPreferencePage extends FieldEditorPreferencePage imple
 		bracketHighlightingCheckbox = addButton(appearanceComposite, SWT.CHECK, label, 0, new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				matchingBrackets=bracketHighlightingCheckbox.getSelection();
+				matchingBrackets = bracketHighlightingCheckbox.getSelection();
 			}
 		});
 
@@ -171,7 +288,7 @@ public class JenkinsEditorPreferencePage extends FieldEditorPreferencePage imple
 					@Override
 					public void widgetSelected(SelectionEvent e) {
 						if (matchingBracketAndCaretLocationRadioButton.getSelection()) {
-							highlightBracketAtCaretLocation= true;
+							highlightBracketAtCaretLocation = true;
 						}
 					}
 				});
@@ -183,7 +300,7 @@ public class JenkinsEditorPreferencePage extends FieldEditorPreferencePage imple
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				boolean selection = enclosingBracketsRadioButton.getSelection();
-				enclosingBrackets=selection;
+				enclosingBrackets = selection;
 				if (selection) {
 					highlightBracketAtCaretLocation = true;
 				}
@@ -197,8 +314,8 @@ public class JenkinsEditorPreferencePage extends FieldEditorPreferencePage imple
 		createDependency(bracketHighlightingCheckbox, matchingBracketsColor.getLabelControl(radioComposite));
 		createDependency(bracketHighlightingCheckbox, matchingBracketsColor.getColorSelector().getButton());
 
-		
-		autoCreateEndBrackets = new BooleanFieldEditor(P_EDITOR_AUTO_CREATE_END_BRACKETSY.getId(), "Auto create ending brackets", getFieldEditorParent());
+		autoCreateEndBrackets = new BooleanFieldEditor(P_EDITOR_AUTO_CREATE_END_BRACKETSY.getId(),
+				"Auto create ending brackets", getFieldEditorParent());
 		addField(autoCreateEndBrackets);
 	}
 
@@ -250,13 +367,13 @@ public class JenkinsEditorPreferencePage extends FieldEditorPreferencePage imple
 		matchingBrackets = getDefaultBoolean(P_EDITOR_MATCHING_BRACKETS_ENABLED);
 		highlightBracketAtCaretLocation = getDefaultBoolean(P_EDITOR_HIGHLIGHT_BRACKET_AT_CARET_LOCATION);
 		enclosingBrackets = getDefaultBoolean(P_EDITOR_ENCLOSING_BRACKETS);
-		
+
 		updateBracketUI();
 	}
 
 	private void updateBracketUI() {
 		this.bracketHighlightingCheckbox.setSelection(matchingBrackets);
-		
+
 		this.enclosingBracketsRadioButton.setSelection(enclosingBrackets);
 		if (!(enclosingBrackets)) {
 			this.matchingBracketRadioButton.setSelection(!(highlightBracketAtCaretLocation));

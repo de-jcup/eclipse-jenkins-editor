@@ -13,13 +13,23 @@ public class JenkinsCLIConfiguration {
 	private String password;
 
 	public enum AuthMode{
-		APIKEY,
+		APIKEY("apikey"),
 		
-		PASSWORD,
+		PASSWORD("secret"),
 		
-		PRIVATE_KEY,
+		PRIVATE_KEY("privatekey"),
 		
-		ANONYMOUS
+		ANONYMOUS("anonymous");
+
+		private String id;
+
+		private AuthMode(String id){
+			this.id=id;
+		}
+		
+		public String getId() {
+			return id;
+		}
 		
 	}
 	
