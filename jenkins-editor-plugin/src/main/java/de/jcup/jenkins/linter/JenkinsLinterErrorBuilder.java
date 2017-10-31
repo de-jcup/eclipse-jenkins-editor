@@ -14,7 +14,7 @@ public class JenkinsLinterErrorBuilder {
 	 * @return If there is an error information detected an error object is
 	 *         build and returned, otherwise <code>null</code>
 	 */
-	public JenkinsLinterError detectErrors(String line) {
+	public JenkinsLinterError build(String line) {
 		if (line==null){
 			return null;
 		}

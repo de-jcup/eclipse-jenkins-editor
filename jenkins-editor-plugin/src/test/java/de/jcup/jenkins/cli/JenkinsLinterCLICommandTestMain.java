@@ -1,10 +1,5 @@
 package de.jcup.jenkins.cli;
 
-import java.io.File;
-
-import de.jcup.jenkins.cli.JenkinsCLIConfiguration;
-import de.jcup.jenkins.cli.JenkinsLinterCLICommand;
-import de.jcup.jenkins.cli.JenkinsLinterCLIResult;
 import de.jcup.jenkins.cli.JenkinsCLIConfiguration.AuthMode;
 
 public class JenkinsLinterCLICommandTestMain {
@@ -33,7 +28,7 @@ public class JenkinsLinterCLICommandTestMain {
 		config.setAPIToken(apiKey);
 		
 		JenkinsLinterCLICommand cmd = new JenkinsLinterCLICommand();
-		JenkinsLinterCLIResult result = cmd.execute(config,new File("./src/test/resources/JenkinsFile1"));
+		JenkinsLinterCLIResult result = cmd.execute(config,"pipeline{}");
 	
 		System.out.println("result:"+ result.toString());
 	}

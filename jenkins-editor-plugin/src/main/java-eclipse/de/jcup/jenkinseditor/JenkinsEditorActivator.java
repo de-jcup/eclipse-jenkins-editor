@@ -15,10 +15,14 @@
  */
 package de.jcup.jenkinseditor;
 
+import java.io.File;
+import java.io.IOException;
+
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 
 import de.jcup.egradle.eclipse.util.ColorManager;
+import de.jcup.egradle.eclipse.util.EclipseResourceHelper;
 
 /**
  * The activator class controls the plug-in life cycle
@@ -62,6 +66,11 @@ public class JenkinsEditorActivator extends AbstractUIPlugin {
 	 */
 	public static JenkinsEditorActivator getDefault() {
 		return plugin;
+	}
+
+	public File getEmbeddedJenkinsCLIJarFile() throws IOException {
+		File file = EclipseResourceHelper.DEFAULT.getFileInPlugin("lib/jenkins-cli.jar", PLUGIN_ID);
+		return file;
 	}
 
 }

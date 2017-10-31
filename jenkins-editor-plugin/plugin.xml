@@ -76,6 +76,7 @@
             categoryId="jenkinseditor.commands.category"
             id="jenkinseditor.editor.commands.source.toggleComment">
       </command>
+      
       <command
             name="Goto matching bracket"
             description="Goto matching bracket inside jenkins document"
@@ -88,6 +89,13 @@
             description="Show quick outline dialog"
             categoryId="jenkinseditor.commands.category"
             id="jenkinseditor.editor.commands.quickoutline">
+      </command>
+      
+      <command
+      		name="Validate by jenkins"
+      		description="Call Linter at Jenkins server"
+      		categoryId="jenkinseditor.commands.category"
+      		id="jenkinseditor.editor.commands.callLinter">
       </command>
 	
 	</extension>
@@ -105,6 +113,10 @@
       <handler
             commandId="jenkinseditor.editor.commands.quickoutline"
             class="de.jcup.jenkinseditor.handlers.OpenQuickOutlineHandler">
+      </handler>
+      <handler
+      		commandId="jenkinseditor.editor.commands.callLinter"
+      		class="de.jcup.jenkinseditor.handlers.CallLinterHandler">
       </handler>
     </extension> 
     
@@ -136,6 +148,23 @@
    <!--                          MENU                                 -->
    <!-- ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
     <extension point="org.eclipse.ui.menus">
+    	
+       <menuContribution
+            locationURI="popup:de.jcup.jenkinseditor.editors.JenkinsEditor.context?after=additions">
+         <command
+               commandId="jenkinseditor.editor.commands.quickoutline"
+               >
+         </command>
+      </menuContribution>
+      
+      <menuContribution
+            locationURI="popup:de.jcup.jenkinseditor.editors.JenkinsEditor.context?after=additions">
+         <command
+               commandId="jenkinseditor.editor.commands.callLinter"
+               >
+         </command>
+      </menuContribution>
+    
       <menuContribution
             locationURI="menu:org.eclipse.ui.main.menu?after=edit">
             
@@ -199,6 +228,15 @@
    		id="de.jcup.jenkinseditor.parse.error"
     	point="org.eclipse.core.resources.markers"
     	name="Jenkins editor parse error">
+        <super type="org.eclipse.core.resources.problemmarker"/>
+        <super type="org.eclipse.core.resources.textmarker"/>
+        <persistent value="true"/>
+    </extension>
+    
+    <extension 
+   		id="de.jcup.jenkinseditor.linter.error"
+    	point="org.eclipse.core.resources.markers"
+    	name="Jenkins linter error">
         <super type="org.eclipse.core.resources.problemmarker"/>
         <super type="org.eclipse.core.resources.textmarker"/>
         <persistent value="true"/>

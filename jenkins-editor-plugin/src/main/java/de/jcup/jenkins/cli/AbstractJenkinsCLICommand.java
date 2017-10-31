@@ -7,21 +7,24 @@ import java.util.List;
 
 import de.jcup.jenkins.cli.JenkinsCLIConfiguration.AuthMode;
 
-public abstract class AbstractJenkinsCLICommand<T extends JenkinsCLIResult, P> implements JenkinsCLICommand<T,P> {
-	final static boolean DEBUG = true;
+public abstract class AbstractJenkinsCLICommand<T extends JenkinsCLIResult, P> implements JenkinsCLICommand<T, P> {
+	final static boolean DEBUG = Boolean.valueOf(System.getProperty("de.jcup.jenkins.cli.command.debug"));
 
 	protected abstract String getCLICommand();
 
 	/**
 	 * Execute the jenkins CLI command
-	 * @param configuration jenkins CLI configuration
-	 * @param parameter parameter for the command
+	 * 
+	 * @param configuration
+	 *            jenkins CLI configuration
+	 * @param parameter
+	 *            parameter for the command
 	 */
 	public final T execute(JenkinsCLIConfiguration configuration, P parameter) throws IOException {
 
 		String[] commands = createCommands(configuration, parameter);
 		List<String> list = Arrays.asList(commands);
-		if (DEBUG){
+		if (DEBUG) {
 			StringBuilder sb = new StringBuilder();
 			for (String s : list) {
 				sb.append(s);
@@ -34,10 +37,10 @@ public abstract class AbstractJenkinsCLICommand<T extends JenkinsCLIResult, P> i
 		pb.command(list);
 		Process process = pb.start();
 		int timeOut = configuration.getTimeOutInSeconds();
-		if (timeOut>0){
+		if (timeOut > 0) {
 			JenkinsCommandTimeoutChecker timeOutChecker = new JenkinsCommandTimeoutChecker(process, timeOut);
 			Thread t = new Thread(timeOutChecker);
-			t.setName("Jenkins command ["+getCLICommand()+"] timeout checker["+timeOut+" seconds]");
+			t.setName("Jenkins command [" + getCLICommand() + "] timeout checker[" + timeOut + " seconds]");
 			t.start();
 		}
 		return handleStartedProcess(process, parameter);
@@ -139,7 +142,7 @@ public abstract class AbstractJenkinsCLICommand<T extends JenkinsCLIResult, P> i
 					long diff = System.currentTimeMillis() - startTime;
 					if (diff > timeOutInMilliSeconds) {
 						process.destroy();
-						if (DEBUG){
+						if (DEBUG) {
 							System.out.println("process destroyed by timeout checker!");
 						}
 					}

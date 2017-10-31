@@ -37,7 +37,11 @@ public enum JenkinsEditorPreferenceConstants implements PreferenceIdentifiable{
 	
 	P_EDITOR_CODEASSIST_PROPOSALS_ENABLED("codeAssistProposalsEnabled"),
 	P_EDITOR_CODEASSIST_NO_PROPOSALS_FOR_GETTER_OR_SETTERS("codeAssistNoProposalsForGetterOrSetter"),
-	P_EDITOR_CODEASSIST_TOOLTIPS_ENABLED("codeAssistTooltipsEnabled"),
+	P_EDITOR_CODEASSIST_TOOLTIPS_ENABLED("codeAssistTooltipsEnabled"), 
+	
+	P_EDITOR_JENKINS_URL("jenkinsURL"),
+	
+	P_EDITOR_PATH_TO_JENKINS_CLI_JAR("pathToJenkinsCliJar")
 	
 	;
 

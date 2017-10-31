@@ -20,7 +20,7 @@ public class JenkinsLinterErrorBuilderTest {
 		String line = "WorkflowScript: 1: Missing required section \"agent\" @ line 1, column 1.";
 
 		/* execute */
-		JenkinsLinterError error = builderToTest.detectErrors(line);
+		JenkinsLinterError error = builderToTest.build(line);
 		
 		/* test */
 		assertNotNull(error);
@@ -36,7 +36,7 @@ public class JenkinsLinterErrorBuilderTest {
 		String line = "WorkflowScript: 2: No stages specified @ line 3, column 2.";
 
 		/* execute */
-		JenkinsLinterError error = builderToTest.detectErrors(line);
+		JenkinsLinterError error = builderToTest.build(line);
 		
 		/* test */
 		assertNotNull(error);
@@ -52,7 +52,7 @@ public class JenkinsLinterErrorBuilderTest {
 		String line = "WorkflowScript: 2: No stages specified @ line 3000, column 22.";
 
 		/* execute */
-		JenkinsLinterError error = builderToTest.detectErrors(line);
+		JenkinsLinterError error = builderToTest.build(line);
 		
 		/* test */
 		assertNotNull(error);
@@ -68,7 +68,7 @@ public class JenkinsLinterErrorBuilderTest {
 		String line = "Errors encountered validating Jenkinsfile:";
 		
 		/* execute */
-		JenkinsLinterError error = builderToTest.detectErrors(line);
+		JenkinsLinterError error = builderToTest.build(line);
 		
 		/* test */
 		assertNull(error);
@@ -81,7 +81,7 @@ public class JenkinsLinterErrorBuilderTest {
 		String line = "   pipeline{";
 		
 		/* execute */
-		JenkinsLinterError error = builderToTest.detectErrors(line);
+		JenkinsLinterError error = builderToTest.build(line);
 		
 		/* test */
 		assertNull(error);

@@ -73,6 +73,10 @@ public class JenkinsEditorPreferences extends AbstractEditorPreferences {
 		return getBooleanPreference(JenkinsEditorPreferenceConstants.P_EDITOR_CODEASSIST_TOOLTIPS_ENABLED);
 	}
 
+	public String getJenkinsURL(){
+		return getStringPreference(JenkinsEditorPreferenceConstants.P_EDITOR_JENKINS_URL);
+	}
+	
 	@Override
 	public boolean isEditorAutoCreateEndBracketsEnabled() {
 		return getBooleanPreference(JenkinsEditorPreferenceConstants.P_EDITOR_AUTO_CREATE_END_BRACKETSY);
@@ -100,6 +104,10 @@ public class JenkinsEditorPreferences extends AbstractEditorPreferences {
 	@Override
 	public PreferenceIdentifiable getP_EDITOR_ENCLOSING_BRACKETS() {
 		return P_EDITOR_ENCLOSING_BRACKETS;
+	}
+
+	public String getPathToJenkinsCLIJar() {
+		return getStringPreference(P_EDITOR_PATH_TO_JENKINS_CLI_JAR);
 	}
 
 }
