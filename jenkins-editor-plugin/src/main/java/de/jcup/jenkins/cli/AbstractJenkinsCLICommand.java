@@ -105,7 +105,7 @@ public abstract class AbstractJenkinsCLICommand<T extends JenkinsCLIResult, P> i
 
 		AuthMode authMode = configuration.getAuthMode();
 		switch (authMode) {
-		case APIKEY:
+		case API_TOKEN:
 			String apiToken = configuration.getAPIToken();
 			list.add("-auth");
 			list.add(user + ":" + apiToken);

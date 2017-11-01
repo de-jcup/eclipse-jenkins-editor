@@ -50,9 +50,7 @@ public class JenkinsLinterCLICommand extends AbstractJenkinsCLICommand<JenkinsLi
 		int exitValue = process.exitValue();
 		if (exitValue != 0) {
 			if (exitValue == -1) {
-				result.cliCallFailureMessage = "Maybe credentials not valid. Please setup in preferences";
-			}else{
-				result.cliCallFailureMessage = "Process did not return 0 but "+exitValue;
+				result.cliCallFailureMessage = "Access to Jenkins was not possible.\nMaybe credentials not valid or hostname/firewall problems.\nPlease check Jenkins CLI setup in preferences";
 			}
 		}
 		result.exitValue = exitValue;

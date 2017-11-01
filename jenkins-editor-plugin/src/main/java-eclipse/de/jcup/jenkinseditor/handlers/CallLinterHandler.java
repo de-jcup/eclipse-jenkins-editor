@@ -61,8 +61,8 @@ public class CallLinterHandler extends AbstractJenkinsEditorHandler {
 		if (preferences.nodeExists(ID_SECURED_CREDENTIALS)) {
 			ISecurePreferences node = preferences.node(ID_SECURED_CREDENTIALS);
 			try {
-				String user = node.get("user", "anonymous");
-				String apiToken = node.get("apiToken", "");
+				String user = node.get(ID_SECURED_USER_KEY, "anonymous");
+				String apiToken = node.get(ID_SECURED_API_KEY, "");
 				
 				configuration.setUser(user);
 				configuration.setAPIToken(apiToken);
@@ -76,7 +76,7 @@ public class CallLinterHandler extends AbstractJenkinsEditorHandler {
 			linterJenkinsURL = "http://localhost:8080";
 		}
 		configuration.setJenkinsURL(linterJenkinsURL);
-		configuration.setAuthMode(AuthMode.APIKEY);// currently we support only
+		configuration.setAuthMode(AuthMode.API_TOKEN);// currently we support only
 													// API KEY- in future maybe
 													// more/ changeable in
 													// preferences

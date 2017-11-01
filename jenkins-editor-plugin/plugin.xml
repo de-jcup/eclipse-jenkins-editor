@@ -11,7 +11,7 @@
      </keyword>
       <keyword
    		id="jenkinseditor.preferences.keyword.color"
-   		label="color">
+   		label="jenkins">
      </keyword>
      <keyword
    		id="jenkinseditor.preferences.keyword.editor"
@@ -92,8 +92,8 @@
       </command>
       
       <command
-      		name="Validate by jenkins"
-      		description="Call Linter at Jenkins server"
+      		name="Call Linter"
+      		description="Call Linter on Jenkins to validate current script"
       		categoryId="jenkinseditor.commands.category"
       		id="jenkinseditor.editor.commands.callLinter">
       </command>
@@ -161,7 +161,7 @@
             locationURI="popup:de.jcup.jenkinseditor.editors.JenkinsEditor.context?after=additions">
          <command
                commandId="jenkinseditor.editor.commands.callLinter"
-               >
+               icon="icons/jenkinseditor/jenkins-lint-call.png">
          </command>
       </menuContribution>
     
@@ -185,6 +185,36 @@
       </menuContribution>
       
       </extension> 
+   
+    <!-- ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
+   <!--                          TOOLBAR                                     -->
+   <!-- ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
+   <extension
+         point="org.eclipse.ui.menus">
+      <menuContribution
+            locationURI="toolbar:org.eclipse.ui.main.toolbar?after=additions">
+         <toolbar
+               id="de.jcup.jenkinseditor.toolbars.mainToolbar"
+               label="Jenkins Editor Toolbar">
+            <command
+                  commandId="jenkinseditor.editor.commands.callLinter"
+                  icon="icons/jenkinseditor/jenkins-lint-call.png"
+                  id="jenkinseditor.toolbar.editor.commands.callLinter"
+                  label="Call Linter"
+                  tooltip="Call Linter on Jenkins to validate current script">
+	    
+	            <visibleWhen checkEnabled="true">
+                     <with variable="activeEditor">
+                     	<instanceof
+                            value="de.jcup.jenkinseditor.JenkinsEditor"/>
+                     </with>
+    	           </visibleWhen>
+                  
+            </command>
+         </toolbar>
+      </menuContribution>
+   </extension>
+   
    <!-- ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
    <!--                          PREFERENCES                                 -->
    <!-- ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->

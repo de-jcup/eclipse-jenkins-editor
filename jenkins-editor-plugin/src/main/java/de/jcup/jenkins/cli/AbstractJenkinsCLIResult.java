@@ -5,7 +5,7 @@ public class AbstractJenkinsCLIResult implements JenkinsCLIResult {
 	String cliCallFailureMessage = "undefined";
 
 	public boolean wasCLICallSuccessFul() {
-		return exitValue == 0;
+		return exitValue >=0;
 	}
 
 	public int getExitValue() {

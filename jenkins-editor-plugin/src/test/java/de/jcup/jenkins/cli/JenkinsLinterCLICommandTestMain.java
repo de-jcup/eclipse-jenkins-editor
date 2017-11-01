@@ -17,15 +17,15 @@ public class JenkinsLinterCLICommandTestMain {
 		
 	}
 	
-	public void test(String user, String apiKey) throws Exception{
+	public void test(String user, String apiToken) throws Exception{
 		// https://jenkins.io/doc/book/managing/cli/
 		JenkinsCLIConfiguration config = new JenkinsCLIConfiguration();
 		config.setJenkinsURL("http://localhost:8080");
 		config.setTimeoutInSeconds(10);
 		config.setPathToJenkinsCLIJar("./lib/jenkins-cli.jar");
-		config.setAuthMode(AuthMode.APIKEY);
+		config.setAuthMode(AuthMode.API_TOKEN);
 		config.setUser(user);
-		config.setAPIToken(apiKey);
+		config.setAPIToken(apiToken);
 		
 		JenkinsLinterCLICommand cmd = new JenkinsLinterCLICommand();
 		JenkinsLinterCLIResult result = cmd.execute(config,"pipeline{}");

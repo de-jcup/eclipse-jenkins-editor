@@ -13,7 +13,7 @@ public class JenkinsCLIConfiguration {
 	private String password;
 
 	public enum AuthMode{
-		APIKEY("apikey"),
+		API_TOKEN("apitoken"),
 		
 		PASSWORD("secret"),
 		
@@ -41,7 +41,7 @@ public class JenkinsCLIConfiguration {
 	
 	public AuthMode getAuthMode() {
 		if (authMode==null){
-			authMode=AuthMode.APIKEY;
+			authMode=AuthMode.API_TOKEN;
 		}
 		return authMode;
 	}

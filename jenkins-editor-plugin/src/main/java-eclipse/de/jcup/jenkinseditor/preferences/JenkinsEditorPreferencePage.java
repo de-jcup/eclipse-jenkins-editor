@@ -15,6 +15,7 @@ package de.jcup.jenkinseditor.preferences;
  *
  */
 
+import static de.jcup.jenkinseditor.JenkinsEditorConstants.*;
 import static de.jcup.jenkinseditor.preferences.JenkinsEditorPreferenceConstants.*;
 
 import java.util.ArrayList;
@@ -45,15 +46,8 @@ import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 
 import de.jcup.egradle.eclipse.preferences.AbstractEditorPreferences;
-import de.jcup.egradle.eclipse.preferences.EGradleCallType;
-import de.jcup.egradle.eclipse.util.ColorManager;
-import de.jcup.egradle.eclipse.util.EclipseUtil;
-import de.jcup.jenkins.cli.JenkinsCLIConfiguration.AuthMode;
 import de.jcup.jenkinseditor.JenkinsEditorMessageDialogSupport;
 import de.jcup.jenkinseditor.JenkinsEditorUtil;
-import de.jcup.jenkinseditor.handlers.CallLinterHandler;
-
-import static de.jcup.jenkinseditor.JenkinsEditorConstants.*;
 
 /**
  * Parts are inspired by <a href=
@@ -88,8 +82,8 @@ public class JenkinsEditorPreferencePage extends FieldEditorPreferencePage imple
 	private BooleanFieldEditor autoCreateEndBrackets;
 	private StringFieldEditor jenkinsUrl;
 	private FileFieldEditor jarFileLocation;
-	private RadioGroupFieldEditor authorizationType;
-	private UserCredentials credentials;
+//	private RadioGroupFieldEditor authorizationType;
+	private UserCredentials temporaryCredentials;
 
 	public JenkinsEditorPreferencePage() {
 		super(GRID);
@@ -114,6 +108,17 @@ public class JenkinsEditorPreferencePage extends FieldEditorPreferencePage imple
 			setBoolean(P_EDITOR_MATCHING_BRACKETS_ENABLED, matchingBrackets);
 			setBoolean(P_EDITOR_HIGHLIGHT_BRACKET_AT_CARET_LOCATION, highlightBracketAtCaretLocation);
 			setBoolean(P_EDITOR_ENCLOSING_BRACKETS, enclosingBrackets);
+		
+		
+			ISecurePreferences preferences = SecurePreferencesFactory.getDefault();
+			ISecurePreferences node = preferences.node(ID_SECURED_CREDENTIALS);
+			try {
+				node.put(ID_SECURED_USER_KEY, temporaryCredentials.username, true);
+				node.put(ID_SECURED_API_KEY, temporaryCredentials.secret, true);
+			} catch (StorageException e1) {
+				JenkinsEditorUtil.logError("Wasn't able to store credentials", e1);
+				return false;
+			}	
 		}
 		return ok;
 	}
@@ -163,8 +168,8 @@ public class JenkinsEditorPreferencePage extends FieldEditorPreferencePage imple
 				"You can set here the location of another jenkins-cli.jar which you can download by your running Jenkins instance.");
 		addField(jarFileLocation);
 
-		String[][] entryNamesAndValues = new String[][] { new String[] { "API Key", AuthMode.APIKEY.getId() },
-				new String[] { "Anonymous", AuthMode.ANONYMOUS.getId() }, };
+//		String[][] entryNamesAndValues = new String[][] { new String[] { "API Key", AuthMode.API_TOKEN.getId() },
+//				new String[] { "Anonymous", AuthMode.ANONYMOUS.getId() }, };
 
 //		authorizationType = new RadioGroupFieldEditor(P_PATH_TO_JENKINS_CLI_JAR.getId(), "Authentification type", 2,
 //				entryNamesAndValues, jenkinsCLIComposite);
@@ -191,21 +196,10 @@ public class JenkinsEditorPreferencePage extends FieldEditorPreferencePage imple
 
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				ISecurePreferences preferences = SecurePreferencesFactory.getDefault();
-				ISecurePreferences node = preferences.node(ID_SECURED_CREDENTIALS);
-				try {
-					credentials = JenkinsEditorMessageDialogSupport.INSTANCE.showUsernamePassword("API Key");
-					if (credentials.username==null || credentials.secret==null){
-						return;
-					}
-					node.put(ID_SECURED_USER_KEY, credentials.username, true);
-					node.put(ID_SECURED_API_KEY, credentials.secret, true);
-				} catch (StorageException e1) {
-					JenkinsEditorUtil.logError("Wasn't able to store credentials", e1);
-				}
+				temporaryCredentials = JenkinsEditorMessageDialogSupport.INSTANCE.showUsernamePassword("API Key");
 			}
 		});
-
+		buttonPut.setLayoutData(data);
 		Label spacer2 = new Label(getFieldEditorParent(), SWT.LEFT);
 		GridData gd2 = new GridData(GridData.HORIZONTAL_ALIGN_FILL);
 		gd2.horizontalSpan = 2;
@@ -319,6 +313,7 @@ public class JenkinsEditorPreferencePage extends FieldEditorPreferencePage imple
 		addField(autoCreateEndBrackets);
 	}
 
+	
 	@Override
 	protected void initialize() {
 		initializeBracketHighlightingPreferences();
