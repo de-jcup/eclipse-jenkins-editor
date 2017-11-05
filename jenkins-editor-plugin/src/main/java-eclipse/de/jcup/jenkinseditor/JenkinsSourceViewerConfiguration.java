@@ -15,9 +15,10 @@
  */
  package de.jcup.jenkinseditor;
 
+import static de.jcup.egradle.eclipse.document.GroovyDocumentIdentifiers.*;
 import static de.jcup.jenkinseditor.document.JenkinsDocumentIdentifiers.*;
 import static de.jcup.jenkinseditor.preferences.JenkinsEditorSyntaxColorPreferenceConstants.*;
-import static de.jcup.egradle.eclipse.document.GroovyDocumentIdentifiers.*;
+
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.hyperlink.IHyperlinkDetector;
 import org.eclipse.jface.text.hyperlink.URLHyperlinkDetector;

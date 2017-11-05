@@ -1,8 +1,13 @@
 package de.jcup.jenkinseditor.handlers;
 
+import static de.jcup.jenkinseditor.JenkinsEditorConstants.*;
+
 import java.io.File;
 import java.io.IOException;
 
+import org.eclipse.equinox.security.storage.ISecurePreferences;
+import org.eclipse.equinox.security.storage.SecurePreferencesFactory;
+import org.eclipse.equinox.security.storage.StorageException;
 import org.eclipse.jface.text.IDocument;
 
 import de.jcup.jenkins.cli.JenkinsCLIConfiguration;
@@ -17,10 +22,6 @@ import de.jcup.jenkinseditor.JenkinsEditorActivator;
 import de.jcup.jenkinseditor.JenkinsEditorMessageDialogSupport;
 import de.jcup.jenkinseditor.JenkinsEditorUtil;
 import de.jcup.jenkinseditor.preferences.JenkinsEditorPreferences;
-import org.eclipse.equinox.security.storage.ISecurePreferences;
-import org.eclipse.equinox.security.storage.SecurePreferencesFactory;
-import org.eclipse.equinox.security.storage.StorageException;
-import static de.jcup.jenkinseditor.JenkinsEditorConstants.*;
 public class CallLinterHandler extends AbstractJenkinsEditorHandler {
 
 	
