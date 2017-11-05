@@ -13,6 +13,12 @@ https://marketplace.eclipse.org/content/jenkins-editor
 - Simple groovy script validation support
 - Bracket switching (CTRL + p)
 - Block commenting (CTRL + 7)
+- Simple groovy syntax validation (local)
+- Validate by Jenkins Linter (remote)
+- ...
+
+## More information
+Please look at https://github.com/de-jcup/eclipse-jenkins-editor/wiki for more information
 
 ## Development
 ### Setup 
