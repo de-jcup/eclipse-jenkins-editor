@@ -28,8 +28,8 @@ import org.eclipse.jface.preference.BooleanFieldEditor;
 import org.eclipse.jface.preference.ColorFieldEditor;
 import org.eclipse.jface.preference.FieldEditorPreferencePage;
 import org.eclipse.jface.preference.FileFieldEditor;
-import org.eclipse.jface.preference.RadioGroupFieldEditor;
 import org.eclipse.jface.preference.StringFieldEditor;
+import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -46,6 +46,8 @@ import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 
 import de.jcup.egradle.eclipse.preferences.AbstractEditorPreferences;
+import de.jcup.egradle.eclipse.ui.SWTFactory;
+import de.jcup.jenkins.cli.JenkinsDefaultURLProvider;
 import de.jcup.jenkinseditor.JenkinsEditorMessageDialogSupport;
 import de.jcup.jenkinseditor.JenkinsEditorUtil;
 
@@ -64,7 +66,8 @@ public class JenkinsEditorPreferencePage extends FieldEditorPreferencePage imple
 	protected static void indent(Control control) {
 		((GridData) control.getLayoutData()).horizontalIndent += INDENT;
 	}
-
+	private JenkinsDefaultURLProvider jenkinsDefaultURLProvider = new JenkinsDefaultURLProvider();
+	
 	private Button bracketHighlightingCheckbox;
 	private Button enclosingBracketsRadioButton;
 	private Button matchingBracketAndCaretLocationRadioButton;
@@ -109,16 +112,17 @@ public class JenkinsEditorPreferencePage extends FieldEditorPreferencePage imple
 			setBoolean(P_EDITOR_HIGHLIGHT_BRACKET_AT_CARET_LOCATION, highlightBracketAtCaretLocation);
 			setBoolean(P_EDITOR_ENCLOSING_BRACKETS, enclosingBrackets);
 		
-		
-			ISecurePreferences preferences = SecurePreferencesFactory.getDefault();
-			ISecurePreferences node = preferences.node(ID_SECURED_CREDENTIALS);
-			try {
-				node.put(ID_SECURED_USER_KEY, temporaryCredentials.username, true);
-				node.put(ID_SECURED_API_KEY, temporaryCredentials.secret, true);
-			} catch (StorageException e1) {
-				JenkinsEditorUtil.logError("Wasn't able to store credentials", e1);
-				return false;
-			}	
+			if (temporaryCredentials!=null){
+				ISecurePreferences preferences = SecurePreferencesFactory.getDefault();
+				ISecurePreferences node = preferences.node(ID_SECURED_CREDENTIALS);
+				try {
+					node.put(ID_SECURED_USER_KEY, temporaryCredentials.username, true);
+					node.put(ID_SECURED_API_KEY, temporaryCredentials.secret, true);
+				} catch (StorageException e1) {
+					JenkinsEditorUtil.logError("Wasn't able to store credentials", e1);
+					return false;
+				}	
+			}
 		}
 		return ok;
 	}
@@ -154,17 +158,25 @@ public class JenkinsEditorPreferencePage extends FieldEditorPreferencePage imple
 		jenkinsCLICompositeLayoutData.horizontalSpan = 3;
 
 		jenkinsCLIComposite.setLayoutData(jenkinsCLICompositeLayoutData);
-
-		jenkinsUrl = new StringFieldEditor(P_JENKINS_URL.getId(), "Jenkins URL", jenkinsCLIComposite);
-		jenkinsUrl.getTextControl(jenkinsCLIComposite)
-				.setToolTipText("Set jenkins URL - when empty http://localhost:8080 will be used as default");
+		
+		
+		jenkinsUrl = new StringFieldEditor(P_JENKINS_URL.getId(), "Jenkins URL (optional)", jenkinsCLIComposite);
+		jenkinsUrl.getLabelControl(jenkinsCLIComposite)
+				.setToolTipText("Set jenkins URL - when empty default value will be used");
 		jenkinsUrl.setEmptyStringAllowed(true);
 		addField(jenkinsUrl);
 
+		Text jenkinsDefaultURLtext = SWTFactory.createText(jenkinsCLIComposite, SWT.NONE, SWT.FILL);
+		jenkinsDefaultURLtext.setFont(JFaceResources.getFontRegistry().getItalic(JFaceResources.DEFAULT_FONT));
+		jenkinsDefaultURLtext.setEditable(false);
+		jenkinsDefaultURLtext.setText("("+jenkinsDefaultURLProvider.createDefaultURLDescription()+")");
+		
+//		SWTFactory.createLabel(jenkinsCLIComposite, "", SWT.FILL);
+		
 		jarFileLocation = new FileFieldEditor(P_PATH_TO_JENKINS_CLI_JAR.getId(), "Path to jenkins-cli.jar (optional)",
 				jenkinsCLIComposite);
 		jarFileLocation.setFileExtensions(new String[] { "*.jar" });
-		jarFileLocation.getTextControl(jenkinsCLIComposite).setToolTipText(
+		jarFileLocation.getLabelControl(jenkinsCLIComposite).setToolTipText(
 				"You can set here the location of another jenkins-cli.jar which you can download by your running Jenkins instance.");
 		addField(jarFileLocation);
 

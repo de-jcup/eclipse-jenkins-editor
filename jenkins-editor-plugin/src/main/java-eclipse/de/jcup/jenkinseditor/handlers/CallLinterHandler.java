@@ -7,6 +7,7 @@ import org.eclipse.jface.text.IDocument;
 
 import de.jcup.jenkins.cli.JenkinsCLIConfiguration;
 import de.jcup.jenkins.cli.JenkinsCLIConfiguration.AuthMode;
+import de.jcup.jenkins.cli.JenkinsDefaultURLProvider;
 import de.jcup.jenkins.cli.JenkinsLinterCLICommand;
 import de.jcup.jenkins.cli.JenkinsLinterCLIResult;
 import de.jcup.jenkins.linter.JenkinsLinterError;
@@ -24,7 +25,8 @@ public class CallLinterHandler extends AbstractJenkinsEditorHandler {
 
 	
 	private JenkinsLinterErrorBuilder errorBuilder = new JenkinsLinterErrorBuilder();
-
+	private JenkinsDefaultURLProvider jenkinsDefaultURLprovider = new JenkinsDefaultURLProvider();
+	
 	@Override
 	protected void executeOnActiveJenkinsEditor(JenkinsEditor editor) {
 		if (editor == null) {
@@ -54,7 +56,6 @@ public class CallLinterHandler extends AbstractJenkinsEditorHandler {
 			/* fall back to embedded variant */
 			pathToJenkinsCLIJar = createPathToEmbeddedCLIJar();
 		}
-		/* FIXME ATR, 31.10.2017: remove... */
 		
 		ISecurePreferences preferences = SecurePreferencesFactory.getDefault();
 
@@ -68,12 +69,14 @@ public class CallLinterHandler extends AbstractJenkinsEditorHandler {
 				configuration.setAPIToken(apiToken);
 				
 			} catch (StorageException e1) {
-				e1.printStackTrace();
+				JenkinsEditorMessageDialogSupport.INSTANCE.showError("No access to secured user credentials!");
+				JenkinsEditorUtil.logError("Was not able to fetch secured credentials", e1);
+				return;
 			}
 		}
 
 		if (linterJenkinsURL == null || linterJenkinsURL.trim().length() == 0) {
-			linterJenkinsURL = "http://localhost:8080";
+			linterJenkinsURL = jenkinsDefaultURLprovider.getDefaultJenkinsURL();
 		}
 		configuration.setJenkinsURL(linterJenkinsURL);
 		configuration.setAuthMode(AuthMode.API_TOKEN);// currently we support only
