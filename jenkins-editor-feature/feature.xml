@@ -2,7 +2,7 @@
 <feature
       id="de.jcup.jenkinseditor.feature"
       label="Jenkins Editor"
-      version="0.3.0"
+      version="0.4.0"
       provider-name="Albert Tregnaghi">
 
    <description url="https://github.com/de-jcup/eclipse-jenkins-editor">
@@ -230,6 +230,7 @@ and limitations under the License.
 
    <url>
       <update label="Jenkins Editor update site" url="https://dl.bintray.com/de-jcup/jenkinseditor"/>
+      <discovery label="Jenkins Editor Wiki (github)" url="https://github.com/de-jcup/eclipse-jenkins-editor/wiki"/>
    </url>
 
    <plugin
