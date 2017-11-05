@@ -92,8 +92,8 @@
       </command>
       
       <command
-      		name="Call Linter"
-      		description="Call Linter on Jenkins to validate current script"
+      		name="Validate by Jenkins Linter"
+      		description="Validate by Jenkins Linter - done by remote operation on server"
       		categoryId="jenkinseditor.commands.category"
       		id="jenkinseditor.editor.commands.callLinter">
       </command>
@@ -200,8 +200,8 @@
                   commandId="jenkinseditor.editor.commands.callLinter"
                   icon="icons/jenkinseditor/jenkins-lint-call.png"
                   id="jenkinseditor.toolbar.editor.commands.callLinter"
-                  label="Call Linter"
-                  tooltip="Call Linter on Jenkins to validate current script">
+                  label="Validate by Jenkins Linter"
+                  tooltip="Validate by Jenkins Linter - done by remote operation on server">
 	    
 	            <visibleWhen checkEnabled="true">
                      <with variable="activeEditor">
