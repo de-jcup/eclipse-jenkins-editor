@@ -20,7 +20,7 @@ allprojects{
 		
 }
 
-def doAutomateEclipseSetup = ['jenkinseditor-other'];
+def doAutomateEclipseSetup = ['jenkins-editor-other'];
 
 subprojects {
     apply plugin: 'java'
@@ -29,22 +29,15 @@ subprojects {
 		apply plugin: 'eclipse'
 	}
 	sourceSets {
-			  	main {
-			   		java {
-			    		srcDir 'src/main/java'
-			    		}
-			   }	
+		main {
+			java {
+		   		srcDir 'src/main/java'
+		    }
+		}	
 	}
-	apply plugin: "maven"
-		
 	group = "de.jcup.jenkinseditor" 
-	version = "0.3.0"
-	def buildNr = System.getenv('ci.buildNumber')
-	// use build number in version
-	if (buildNr != null && ! buildNr.isEmpty()){
-		version= version + "_"+buildNr
-	}
-		
+	version = "0.4.0"
+	
 	/* Setup UTF-8 for compile AND test compilation*/
 	[ compileJava, compileTestJava ]*.options*.encoding = 'UTF-8'
 
@@ -71,30 +64,6 @@ subprojects {
 		from javadoc.destinationDir
 	}
 
-	artifacts {
-		archives sourcesJar
-		archives javadocJar
-	}
-
-
-}
-
-def our_group='bash editor'
-
-/* own task for complete project with sub projects...*/
-task testReportAll(type: TestReport) {
-	description 'Starts all tests for all sub projects and cumulate the results into build folder of root project.'
-	group our_group
-    subprojects {
-        test {
-            /* stops single reports for each project */
-            reports.html.enabled = false
-        }
-    }
-    destinationDir = file("$buildDir/reports/allUnitTests")
-
-    /* report on the results of the subprojects' test task*/
-    reportOn subprojects*.test
 }
 
 task wrapper(type: Wrapper) {
