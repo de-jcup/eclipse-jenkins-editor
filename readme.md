@@ -1,8 +1,8 @@
-# In a nutshell
 ![Jenkins Editor Logo](https://github.com/de-jcup/eclipse-jenkins-editor/raw/master/jenkins-editor-plugin/html/images/jenkins-editor-logo.png)
 
 [![Build status:](https://travis-ci.org/de-jcup/eclipse-jenkins-editor.svg?branch=master)](https://travis-ci.org/de-jcup/eclipse-jenkins-editor)
 
+# In a nutshell
 This is a eclipse plugin to edit jenkins files named as `Jenkinsfile` . See https://jenkins.io/doc/book/pipeline/jenkinsfile/ for more information about syntax etc.
 
 ## Installation by eclipse marketplace
