@@ -1,0 +1,213 @@
+/** 
+ * Jenkinsfile (Declarative Pipeline)  
+ * ----------------------------------
+ * a convergence file from examples of
+ * https://jenkins.io/doc/book/pipeline/jenkinsfile/
+ *
+ * Not a really working pipeline script but enough to check outline handles all DSL parts when
+ * declarative... 
+ */
+pipeline {
+		environment { 
+        	CC = 'clang'
+    	}
+    	
+		agent {
+			
+		    docker {
+		        image 'maven:3-alpine'
+		        label 'my-defined-label'
+		        args  '-v /tmp:/tmp'
+		    }
+		}
+    	
+    	triggers {
+        	cron('H */4 * * 1-5')
+    	}
+    	
+    	tools {
+        	maven 'apache-maven-3.0.1' 
+    	}
+    	
+    	options {
+        	timeout(time: 1, unit: 'HOURS') 
+        }
+        
+    	parameters {
+        	string(name: 'Greeting', defaultValue: 'Hello', description: 'How should I greet the world?')
+    	}
+    	
+    	stages{
+    	    stage('Example') {
+    	    	agent { dockerfile { dir 'someSubDir' } }
+    	    
+	            environment { 
+	                DEBUG_FLAGS = '-g'
+	            }
+	            steps {
+	            	echo 'Hello World'
+
+	                script {
+	                    def browsers = ['chrome', 'firefox']
+	                    for (int i = 0; i < browsers.size(); ++i) {
+	                        echo "Testing the ${browsers[i]} browser"
+	                    }
+	                }
+	            
+	                sh 'printenv'
+	                echo "Running ${env.BUILD_ID} on ${env.JENKINS_URL}"
+	            }
+	        }
+	        
+	        stage('Example Deploy1') {
+            when {
+                branch 'production'
+            }
+            steps {
+                echo 'Deploying'
+            }
+        }
+    	stage('Example Deploy2') {
+            when {
+                allOf {
+                    not {
+						branch 'production'
+                    }
+                    environment name: 'DEPLOY_TO', value: 'production'
+                }
+            }
+            steps {
+                echo 'Deploying'
+            }
+        }
+    	
+    	stage('Example Deploy3') {
+    	agent {
+ 		    node {
+		        label 'my-defined-label'
+		        customWorkspace '/some/other/path'
+   			 }
+}
+            when {
+                branch 'production'
+                anyOf {
+                    environment name: 'DEPLOY_TO', value: 'production'
+                    environment name: 'DEPLOY_TO', value: 'staging'
+                }
+            }
+            steps {
+                echo 'Deploying'
+            }
+        }
+    	stage('Parallel Stage') {
+            when {
+                branch 'master'
+            }
+            failFast true
+            parallel {
+                stage('Branch A') {
+                    agent {
+                        label "for-branch-a"
+                    }
+                    steps {
+                        echo "On Branch A"
+                    }
+                }
+                stage('Branch B') {
+                    agent {
+                        label "for-branch-b"
+                    }
+                    steps {
+                        echo "On Branch B"
+                    }
+                }
+            }
+        }
+	        
+	        stage('Build') {
+	            agent any
+	            steps {
+	                checkout scm
+	                sh 'make'
+	                stash includes: '**/target/*.jar', name: 'app' 
+	            }
+	        }
+	        
+	        stage('Test on Linux') {
+	            agent { 
+	                label 'linux'
+	            }
+	            steps {
+	                unstash 'app' 
+	                sh 'make check'
+	            }
+	            post {
+	                always {
+	                    junit '**/target/*.xml'
+	                }
+	            }
+	        }
+	        stage('Test on Windows') {
+	            agent {
+	                label 'windows'
+	            }
+	            steps {
+	                unstash 'app'
+	                bat 'make check' 
+	            }
+	            post {
+	                always {
+	                    junit '**/target/*.xml'
+	                }
+	            }
+	        }
+	        
+	        stage('Test') {
+	            steps {
+	                echo 'Testing..'
+	                /* `make check` returns non-zero on test failures,
+	                * using `true` to allow the Pipeline to continue nonetheless
+	                */
+	                sh 'make check || true' 
+	                junit '**/target/*.xml' 
+	            }
+	        }
+	        stage('Deploy') {
+	            when {
+	              expression {
+	                currentBuild.result == null || currentBuild.result == 'SUCCESS' 
+	              }
+	            }
+	            steps {
+	             	echo 'Deploying....'
+	                sh 'make publish'
+	            }
+	        }
+    	    
+    	}
+		post {
+	        always {
+	            junit '**/target/*.xml'
+	        }
+	        failure {
+	          // mail to: team@example.com, subject: 'The Pipeline failed :('
+	        }
+	        
+	        changed {
+	            // ...
+	        }
+
+			success {
+	            // ...
+	        }
+	        
+	        unstable {
+	            // ...
+	        }
+	        
+	        aborted {
+	            // ...
+	        }
+	    }
+        
+}

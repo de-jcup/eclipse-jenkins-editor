@@ -31,12 +31,16 @@ import de.jcup.egradle.core.model.Modifier;
 import de.jcup.egradle.eclipse.util.ColorManager;
 import de.jcup.egradle.eclipse.util.EclipseDevelopmentSettings;
 import de.jcup.egradle.eclipse.util.EclipseUtil;
+import de.jcup.jenkins.PipelineDSL;
 import de.jcup.jenkinseditor.JenkinsEditorActivator;
 import de.jcup.jenkinseditor.preferences.JenkinsEditorColorConstants;
 
 public class JenkinsEditorOutlineLabelProvider extends BaseLabelProvider
 		implements IStyledLabelProvider, IColorProvider {
 
+	
+	
+	/* groovy */
 	private static final String ICON_CLASS = "class_obj.png";
 	private static final String ICON_INTERFACE = "int_obj.png";
 	private static final String ICON_ENUM = "enum_obj.png";
@@ -162,6 +166,17 @@ public class JenkinsEditorOutlineLabelProvider extends BaseLabelProvider
 				}
 				return getOutlineImage(path);
 			case CLOSURE:
+				String name = item.getName();
+				if (name==null){
+					return getOutlineImage(ICON_CLOSURE);
+				}
+				name = name.toUpperCase().split(" ")[0];
+				for (PipelineDSL dsl: PipelineDSL.values()){
+					if (dsl.name().equals(name)){
+						return getOutlineImage(dsl);
+					}
+				}
+				
 				return getOutlineImage(ICON_CLOSURE);
 			case CLASS:
 				return getOutlineImage(ICON_CLASS);
@@ -296,6 +311,9 @@ public class JenkinsEditorOutlineLabelProvider extends BaseLabelProvider
 		return editorActivator.getColorManager();
 	}
 
+	private Image getOutlineImage(PipelineDSL dsl){
+		return EclipseUtil.getImage(dsl.getRelativePathInsidePlugin(), JenkinsEditorActivator.PLUGIN_ID);
+	}
 	
 	
 	private Image getOutlineImage(String name) {
