@@ -18,6 +18,7 @@ package de.jcup.jenkinseditor.preferences;
 import static de.jcup.jenkinseditor.JenkinsEditorConstants.*;
 import static de.jcup.jenkinseditor.preferences.JenkinsEditorPreferenceConstants.*;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 import org.eclipse.core.runtime.Assert;
@@ -47,9 +48,13 @@ import org.eclipse.ui.IWorkbenchPreferencePage;
 
 import de.jcup.egradle.eclipse.preferences.AbstractEditorPreferences;
 import de.jcup.egradle.eclipse.ui.SWTFactory;
+import de.jcup.jenkins.cli.JenkinsCLIConfiguration;
 import de.jcup.jenkins.cli.JenkinsDefaultURLProvider;
+import de.jcup.jenkins.cli.JenkinsLinterCLICommand;
+import de.jcup.jenkins.cli.JenkinsLinterCLIResult;
 import de.jcup.jenkinseditor.JenkinsEditorMessageDialogSupport;
 import de.jcup.jenkinseditor.JenkinsEditorUtil;
+import de.jcup.jenkinseditor.handlers.CallLinterHandler;
 
 /**
  * Parts are inspired by <a href=
@@ -66,8 +71,9 @@ public class JenkinsEditorPreferencePage extends FieldEditorPreferencePage imple
 	protected static void indent(Control control) {
 		((GridData) control.getLayoutData()).horizontalIndent += INDENT;
 	}
+
 	private JenkinsDefaultURLProvider jenkinsDefaultURLProvider = new JenkinsDefaultURLProvider();
-	
+
 	private Button bracketHighlightingCheckbox;
 	private Button enclosingBracketsRadioButton;
 	private Button matchingBracketAndCaretLocationRadioButton;
@@ -85,7 +91,7 @@ public class JenkinsEditorPreferencePage extends FieldEditorPreferencePage imple
 	private BooleanFieldEditor autoCreateEndBrackets;
 	private StringFieldEditor jenkinsUrl;
 	private FileFieldEditor jarFileLocation;
-//	private RadioGroupFieldEditor authorizationType;
+	// private RadioGroupFieldEditor authorizationType;
 	private UserCredentials temporaryCredentials;
 
 	public JenkinsEditorPreferencePage() {
@@ -111,8 +117,8 @@ public class JenkinsEditorPreferencePage extends FieldEditorPreferencePage imple
 			setBoolean(P_EDITOR_MATCHING_BRACKETS_ENABLED, matchingBrackets);
 			setBoolean(P_EDITOR_HIGHLIGHT_BRACKET_AT_CARET_LOCATION, highlightBracketAtCaretLocation);
 			setBoolean(P_EDITOR_ENCLOSING_BRACKETS, enclosingBrackets);
-		
-			if (temporaryCredentials!=null){
+
+			if (temporaryCredentials != null) {
 				ISecurePreferences preferences = SecurePreferencesFactory.getDefault();
 				ISecurePreferences node = preferences.node(ID_SECURED_CREDENTIALS);
 				try {
@@ -121,7 +127,7 @@ public class JenkinsEditorPreferencePage extends FieldEditorPreferencePage imple
 				} catch (StorageException e1) {
 					JenkinsEditorUtil.logError("Wasn't able to store credentials", e1);
 					return false;
-				}	
+				}
 			}
 		}
 		return ok;
@@ -154,12 +160,11 @@ public class JenkinsEditorPreferencePage extends FieldEditorPreferencePage imple
 		jenkinsCLICompositeLayoutData.verticalAlignment = GridData.BEGINNING;
 		jenkinsCLICompositeLayoutData.grabExcessHorizontalSpace = true;
 		jenkinsCLICompositeLayoutData.grabExcessVerticalSpace = false;
-//		jenkinsCLICompositeLayoutData.verticalSpan = 2;
+		// jenkinsCLICompositeLayoutData.verticalSpan = 2;
 		jenkinsCLICompositeLayoutData.horizontalSpan = 3;
 
 		jenkinsCLIComposite.setLayoutData(jenkinsCLICompositeLayoutData);
-		
-		
+
 		jenkinsUrl = new StringFieldEditor(P_JENKINS_URL.getId(), "Jenkins URL (optional)", jenkinsCLIComposite);
 		jenkinsUrl.getLabelControl(jenkinsCLIComposite)
 				.setToolTipText("Set jenkins URL - when empty default value will be used");
@@ -169,10 +174,10 @@ public class JenkinsEditorPreferencePage extends FieldEditorPreferencePage imple
 		Text jenkinsDefaultURLtext = SWTFactory.createText(jenkinsCLIComposite, SWT.NONE, SWT.FILL);
 		jenkinsDefaultURLtext.setFont(JFaceResources.getFontRegistry().getItalic(JFaceResources.DEFAULT_FONT));
 		jenkinsDefaultURLtext.setEditable(false);
-		jenkinsDefaultURLtext.setText("("+jenkinsDefaultURLProvider.createDefaultURLDescription()+")");
-		
-//		SWTFactory.createLabel(jenkinsCLIComposite, "", SWT.FILL);
-		
+		jenkinsDefaultURLtext.setText("(" + jenkinsDefaultURLProvider.createDefaultURLDescription() + ")");
+
+		// SWTFactory.createLabel(jenkinsCLIComposite, "", SWT.FILL);
+
 		jarFileLocation = new FileFieldEditor(P_PATH_TO_JENKINS_CLI_JAR.getId(), "Path to jenkins-cli.jar (optional)",
 				jenkinsCLIComposite);
 		jarFileLocation.setFileExtensions(new String[] { "*.jar" });
@@ -180,38 +185,80 @@ public class JenkinsEditorPreferencePage extends FieldEditorPreferencePage imple
 				"You can set here the location of another jenkins-cli.jar which you can download by your running Jenkins instance.");
 		addField(jarFileLocation);
 
-//		String[][] entryNamesAndValues = new String[][] { new String[] { "API Key", AuthMode.API_TOKEN.getId() },
-//				new String[] { "Anonymous", AuthMode.ANONYMOUS.getId() }, };
+		// String[][] entryNamesAndValues = new String[][] { new String[] { "API
+		// Key", AuthMode.API_TOKEN.getId() },
+		// new String[] { "Anonymous", AuthMode.ANONYMOUS.getId() }, };
 
-//		authorizationType = new RadioGroupFieldEditor(P_PATH_TO_JENKINS_CLI_JAR.getId(), "Authentification type", 2,
-//				entryNamesAndValues, jenkinsCLIComposite);
-//		
-//		addField(authorizationType);
-//		
-//		Label spacer3 = new Label(jenkinsCLIComposite, SWT.LEFT);
-//		GridData gd3 = new GridData(GridData.HORIZONTAL_ALIGN_FILL);
-//		gd3.horizontalSpan = 2;
-//		gd3.heightHint = convertHeightInCharsToPixels(1) / 2;
-//		spacer3.setLayoutData(gd3);
-		
+		// authorizationType = new
+		// RadioGroupFieldEditor(P_PATH_TO_JENKINS_CLI_JAR.getId(),
+		// "Authentification type", 2,
+		// entryNamesAndValues, jenkinsCLIComposite);
+		//
+		// addField(authorizationType);
+		//
+		// Label spacer3 = new Label(jenkinsCLIComposite, SWT.LEFT);
+		// GridData gd3 = new GridData(GridData.HORIZONTAL_ALIGN_FILL);
+		// gd3.horizontalSpan = 2;
+		// gd3.heightHint = convertHeightInCharsToPixels(1) / 2;
+		// spacer3.setLayoutData(gd3);
+
 		Label passwordLabel = new Label(jenkinsCLIComposite, SWT.LEFT);
 		passwordLabel.setText("User credentials : ");
-		
+
 		Text passwordField = new Text(jenkinsCLIComposite, SWT.SINGLE | SWT.PASSWORD);
 		GridData data = new GridData(GridData.FILL_HORIZONTAL);
 		passwordField.setLayoutData(data);
 		passwordField.setText("encryptedthings");
-		
-		Button buttonPut = new Button(jenkinsCLIComposite, SWT.PUSH);
-		buttonPut.setText("Credentials ...");
-		buttonPut.addSelectionListener(new SelectionAdapter() {
+
+		Button credentialsButton = new Button(jenkinsCLIComposite, SWT.PUSH);
+		credentialsButton.setText("Credentials ...");
+		credentialsButton.addSelectionListener(new SelectionAdapter() {
 
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				temporaryCredentials = JenkinsEditorMessageDialogSupport.INSTANCE.showUsernamePassword("API Key");
 			}
 		});
-		buttonPut.setLayoutData(data);
+		credentialsButton.setLayoutData(data);
+
+		Button connectionTestButton = new Button(jenkinsCLIComposite, SWT.PUSH);
+		connectionTestButton.setText("Test connection");
+		connectionTestButton.addSelectionListener(new SelectionAdapter() {
+
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				JenkinsLinterCLICommand command = new JenkinsLinterCLICommand();
+				JenkinsEditorMessageDialogSupport dialogSupport = JenkinsEditorMessageDialogSupport.INSTANCE;
+				try {
+					JenkinsCLIConfiguration configuration = CallLinterHandler
+							.createConfiguration(new JenkinsDefaultURLProvider());
+					if (temporaryCredentials != null) {
+						/*
+						 * if temporary credentials exists, we use the temporary
+						 * user and password settings- currently only api token
+						 * is supported.
+						 */
+						configuration.setUser(temporaryCredentials.username);
+						configuration.setAPIToken(temporaryCredentials.secret);
+					}
+					String enteredURL = jenkinsUrl.getStringValue();
+					if (enteredURL != null && enteredURL.trim().length() > 0) {
+						/* we got an entry here - so we use it ..*/
+						configuration.setJenkinsURL(enteredURL);
+					}
+					JenkinsLinterCLIResult result = command.execute(configuration, "");
+					if (result.wasCLICallSuccessFul()) {
+						dialogSupport.showInfo("Connection test successful!");
+					} else {
+						dialogSupport.showError(
+								"Connection test NOT successful!\n\n"+result.getCLICallFailureMessage());
+					}
+				} catch (IOException e1) { 
+					dialogSupport.showError("Connection  test failed!\n" + e1.getMessage());
+				}
+			}
+		});
+
 		Label spacer2 = new Label(getFieldEditorParent(), SWT.LEFT);
 		GridData gd2 = new GridData(GridData.HORIZONTAL_ALIGN_FILL);
 		gd2.horizontalSpan = 2;
@@ -325,7 +372,6 @@ public class JenkinsEditorPreferencePage extends FieldEditorPreferencePage imple
 		addField(autoCreateEndBrackets);
 	}
 
-	
 	@Override
 	protected void initialize() {
 		initializeBracketHighlightingPreferences();

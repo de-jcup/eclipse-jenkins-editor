@@ -13,7 +13,7 @@
  * and limitations under the License.
  *
  */
- package de.jcup.jenkinseditor.handlers;
+package de.jcup.jenkinseditor.handlers;
 
 import static de.jcup.jenkinseditor.JenkinsEditorConstants.*;
 
@@ -37,12 +37,12 @@ import de.jcup.jenkinseditor.JenkinsEditorActivator;
 import de.jcup.jenkinseditor.JenkinsEditorMessageDialogSupport;
 import de.jcup.jenkinseditor.JenkinsEditorUtil;
 import de.jcup.jenkinseditor.preferences.JenkinsEditorPreferences;
+
 public class CallLinterHandler extends AbstractJenkinsEditorHandler {
 
-	
 	private JenkinsLinterErrorBuilder errorBuilder = new JenkinsLinterErrorBuilder();
 	private JenkinsDefaultURLProvider jenkinsDefaultURLprovider = new JenkinsDefaultURLProvider();
-	
+
 	@Override
 	protected void executeOnActiveJenkinsEditor(JenkinsEditor editor) {
 		if (editor == null) {
@@ -62,52 +62,16 @@ public class CallLinterHandler extends AbstractJenkinsEditorHandler {
 	}
 
 	protected void executeLinterFor(String code, JenkinsEditor editor) throws IOException {
-		JenkinsCLIConfiguration configuration = new JenkinsCLIConfiguration();
-
-		JenkinsEditorPreferences editorPreferences = JenkinsEditorPreferences.getInstance();
-
-		String linterJenkinsURL = editorPreferences.getJenkinsURL();
-		String pathToJenkinsCLIJar = editorPreferences.getPathToJenkinsCLIJar();
-		if (pathToJenkinsCLIJar == null || pathToJenkinsCLIJar.trim().length() == 0) {
-			/* fall back to embedded variant */
-			pathToJenkinsCLIJar = createPathToEmbeddedCLIJar();
+		JenkinsCLIConfiguration configuration = createConfiguration(jenkinsDefaultURLprovider);
+		if (configuration == null) {
+			return;
 		}
-		
-		ISecurePreferences preferences = SecurePreferencesFactory.getDefault();
-
-		if (preferences.nodeExists(ID_SECURED_CREDENTIALS)) {
-			ISecurePreferences node = preferences.node(ID_SECURED_CREDENTIALS);
-			try {
-				String user = node.get(ID_SECURED_USER_KEY, "anonymous");
-				String apiToken = node.get(ID_SECURED_API_KEY, "");
-				
-				configuration.setUser(user);
-				configuration.setAPIToken(apiToken);
-				
-			} catch (StorageException e1) {
-				JenkinsEditorMessageDialogSupport.INSTANCE.showError("No access to secured user credentials!");
-				JenkinsEditorUtil.logError("Was not able to fetch secured credentials", e1);
-				return;
-			}
-		}
-
-		if (linterJenkinsURL == null || linterJenkinsURL.trim().length() == 0) {
-			linterJenkinsURL = jenkinsDefaultURLprovider.getDefaultJenkinsURL();
-		}
-		configuration.setJenkinsURL(linterJenkinsURL);
-		configuration.setAuthMode(AuthMode.API_TOKEN);// currently we support only
-													// API KEY- in future maybe
-													// more/ changeable in
-													// preferences
-		configuration.setPathToJenkinsCLIJar(pathToJenkinsCLIJar);
-
-		configuration.setTimeoutInSeconds(10);
-
 		JenkinsLinterCLICommand command = new JenkinsLinterCLICommand();
 		try {
 			JenkinsLinterCLIResult result = command.execute(configuration, code);
-			if (! result.wasCLICallSuccessFul()){
-				JenkinsEditorMessageDialogSupport.INSTANCE.showError("Jenkins CLI call failed:\n"+result.getCLICallFailureMessage());
+			if (!result.wasCLICallSuccessFul()) {
+				JenkinsEditorMessageDialogSupport.INSTANCE
+						.showError("Jenkins CLI call failed:\n" + result.getCLICallFailureMessage());
 				return;
 			}
 			/* remove former linter errors (after call was possible ) */
@@ -136,7 +100,53 @@ public class CallLinterHandler extends AbstractJenkinsEditorHandler {
 		}
 	}
 
-	private String createPathToEmbeddedCLIJar() throws IOException {
+	public static JenkinsCLIConfiguration createConfiguration(JenkinsDefaultURLProvider jenkinsDefaultURLprovider) throws IOException {
+		JenkinsCLIConfiguration configuration = new JenkinsCLIConfiguration();
+
+		JenkinsEditorPreferences editorPreferences = JenkinsEditorPreferences.getInstance();
+
+		String linterJenkinsURL = editorPreferences.getJenkinsURL();
+		String pathToJenkinsCLIJar = editorPreferences.getPathToJenkinsCLIJar();
+		if (pathToJenkinsCLIJar == null || pathToJenkinsCLIJar.trim().length() == 0) {
+			/* fall back to embedded variant */
+			pathToJenkinsCLIJar = createPathToEmbeddedCLIJar();
+		}
+
+		ISecurePreferences preferences = SecurePreferencesFactory.getDefault();
+
+		if (preferences.nodeExists(ID_SECURED_CREDENTIALS)) {
+			ISecurePreferences node = preferences.node(ID_SECURED_CREDENTIALS);
+			try {
+				String user = node.get(ID_SECURED_USER_KEY, "anonymous");
+				String apiToken = node.get(ID_SECURED_API_KEY, "");
+
+				configuration.setUser(user);
+				configuration.setAPIToken(apiToken);
+
+			} catch (StorageException e1) {
+				JenkinsEditorMessageDialogSupport.INSTANCE.showError("No access to secured user credentials!");
+				JenkinsEditorUtil.logError("Was not able to fetch secured credentials", e1);
+				return null;
+			}
+		}
+
+		if (linterJenkinsURL == null || linterJenkinsURL.trim().length() == 0) {
+			linterJenkinsURL = jenkinsDefaultURLprovider.getDefaultJenkinsURL();
+		}
+		configuration.setJenkinsURL(linterJenkinsURL);
+		configuration.setAuthMode(AuthMode.API_TOKEN);// currently we support
+														// only
+														// API KEY- in future
+														// maybe
+														// more/ changeable in
+														// preferences
+		configuration.setPathToJenkinsCLIJar(pathToJenkinsCLIJar);
+
+		configuration.setTimeoutInSeconds(10);
+		return configuration;
+	}
+
+	private static String createPathToEmbeddedCLIJar() throws IOException {
 		File file = JenkinsEditorActivator.getDefault().getEmbeddedJenkinsCLIJarFile();
 		return file.getAbsolutePath();
 	}
