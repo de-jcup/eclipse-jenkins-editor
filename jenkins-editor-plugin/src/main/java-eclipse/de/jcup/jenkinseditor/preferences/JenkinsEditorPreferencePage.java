@@ -372,7 +372,10 @@ public class JenkinsEditorPreferencePage extends FieldEditorPreferencePage imple
 			            		// use this to open a Shell in the UI thread
 			            	} catch (IOException e1) { 
 			            		dialogSupport.showError("Connection test failed!\n" + e1.getMessage());
-			            	}
+			            	} finally{
+								monitor.done();
+							}
+							
 							
 						}
 					};

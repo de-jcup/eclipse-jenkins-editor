@@ -19,12 +19,17 @@ import static de.jcup.jenkinseditor.JenkinsEditorConstants.*;
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.equinox.security.storage.ISecurePreferences;
 import org.eclipse.equinox.security.storage.SecurePreferencesFactory;
 import org.eclipse.equinox.security.storage.StorageException;
+import org.eclipse.jface.dialogs.ProgressMonitorDialog;
+import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.text.IDocument;
 
+import de.jcup.egradle.eclipse.util.EclipseUtil;
 import de.jcup.jenkins.cli.JenkinsCLIConfiguration;
 import de.jcup.jenkins.cli.JenkinsCLIConfiguration.AuthMode;
 import de.jcup.jenkins.cli.JenkinsDefaultURLProvider;
@@ -67,37 +72,56 @@ public class CallLinterHandler extends AbstractJenkinsEditorHandler {
 			return;
 		}
 		JenkinsLinterCLICommand command = new JenkinsLinterCLICommand();
-		try {
-			JenkinsLinterCLIResult result = command.execute(configuration, code);
-			if (!result.wasCLICallSuccessFul()) {
-				JenkinsEditorMessageDialogSupport.INSTANCE
-						.showError("Jenkins CLI call failed:\n" + result.getCLICallFailureMessage());
-				return;
-			}
-			/* remove former linter errors (after call was possible ) */
-			JenkinsEditorUtil.removeLinterErrors(editor);
+		
+		ProgressMonitorDialog dialog = new ProgressMonitorDialog(EclipseUtil.getActiveWorkbenchShell());
+		IRunnableWithProgress runnable = new IRunnableWithProgress() {
+			
+			@Override
+			public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
+				monitor.beginTask("Validate script by Jenkins", IProgressMonitor.UNKNOWN);
+				try {
+					JenkinsLinterCLIResult result = command.execute(configuration, code);
+					if (!result.wasCLICallSuccessFul()) {
+						JenkinsEditorMessageDialogSupport.INSTANCE
+								.showError("Jenkins CLI call failed:\n" + result.getCLICallFailureMessage());
+						return;
+					}
+					/* remove former linter errors (after call was possible ) */
+					JenkinsEditorUtil.removeLinterErrors(editor);
 
-			boolean foundAtLeastOneError = false;
-			for (String line : result.getLines()) {
-				JenkinsLinterError error = errorBuilder.build(line);
-				if (error == null) {
-					continue;
+					int errorCount =0;
+					for (String line : result.getLines()) {
+						JenkinsLinterError error = errorBuilder.build(line);
+						if (error == null) {
+							continue;
+						}
+						/* add linter error */
+						JenkinsEditorUtil.addLinterError(editor, error);
+						errorCount++;
+					}
+
+					if (errorCount>0) {
+						JenkinsEditorMessageDialogSupport.INSTANCE.showWarning("This script has "+errorCount+" error(s) inside!");
+					} else {
+						JenkinsEditorMessageDialogSupport.INSTANCE
+								.showInfo("This script has no failures.");
+					}
+
+				} catch (IOException e) {
+					JenkinsEditorMessageDialogSupport.INSTANCE.showError("Linter action failed" + e.getMessage());
+				} finally{
+					monitor.done();
 				}
-				/* add linter error */
-				JenkinsEditorUtil.addLinterError(editor, error);
-				foundAtLeastOneError = true;
+				
 			}
-
-			if (foundAtLeastOneError) {
-				JenkinsEditorMessageDialogSupport.INSTANCE.showWarning("This script has errors inside!");
-			} else {
-				JenkinsEditorMessageDialogSupport.INSTANCE
-						.showInfo("Your Jenkins server did found no lint errors for this script!");
-			}
-
-		} catch (IOException e) {
-			JenkinsEditorMessageDialogSupport.INSTANCE.showError("Linter action failed" + e.getMessage());
+		};
+		try {
+			dialog.run(true, false, runnable);
+		} catch (InvocationTargetException | InterruptedException e) {
+			JenkinsEditorUtil.logError("Linter execution failed", e);
 		}
+		
+		
 	}
 
 	public static JenkinsCLIConfiguration createConfiguration(JenkinsDefaultURLProvider jenkinsDefaultURLprovider) throws IOException {

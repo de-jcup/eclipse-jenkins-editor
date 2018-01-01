@@ -19,6 +19,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import static de.jcup.jenkins.cli.JenkinsExitCodes.*;
+
 public class JenkinsLinterCLIResult extends AbstractJenkinsCLIResult{
 	
 	private List<String> list = new ArrayList<>();
@@ -37,10 +39,20 @@ public class JenkinsLinterCLIResult extends AbstractJenkinsCLIResult{
 		StringBuilder sb = new StringBuilder();
 		sb.append(getClass().getSimpleName());
 		sb.append(":\n");
+		sb.append("exitCode:"+exitCode);
+		sb.append(":\n");
+		sb.append("failureMessage:"+getCLICallFailureMessage());
+		sb.append(":\n");
+		
 		for (String string: list){
 			sb.append(string);
 			sb.append('\n');
 		}
 		return sb.toString();
+	}
+
+	@Override
+	public boolean wasCLICallSuccessFul() {
+		return isExitCode(OK) || isExitCode(LINTER_FAILURES);
 	}
 }

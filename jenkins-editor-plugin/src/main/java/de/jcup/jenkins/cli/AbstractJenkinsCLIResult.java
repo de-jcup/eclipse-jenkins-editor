@@ -15,19 +15,19 @@
  */
  package de.jcup.jenkins.cli;
 
-public class AbstractJenkinsCLIResult implements JenkinsCLIResult {
-	int exitValue = -2;
-	String cliCallFailureMessage = "undefined";
+public abstract class AbstractJenkinsCLIResult implements JenkinsCLIResult {
+	int exitCode = -2;
+	String cliCallFailureMessage = "No dedicated failure message available";
 
-	public boolean wasCLICallSuccessFul() {
-		return exitValue >=0;
-	}
-
-	public int getExitValue() {
-		return exitValue;
+	public int getExitCode() {
+		return exitCode;
 	}
 
 	public String getCLICallFailureMessage() {
 		return cliCallFailureMessage;
+	}
+	
+	protected boolean isExitCode(JenkinsExitCodes expected){
+		return expected!=null && expected.getExitCode()==exitCode;
 	}
 }

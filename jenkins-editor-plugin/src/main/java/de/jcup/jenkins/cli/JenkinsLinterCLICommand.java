@@ -40,8 +40,8 @@ public class JenkinsLinterCLICommand extends AbstractJenkinsCLICommand<JenkinsLi
 		JenkinsLinterCLIResult result = new JenkinsLinterCLIResult();
 		if (!process.isAlive()) {
 			int exitValue = process.exitValue();
-			result.exitValue = exitValue;
-			result.cliCallFailureMessage = "Was not able to start process.";
+			result.exitCode = exitValue;
+			result.cliCallFailureMessage = "Was not able to start linter process.linter.\nMaybe server is down or CLI credentials are not set correctly.";
 			return result;
 		}
 		/* give code data as input */
@@ -63,12 +63,10 @@ public class JenkinsLinterCLICommand extends AbstractJenkinsCLICommand<JenkinsLi
 			}
 		}
 		int exitValue = process.exitValue();
-		if (exitValue != 0) {
-			if (exitValue == -1) {
-				result.cliCallFailureMessage = "Access to Jenkins was not possible.\nMaybe credentials not valid or hostname/firewall problems.\nPlease check Jenkins CLI setup in preferences";
-			}
+		result.exitCode = exitValue;
+		if (! result.wasCLICallSuccessFul()) {
+			result.cliCallFailureMessage = "Access to Jenkins was not possible.\nMaybe credentials not valid or hostname/firewall problems.\nPlease check Jenkins CLI setup in preferences";
 		}
-		result.exitValue = exitValue;
 		return result;
 	}
 

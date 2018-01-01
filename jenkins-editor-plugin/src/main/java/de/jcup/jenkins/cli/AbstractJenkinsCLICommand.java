@@ -58,8 +58,8 @@ public abstract class AbstractJenkinsCLICommand<T extends JenkinsCLIResult, P> i
 			t.setName("Jenkins command [" + getCLICommand() + "] timeout checker[" + timeOut + " seconds]");
 			t.start();
 		}
-		return handleStartedProcess(process, parameter);
-
+		T result = handleStartedProcess(process, parameter);
+		return result;
 	}
 
 	protected void debug(String string) {
@@ -74,7 +74,6 @@ public abstract class AbstractJenkinsCLICommand<T extends JenkinsCLIResult, P> i
 
 	protected String[] createExecutionStrings(JenkinsCLIConfiguration configuration, String... parameters) {
 		List<String> list = new ArrayList<>();
-		/* FIXME ATR: use pathToCurrentJavaUsedByEclispse.java... ? */
 		list.add("java");
 		list.add("-jar");
 		list.add(configuration.getPathToJenkinsCLIJar());
