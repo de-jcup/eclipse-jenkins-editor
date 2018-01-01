@@ -13,16 +13,17 @@
  * and limitations under the License.
  *
  */
-package de.jcup.jenkinseditor;
+package de.jcup.jenkins;
 
 import antlr.collections.AST;
 import de.jcup.egradle.core.model.Item;
 import de.jcup.egradle.core.model.groovyantlr.AbstractGroovyModelBuilderSupport;
 
-@Deprecated
-/* unused class - if no longer necessary - remove */
-class JenkinsModelBuilderSupport extends AbstractGroovyModelBuilderSupport {
-
+public class JenkinsModelBuilderSupport extends AbstractGroovyModelBuilderSupport {
+	/*
+	 * TODO ATR, 01.01.2018: those methods are not groovy but gradle specific
+	 * and shold be removed from abstract part
+	 */
 	public Item handleDependencyAndReturnItem(AST methodCall, Item item) {
 		return item;
 	}
@@ -32,32 +33,32 @@ class JenkinsModelBuilderSupport extends AbstractGroovyModelBuilderSupport {
 	}
 
 	public AST handleTasksWithTypeClosure(String enameString, Item item, AST nextAST) {
-		return null;
+		AST newLastAst = nextAST;
+		return newLastAst;
 	}
-	
-	
+
 	/**
 	 * @param enameString
 	 * @param item
 	 * @param nextAST
-	 * @return next AST to inspect for further details. If the next hierarchy part is a closure the closure element (CLOSABLE_BLOCK=50) must be returned!
+	 * @return next AST to inspect for further details. If the next hierarchy
+	 *         part is a closure the closure element (CLOSABLE_BLOCK=50) must be
+	 *         returned!
 	 */
 	public AST handleTaskClosure(String enameString, Item item, AST nextAST) {
 		if (nextAST == null) {
 			return null;
 		}
 		ASTResultInfo nextASTData = handleTaskNameResolving(enameString, item, nextAST);
-		if (nextASTData==null){
+		if (nextASTData == null) {
 			return null;
 		}
-		if (nextASTData.terminated){
+		if (nextASTData.terminated) {
 			return nextASTData.nextAST;
 		}
-		nextAST=nextASTData.nextAST;
+		nextAST = nextASTData.nextAST;
 		nextAST = handleTaskTypeResolving(item, nextAST);
 		return nextAST;
 	}
 
-
-	
 }

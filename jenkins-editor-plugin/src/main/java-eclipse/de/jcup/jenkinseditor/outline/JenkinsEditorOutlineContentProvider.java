@@ -20,7 +20,6 @@ import java.io.InputStream;
 import org.eclipse.core.runtime.IAdaptable;
 
 import de.jcup.egradle.core.model.BuildContext;
-import de.jcup.egradle.core.model.groovyantlr.GradleModelBuilder;
 import de.jcup.egradle.core.model.groovyantlr.GroovyModelFilters;
 import de.jcup.egradle.core.util.Filter;
 import de.jcup.egradle.core.util.MultiFilter;
@@ -28,6 +27,7 @@ import de.jcup.egradle.eclipse.api.GroovyBasedModelType;
 import de.jcup.egradle.eclipse.ui.AbstractGroovyBasedEditorOutlineContentProvider;
 import de.jcup.egradle.eclipse.ui.IExtendedEditor;
 import de.jcup.egradle.eclipse.ui.PersistedMarkerHelper;
+import de.jcup.jenkins.JenkinsModelBuilder;
 
 public class JenkinsEditorOutlineContentProvider extends AbstractGroovyBasedEditorOutlineContentProvider  {
 	
@@ -50,10 +50,8 @@ public class JenkinsEditorOutlineContentProvider extends AbstractGroovyBasedEdit
 		return JenkinsModelTypes.JENKINS;
 	}
 
-	@Deprecated
-	/* FIXME ATR, 28.09.2017: check if this and the builder support should be removed (except the groovy class rendering does need it!):currently not really necessary - same as Jenkins model builder */
 	Object[] buildJenkinsModel(String charset, InputStream is,boolean filteringEnabled) throws Exception {
-		GradleModelBuilder builder = new GradleModelBuilder(is);
+		JenkinsModelBuilder builder = new JenkinsModelBuilder(is);
 		if (filteringEnabled){
 			builder.setPreCreationFilter(getPreCreationFilterFilter());
 			builder.setPostCreationFilter(getPostCreationFilter());
