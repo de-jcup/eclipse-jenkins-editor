@@ -22,6 +22,8 @@ import static de.jcup.jenkinseditor.preferences.JenkinsEditorSyntaxColorPreferen
 import org.eclipse.core.runtime.preferences.AbstractPreferenceInitializer;
 import org.eclipse.jface.preference.IPreferenceStore;
 
+import de.jcup.jenkins.linter.JenkinsLinterErrorLevel;
+
 /**
  * Class used to initialize default preference values.
  */
@@ -45,6 +47,8 @@ public class JenkinsEditorPreferenceInitializer extends AbstractPreferenceInitia
 		store.setDefault(P_EDITOR_CODEASSIST_PROPOSALS_ENABLED.getId(), true);
 		store.setDefault(P_EDITOR_CODEASSIST_NO_PROPOSALS_FOR_GETTER_OR_SETTERS.getId(), true);
 		store.setDefault(P_EDITOR_CODEASSIST_TOOLTIPS_ENABLED.getId(), true);
+		
+		store.setDefault(JENKINS_LINTER_ERROR_LEVEL.getId(), JenkinsLinterErrorLevel.ERROR.getId());
 		
 		/* bracket color */
 		getPreferences().setDefaultColor(P_EDITOR_MATCHING_BRACKETS_COLOR, JenkinsEditorColorConstants.GRAY_JAVA);
