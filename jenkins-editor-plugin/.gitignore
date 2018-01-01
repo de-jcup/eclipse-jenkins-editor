@@ -1,3 +1,10 @@
+# add eclipse meta data to git!!!
+!.metadata
+!.classpath
+!.project
+!.settings/
+!*.jar
+
 .lck
 .gradle/
 *.class

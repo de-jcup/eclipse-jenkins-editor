@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src/main/java-eclipse"/>
+	<classpathentry kind="src" path="src/test/java-eclipse"/>
+	<classpathentry kind="src" path="src/main/java"/>
+	<classpathentry kind="src" path="src/test/java"/>
+	<classpathentry kind="src" path="src/test/resources"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
+	<classpathentry kind="con" path="org.eclipse.pde.core.requiredPlugins"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/egradle-plugin-main"/>
+	<classpathentry kind="lib" path="lib/jenkins-cli.jar"/>
+	<classpathentry kind="lib" path="/egradle-plugin-main/lib/mockito-all-1.8.5.jar" sourcepath="/egradle-plugin-main/lib/mockito-all-1.8.5-sources.jar"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>
