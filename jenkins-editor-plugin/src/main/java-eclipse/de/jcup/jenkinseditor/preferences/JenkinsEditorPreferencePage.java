@@ -19,12 +19,16 @@ import static de.jcup.jenkinseditor.JenkinsEditorConstants.*;
 import static de.jcup.jenkinseditor.preferences.JenkinsEditorPreferenceConstants.*;
 
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 
 import org.eclipse.core.runtime.Assert;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.equinox.security.storage.ISecurePreferences;
 import org.eclipse.equinox.security.storage.SecurePreferencesFactory;
 import org.eclipse.equinox.security.storage.StorageException;
+import org.eclipse.jface.dialogs.ProgressMonitorDialog;
+import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.preference.BooleanFieldEditor;
 import org.eclipse.jface.preference.ColorFieldEditor;
 import org.eclipse.jface.preference.FieldEditorPreferencePage;
@@ -144,120 +148,7 @@ public class JenkinsEditorPreferencePage extends FieldEditorPreferencePage imple
 	@Override
 	protected void createFieldEditors() {
 
-		/* -------------------------------------------------------------- */
-		/* ------------------------ JENKINS CLI ------------------------- */
-		/* -------------------------------------------------------------- */
-		Group jenkinsCLIComposite = new Group(getFieldEditorParent(), SWT.NONE);
-		jenkinsCLIComposite.setText("Jenkins CLI setup");
-		GridLayout jenkinsCLICompositeLayout = new GridLayout(3, true);
-		jenkinsCLICompositeLayout.marginWidth = 10;
-		jenkinsCLICompositeLayout.marginHeight = 0;
-		jenkinsCLICompositeLayout.marginLeft = 20;
-		jenkinsCLIComposite.setLayout(jenkinsCLICompositeLayout);
-
-		GridData jenkinsCLICompositeLayoutData = new GridData();
-		jenkinsCLICompositeLayoutData.horizontalAlignment = GridData.FILL;
-		jenkinsCLICompositeLayoutData.verticalAlignment = GridData.BEGINNING;
-		jenkinsCLICompositeLayoutData.grabExcessHorizontalSpace = true;
-		jenkinsCLICompositeLayoutData.grabExcessVerticalSpace = false;
-		// jenkinsCLICompositeLayoutData.verticalSpan = 2;
-		jenkinsCLICompositeLayoutData.horizontalSpan = 3;
-
-		jenkinsCLIComposite.setLayoutData(jenkinsCLICompositeLayoutData);
-
-		jenkinsUrl = new StringFieldEditor(P_JENKINS_URL.getId(), "Jenkins URL (optional)", jenkinsCLIComposite);
-		jenkinsUrl.getLabelControl(jenkinsCLIComposite)
-				.setToolTipText("Set jenkins URL - when empty default value will be used");
-		jenkinsUrl.setEmptyStringAllowed(true);
-		addField(jenkinsUrl);
-
-		Text jenkinsDefaultURLtext = SWTFactory.createText(jenkinsCLIComposite, SWT.NONE, SWT.FILL);
-		jenkinsDefaultURLtext.setFont(JFaceResources.getFontRegistry().getItalic(JFaceResources.DEFAULT_FONT));
-		jenkinsDefaultURLtext.setEditable(false);
-		jenkinsDefaultURLtext.setText("(" + jenkinsDefaultURLProvider.createDefaultURLDescription() + ")");
-
-		// SWTFactory.createLabel(jenkinsCLIComposite, "", SWT.FILL);
-
-		jarFileLocation = new FileFieldEditor(P_PATH_TO_JENKINS_CLI_JAR.getId(), "Path to jenkins-cli.jar (optional)",
-				jenkinsCLIComposite);
-		jarFileLocation.setFileExtensions(new String[] { "*.jar" });
-		jarFileLocation.getLabelControl(jenkinsCLIComposite).setToolTipText(
-				"You can set here the location of another jenkins-cli.jar which you can download by your running Jenkins instance.");
-		addField(jarFileLocation);
-
-		// String[][] entryNamesAndValues = new String[][] { new String[] { "API
-		// Key", AuthMode.API_TOKEN.getId() },
-		// new String[] { "Anonymous", AuthMode.ANONYMOUS.getId() }, };
-
-		// authorizationType = new
-		// RadioGroupFieldEditor(P_PATH_TO_JENKINS_CLI_JAR.getId(),
-		// "Authentification type", 2,
-		// entryNamesAndValues, jenkinsCLIComposite);
-		//
-		// addField(authorizationType);
-		//
-		// Label spacer3 = new Label(jenkinsCLIComposite, SWT.LEFT);
-		// GridData gd3 = new GridData(GridData.HORIZONTAL_ALIGN_FILL);
-		// gd3.horizontalSpan = 2;
-		// gd3.heightHint = convertHeightInCharsToPixels(1) / 2;
-		// spacer3.setLayoutData(gd3);
-
-		Label passwordLabel = new Label(jenkinsCLIComposite, SWT.LEFT);
-		passwordLabel.setText("User credentials : ");
-
-		Text passwordField = new Text(jenkinsCLIComposite, SWT.SINGLE | SWT.PASSWORD);
-		GridData data = new GridData(GridData.FILL_HORIZONTAL);
-		passwordField.setLayoutData(data);
-		passwordField.setText("encryptedthings");
-
-		Button credentialsButton = new Button(jenkinsCLIComposite, SWT.PUSH);
-		credentialsButton.setText("Credentials ...");
-		credentialsButton.addSelectionListener(new SelectionAdapter() {
-
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				temporaryCredentials = JenkinsEditorMessageDialogSupport.INSTANCE.showUsernamePassword("API Key");
-			}
-		});
-		credentialsButton.setLayoutData(data);
-
-		Button connectionTestButton = new Button(jenkinsCLIComposite, SWT.PUSH);
-		connectionTestButton.setText("Test connection");
-		connectionTestButton.addSelectionListener(new SelectionAdapter() {
-
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				JenkinsLinterCLICommand command = new JenkinsLinterCLICommand();
-				JenkinsEditorMessageDialogSupport dialogSupport = JenkinsEditorMessageDialogSupport.INSTANCE;
-				try {
-					JenkinsCLIConfiguration configuration = CallLinterHandler
-							.createConfiguration(new JenkinsDefaultURLProvider());
-					if (temporaryCredentials != null) {
-						/*
-						 * if temporary credentials exists, we use the temporary
-						 * user and password settings- currently only api token
-						 * is supported.
-						 */
-						configuration.setUser(temporaryCredentials.username);
-						configuration.setAPIToken(temporaryCredentials.secret);
-					}
-					String enteredURL = jenkinsUrl.getStringValue();
-					if (enteredURL != null && enteredURL.trim().length() > 0) {
-						/* we got an entry here - so we use it ..*/
-						configuration.setJenkinsURL(enteredURL);
-					}
-					JenkinsLinterCLIResult result = command.execute(configuration, "");
-					if (result.wasCLICallSuccessFul()) {
-						dialogSupport.showInfo("Connection test successful!");
-					} else {
-						dialogSupport.showError(
-								"Connection test NOT successful!\n\n"+result.getCLICallFailureMessage());
-					}
-				} catch (IOException e1) { 
-					dialogSupport.showError("Connection  test failed!\n" + e1.getMessage());
-				}
-			}
-		});
+		createJenkinsCLIFieldEditors();
 
 		Label spacer2 = new Label(getFieldEditorParent(), SWT.LEFT);
 		GridData gd2 = new GridData(GridData.HORIZONTAL_ALIGN_FILL);
@@ -282,6 +173,12 @@ public class JenkinsEditorPreferencePage extends FieldEditorPreferencePage imple
 		appearanceComposite.setLayout(layout);
 		appearanceComposite.setLayoutData(appearanceLayoutData);
 
+		createOtherFieldEditors(appearanceComposite);
+
+		createBracketsFieldEditors(appearanceComposite);
+	}
+
+	protected void createOtherFieldEditors(Composite appearanceComposite) {
 		/* OTHER */
 		Composite otherComposite = new Composite(appearanceComposite, SWT.NONE);
 		GridLayout otherLayout = new GridLayout();
@@ -295,7 +192,9 @@ public class JenkinsEditorPreferencePage extends FieldEditorPreferencePage imple
 		linkEditorWithOutline.getDescriptionControl(otherComposite)
 				.setToolTipText("Via this setting the default behaviour for new opened outlines is set");
 		addField(linkEditorWithOutline);
+	}
 
+	protected void createBracketsFieldEditors(Composite appearanceComposite) {
 		/* BRACKETS */
 		/*
 		 * Why so ugly implemented and not using field editors ? Because
@@ -370,6 +269,120 @@ public class JenkinsEditorPreferencePage extends FieldEditorPreferencePage imple
 		autoCreateEndBrackets = new BooleanFieldEditor(P_EDITOR_AUTO_CREATE_END_BRACKETSY.getId(),
 				"Auto create ending brackets", getFieldEditorParent());
 		addField(autoCreateEndBrackets);
+	}
+
+	protected void createJenkinsCLIFieldEditors() {
+		/* -------------------------------------------------------------- */
+		/* ------------------------ JENKINS CLI ------------------------- */
+		/* -------------------------------------------------------------- */
+		Group jenkinsCLIComposite = new Group(getFieldEditorParent(), SWT.NONE);
+		jenkinsCLIComposite.setText("Jenkins CLI setup");
+		GridLayout jenkinsCLICompositeLayout = new GridLayout(3, true);
+		jenkinsCLICompositeLayout.marginWidth = 10;
+		jenkinsCLICompositeLayout.marginHeight = 0;
+		jenkinsCLICompositeLayout.marginLeft = 20;
+		jenkinsCLIComposite.setLayout(jenkinsCLICompositeLayout);
+
+		GridData jenkinsCLICompositeLayoutData = new GridData();
+		jenkinsCLICompositeLayoutData.horizontalAlignment = GridData.FILL;
+		jenkinsCLICompositeLayoutData.verticalAlignment = GridData.BEGINNING;
+		jenkinsCLICompositeLayoutData.grabExcessHorizontalSpace = true;
+		jenkinsCLICompositeLayoutData.grabExcessVerticalSpace = false;
+		// jenkinsCLICompositeLayoutData.verticalSpan = 2;
+		jenkinsCLICompositeLayoutData.horizontalSpan = 3;
+
+		jenkinsCLIComposite.setLayoutData(jenkinsCLICompositeLayoutData);
+
+		jenkinsUrl = new StringFieldEditor(P_JENKINS_URL.getId(), "Jenkins URL (optional)", jenkinsCLIComposite);
+		jenkinsUrl.getLabelControl(jenkinsCLIComposite)
+				.setToolTipText("Set jenkins URL - when empty default value will be used");
+		jenkinsUrl.setEmptyStringAllowed(true);
+		addField(jenkinsUrl);
+
+		Text jenkinsDefaultURLtext = SWTFactory.createText(jenkinsCLIComposite, SWT.NONE, SWT.FILL);
+		jenkinsDefaultURLtext.setFont(JFaceResources.getFontRegistry().getItalic(JFaceResources.DEFAULT_FONT));
+		jenkinsDefaultURLtext.setEditable(false);
+		jenkinsDefaultURLtext.setText("(" + jenkinsDefaultURLProvider.createDefaultURLDescription() + ")");
+
+		jarFileLocation = new FileFieldEditor(P_PATH_TO_JENKINS_CLI_JAR.getId(), "Path to jenkins-cli.jar (optional)",
+				jenkinsCLIComposite);
+		jarFileLocation.setFileExtensions(new String[] { "*.jar" });
+		jarFileLocation.getLabelControl(jenkinsCLIComposite).setToolTipText(
+				"You can set here the location of another jenkins-cli.jar which you can download by your running Jenkins instance.");
+		addField(jarFileLocation);
+
+		Label passwordLabel = new Label(jenkinsCLIComposite, SWT.LEFT);
+		passwordLabel.setText("User credentials : ");
+
+		Text passwordField = new Text(jenkinsCLIComposite, SWT.SINGLE | SWT.PASSWORD);
+		GridData data = new GridData(GridData.FILL_HORIZONTAL);
+		passwordField.setLayoutData(data);
+		passwordField.setText("encryptedthings");
+
+		Button credentialsButton = new Button(jenkinsCLIComposite, SWT.PUSH);
+		credentialsButton.setText("Credentials ...");
+		credentialsButton.addSelectionListener(new SelectionAdapter() {
+
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				temporaryCredentials = JenkinsEditorMessageDialogSupport.INSTANCE.showUsernamePassword("API Key");
+			}
+		});
+		credentialsButton.setLayoutData(data);
+
+		Button connectionTestButton = new Button(jenkinsCLIComposite, SWT.PUSH);
+		connectionTestButton.setText("Test connection");
+		connectionTestButton.addSelectionListener(new SelectionAdapter() {
+
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				JenkinsLinterCLICommand command = new JenkinsLinterCLICommand();
+				JenkinsEditorMessageDialogSupport dialogSupport = JenkinsEditorMessageDialogSupport.INSTANCE;
+				try {
+					JenkinsCLIConfiguration configuration = CallLinterHandler
+							.createConfiguration(new JenkinsDefaultURLProvider());
+					if (temporaryCredentials != null) {
+						/*
+						 * if temporary credentials exists, we use the temporary
+						 * user and password settings- currently only api token
+						 * is supported.
+						 */
+						configuration.setUser(temporaryCredentials.username);
+						configuration.setAPIToken(temporaryCredentials.secret);
+					}
+					String enteredURL = jenkinsUrl.getStringValue();
+					if (enteredURL != null && enteredURL.trim().length() > 0) {
+						/* we got an entry here - so we use it ..*/
+						configuration.setJenkinsURL(enteredURL);
+					}
+					ProgressMonitorDialog dialog = new ProgressMonitorDialog(getShell());
+					IRunnableWithProgress runnable = new IRunnableWithProgress() {
+						
+						@Override
+						public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
+							try{
+								monitor.beginTask("Try to connect to Jenkins", IProgressMonitor.UNKNOWN);
+			            		JenkinsLinterCLIResult result = command.execute(configuration, "");
+			            		if (result.wasCLICallSuccessFul()) {
+			            			dialogSupport.showInfo("Connection test successful!");
+			            		} else {
+			            			dialogSupport.showError(
+			            					"Connection test NOT successful!\n\n"+result.getCLICallFailureMessage());
+			            		}
+			            		// use this to open a Shell in the UI thread
+			            	} catch (IOException e1) { 
+			            		dialogSupport.showError("Connection test failed!\n" + e1.getMessage());
+			            	}
+							
+						}
+					};
+					dialog.run(true, false, runnable);
+					
+				} catch (Exception e1) { 
+					dialogSupport.showError("Was not able to create connection configuration\n" + e1.getMessage());
+				}
+			}
+		});
 	}
 
 	@Override
