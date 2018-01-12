@@ -46,6 +46,9 @@ public class JenkinsEditorPreferenceInitializer extends AbstractPreferenceInitia
 		store.setDefault(P_EDITOR_CODEASSIST_NO_PROPOSALS_FOR_GETTER_OR_SETTERS.getId(), true);
 		store.setDefault(P_EDITOR_CODEASSIST_TOOLTIPS_ENABLED.getId(), true);
 		
+		/* CLI setup */
+		store.setDefault(P_CERTIFICATE_CHECK_DISABLED.getId(), false);
+		
 		/* bracket color */
 		getPreferences().setDefaultColor(P_EDITOR_MATCHING_BRACKETS_COLOR, JenkinsEditorColorConstants.GRAY_JAVA);
 		

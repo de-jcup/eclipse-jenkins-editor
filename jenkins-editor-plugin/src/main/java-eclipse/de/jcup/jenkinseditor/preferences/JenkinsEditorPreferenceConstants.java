@@ -41,7 +41,9 @@ public enum JenkinsEditorPreferenceConstants implements PreferenceIdentifiable{
 	
 	P_JENKINS_URL("jenkinsURL"),
 	
-	P_PATH_TO_JENKINS_CLI_JAR("pathToJenkinsCliJar")
+	P_PATH_TO_JENKINS_CLI_JAR("pathToJenkinsCliJar"),
+	
+	P_CERTIFICATE_CHECK_DISABLED("certificateCheckIsDisabled")
 	
 	;
 

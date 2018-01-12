@@ -110,4 +110,8 @@ public class JenkinsEditorPreferences extends AbstractEditorPreferences {
 		return getStringPreference(P_PATH_TO_JENKINS_CLI_JAR);
 	}
 
+	public boolean isCertficateCheckDisabled() {
+		return getBooleanPreference(P_CERTIFICATE_CHECK_DISABLED);
+	}
+
 }

@@ -23,8 +23,9 @@ import java.util.List;
 import de.jcup.jenkins.cli.JenkinsCLIConfiguration.AuthMode;
 
 public abstract class AbstractJenkinsCLICommand<T extends JenkinsCLIResult, P> implements JenkinsCLICommand<T, P> {
-	final static boolean DEBUG = Boolean.valueOf(System.getProperty("de.jcup.jenkins.cli.command.debug"));
-
+	private final static boolean DEBUG = Boolean.valueOf(System.getProperty("de.jcup.jenkins.cli.command.debug"));
+	private final static boolean INHERIT_IO = Boolean.valueOf(System.getProperty("de.jcup.jenkins.cli.command.inherit.io"));
+	
 	protected abstract String getCLICommand();
 
 	/**
@@ -50,6 +51,10 @@ public abstract class AbstractJenkinsCLICommand<T extends JenkinsCLIResult, P> i
 
 		ProcessBuilder pb = new ProcessBuilder();
 		pb.command(list);
+		if (INHERIT_IO){
+			pb.inheritIO();
+		}
+		
 		Process process = pb.start();
 		int timeOut = configuration.getTimeOutInSeconds();
 		if (timeOut > 0) {
@@ -78,9 +83,11 @@ public abstract class AbstractJenkinsCLICommand<T extends JenkinsCLIResult, P> i
 		list.add("-jar");
 		list.add(configuration.getPathToJenkinsCLIJar());
 
-		list.add("-s");
-		list.add(configuration.getJenkinsURL());
-
+		if (configuration.getJenkinsURL()!=null){
+			list.add("-s");
+			list.add(configuration.getJenkinsURL());
+		}
+		
 		addOptions(configuration, list);
 
 		list.add(getCLICommand());
@@ -116,6 +123,11 @@ public abstract class AbstractJenkinsCLICommand<T extends JenkinsCLIResult, P> i
 		if (configuration.isSSHenabled()) {
 			list.add("-ssh");
 		}
+		
+		if (configuration.isCertificateCheckDisabled()){
+			list.add("-noCertificateCheck");
+		}
+		
 
 		AuthMode authMode = configuration.getAuthMode();
 		switch (authMode) {

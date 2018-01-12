@@ -49,6 +49,7 @@ public class JenkinsCLIConfiguration {
 	}
 	
 	private AuthMode authMode;
+	private boolean certificateCheckDisabled;
 	
 	public void setAuthMode(AuthMode authMode) {
 		this.authMode = authMode;
@@ -125,4 +126,12 @@ public class JenkinsCLIConfiguration {
 		return password;
 	}
 
+	public void setCertificateCheckDisabled(boolean certificateCheckDisabled) {
+		this.certificateCheckDisabled = certificateCheckDisabled;
+	}
+	
+	public boolean isCertificateCheckDisabled() {
+		return certificateCheckDisabled;
+	}
+	
 }

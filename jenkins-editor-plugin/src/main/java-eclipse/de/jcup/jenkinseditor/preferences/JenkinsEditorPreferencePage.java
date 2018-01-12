@@ -304,6 +304,11 @@ public class JenkinsEditorPreferencePage extends FieldEditorPreferencePage imple
 		jenkinsDefaultURLtext.setEditable(false);
 		jenkinsDefaultURLtext.setText("(" + jenkinsDefaultURLProvider.createDefaultURLDescription() + ")");
 
+		// disable certificate check
+		BooleanFieldEditor certificateCheckDisabled = new BooleanFieldEditor(P_CERTIFICATE_CHECK_DISABLED.getId(), "Disable certificate check",  jenkinsCLIComposite);
+		addField(certificateCheckDisabled);		
+		
+		
 		jarFileLocation = new FileFieldEditor(P_PATH_TO_JENKINS_CLI_JAR.getId(), "Path to jenkins-cli.jar (optional)",
 				jenkinsCLIComposite);
 		jarFileLocation.setFileExtensions(new String[] { "*.jar" });
@@ -350,6 +355,8 @@ public class JenkinsEditorPreferencePage extends FieldEditorPreferencePage imple
 						configuration.setUser(temporaryCredentials.username);
 						configuration.setAPIToken(temporaryCredentials.secret);
 					}
+					configuration.setCertificateCheckDisabled(certificateCheckDisabled.getBooleanValue());
+					
 					String enteredURL = jenkinsUrl.getStringValue();
 					if (enteredURL != null && enteredURL.trim().length() > 0) {
 						/* we got an entry here - so we use it ..*/
@@ -386,6 +393,7 @@ public class JenkinsEditorPreferencePage extends FieldEditorPreferencePage imple
 				}
 			}
 		});
+		
 	}
 
 	@Override

@@ -15,40 +15,54 @@
  */
  package de.jcup.jenkins.cli;
 
+import java.io.IOException;
+
 import de.jcup.jenkins.cli.JenkinsCLIConfiguration.AuthMode;
 
-public class JenkinsLinterCLICommandTestMain {
+public class JenkinsCLIHelpTestMain {
 
 	/* just an api key for an temporary test jenkins*/
 	
 	public static void main(String[] args) throws Exception {
-		if (args.length!=3){
-			throw new IllegalArgumentException("Call with parameters:'userName apiKEY jenkinsurl' !");
-		}
-		String user=args[0];
-		String apiKey= args[1];
-		String url = args[2];
-		JenkinsLinterCLICommandTestMain testMain =  new JenkinsLinterCLICommandTestMain();
-		testMain.test(user, apiKey, url);
+		JenkinsCLIHelpTestMain testMain =  new JenkinsCLIHelpTestMain();
+		testMain.test();
 		
 	}
 	
-	public void test(String user, String apiToken, String url) throws Exception{
+	public void test() throws Exception{
 		// https://jenkins.io/doc/book/managing/cli/
+		
+		HelpCommand cmd = new HelpCommand();
 		JenkinsCLIConfiguration config = new JenkinsCLIConfiguration();
-		config.setJenkinsURL(url);
 		config.setTimeoutInSeconds(10);
 		config.setPathToJenkinsCLIJar("./lib/jenkins-cli.jar");
-		config.setAuthMode(AuthMode.API_TOKEN);
-		config.setUser(user);
-		config.setAPIToken(apiToken);
 		
-		JenkinsLinterCLICommand cmd = new JenkinsLinterCLICommand();
-		config.setCertificateCheckDisabled(true);
-		
-		JenkinsLinterCLIResult result = cmd.execute(config,"pipeline{}");
+		JenkinsCLIResult result = cmd.execute(config ,"pipeline{}");
 	
 		System.out.println("result:"+ result.toString());
+	}
+	
+	private class HelpCommand extends AbstractJenkinsCLICommand<JenkinsCLIResult, String>{
+
+		@Override
+		protected String getCLICommand() {
+			return "help";
+		}
+
+		@Override
+		protected JenkinsCLIResult handleStartedProcess(Process process, String parameter) throws IOException {
+			return null;
+		}
+		
+	}
+	
+	private class JenkinsHelpResult extends AbstractJenkinsCLIResult{
+
+		@Override
+		public boolean wasCLICallSuccessFul() {
+			return true;
+		}
+		
 	}
 	
 }

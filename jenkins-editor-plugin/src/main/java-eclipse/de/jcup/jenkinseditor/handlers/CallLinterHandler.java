@@ -135,6 +135,7 @@ public class CallLinterHandler extends AbstractJenkinsEditorHandler {
 			/* fall back to embedded variant */
 			pathToJenkinsCLIJar = createPathToEmbeddedCLIJar();
 		}
+		boolean certificateCheckDisabled = editorPreferences.isCertficateCheckDisabled();
 
 		ISecurePreferences preferences = SecurePreferencesFactory.getDefault();
 
@@ -157,6 +158,7 @@ public class CallLinterHandler extends AbstractJenkinsEditorHandler {
 		if (linterJenkinsURL == null || linterJenkinsURL.trim().length() == 0) {
 			linterJenkinsURL = jenkinsDefaultURLprovider.getDefaultJenkinsURL();
 		}
+		configuration.setCertificateCheckDisabled(certificateCheckDisabled);
 		configuration.setJenkinsURL(linterJenkinsURL);
 		configuration.setAuthMode(AuthMode.API_TOKEN);// currently we support
 														// only
