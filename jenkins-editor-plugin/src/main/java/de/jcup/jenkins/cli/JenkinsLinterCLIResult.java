@@ -39,16 +39,28 @@ public class JenkinsLinterCLIResult extends AbstractJenkinsCLIResult{
 		StringBuilder sb = new StringBuilder();
 		sb.append(getClass().getSimpleName());
 		sb.append(":\n");
-		sb.append("exitCode:"+exitCode);
-		sb.append(":\n");
-		sb.append("failureMessage:"+getCLICallFailureMessage());
-		sb.append(":\n");
+		sb.append("- exitCode:"+exitCode).append(" (").append(exitCodeDescription(exitCode)).append(")");
+		sb.append("\n");
+		sb.append("- failureMessage:"+getCLICallFailureMessage());
+		sb.append("\n-Output was:\n");
 		
 		for (String string: list){
 			sb.append(string);
 			sb.append('\n');
 		}
 		return sb.toString();
+	}
+
+	private String exitCodeDescription(int exitCode) {
+		if (exitCode==-2){
+			return "Linter was not executed at all";
+		}
+		for (JenkinsExitCodes code: JenkinsExitCodes.values()){
+			if (code.getExitCode()==exitCode){
+				return code.name();
+			}
+		}
+		return "No explaination available";
 	}
 
 	@Override

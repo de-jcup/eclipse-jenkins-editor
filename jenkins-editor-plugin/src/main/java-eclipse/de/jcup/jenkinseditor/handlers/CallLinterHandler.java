@@ -83,7 +83,7 @@ public class CallLinterHandler extends AbstractJenkinsEditorHandler {
 					JenkinsLinterCLIResult result = command.execute(configuration, code);
 					if (!result.wasCLICallSuccessFul()) {
 						JenkinsEditorMessageDialogSupport.INSTANCE
-								.showError("Jenkins CLI call failed:\n" + result.getCLICallFailureMessage());
+								.showError("Jenkins CLI call failed:\n" + result.toString());
 						return;
 					}
 					/* remove former linter errors (after call was possible ) */
@@ -108,7 +108,14 @@ public class CallLinterHandler extends AbstractJenkinsEditorHandler {
 					}
 
 				} catch (IOException e) {
-					JenkinsEditorMessageDialogSupport.INSTANCE.showError("Linter action failed" + e.getMessage());
+					StringBuilder sb = new StringBuilder();
+					sb.append("Linter action failed at '");
+					sb.append(configuration.getJenkinsURL());
+					sb.append("'\nMessage:");
+					sb.append(e.getMessage());
+					JenkinsEditorMessageDialogSupport.INSTANCE.showError(sb.toString());
+					
+					JenkinsEditorUtil.logError(sb.toString(), e);
 				} finally{
 					monitor.done();
 				}

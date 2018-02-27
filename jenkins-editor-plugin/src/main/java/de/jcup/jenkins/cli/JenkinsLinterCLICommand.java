@@ -21,6 +21,8 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 
+import de.jcup.jenkinseditor.JenkinsEditorUtil;
+
 /**
  * Transfers given code on execution time to jenkins server for validation
  * 
@@ -44,17 +46,23 @@ public class JenkinsLinterCLICommand extends AbstractJenkinsCLICommand<JenkinsLi
 			result.cliCallFailureMessage = "Was not able to start linter process.linter.\nMaybe server is down or CLI credentials are not set correctly.";
 			return result;
 		}
-		/* give code data as input */
-		try (BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(process.getOutputStream()))) {
-			bw.write(code);
+		int exitValue =  result.exitCode;
+		try{
+			writeCode(process, code);
+			fetchResult(process, result);
+			waitForProcessTermination(process);
+			exitValue = process.exitValue();
+		}catch(IOException e){
+			JenkinsEditorUtil.logError("IO problems on executing jenkins linter command", e);
 		}
-		/* fetch output to result */
-		try (BufferedReader br = new BufferedReader(new InputStreamReader(process.getInputStream()))) {
-			String line = null;
-			while ((line = br.readLine()) != null) {
-				result.appendOutput(line);
-			}
+		result.exitCode = exitValue;
+		if (! result.wasCLICallSuccessFul()) {
+			result.cliCallFailureMessage = "Access to Jenkins was not possible.\nMaybe credentials not valid or hostname/firewall problems.\nPlease check Jenkins CLI setup in preferences";
 		}
+		return result;
+	}
+
+	protected void waitForProcessTermination(Process process) {
 		while (process.isAlive()) {
 			try {
 				Thread.sleep(100);
@@ -62,12 +70,23 @@ public class JenkinsLinterCLICommand extends AbstractJenkinsCLICommand<JenkinsLi
 				break;
 			}
 		}
-		int exitValue = process.exitValue();
-		result.exitCode = exitValue;
-		if (! result.wasCLICallSuccessFul()) {
-			result.cliCallFailureMessage = "Access to Jenkins was not possible.\nMaybe credentials not valid or hostname/firewall problems.\nPlease check Jenkins CLI setup in preferences";
+	}
+
+	protected void fetchResult(Process process, JenkinsLinterCLIResult result) throws IOException {
+		/* fetch output to result */
+		try (BufferedReader br = new BufferedReader(new InputStreamReader(process.getInputStream()))) {
+			String line = null;
+			while ((line = br.readLine()) != null) {
+				result.appendOutput(line);
+			}
 		}
-		return result;
+	}
+
+	protected void writeCode(Process process, String code) throws IOException {
+		/* give code data as input */
+		try (BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(process.getOutputStream()))) {
+			bw.write(code);
+		}
 	}
 
 }

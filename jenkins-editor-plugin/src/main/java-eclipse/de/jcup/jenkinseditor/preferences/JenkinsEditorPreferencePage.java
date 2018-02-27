@@ -373,8 +373,13 @@ public class JenkinsEditorPreferencePage extends FieldEditorPreferencePage imple
 			            		if (result.wasCLICallSuccessFul()) {
 			            			dialogSupport.showInfo("Connection test successful!");
 			            		} else {
-			            			dialogSupport.showError(
-			            					"Connection test NOT successful!\n\n"+result.getCLICallFailureMessage());
+			            			StringBuilder sb = new StringBuilder();
+			            			sb.append("Connection test to '").append(configuration.getJenkinsURL()).append("' was NOT successful!\n\n");
+			            			sb.append(result.toString());
+									
+			            			String errorMessage = sb.toString();
+									dialogSupport.showError(errorMessage);
+									JenkinsEditorUtil.logError(errorMessage, null);
 			            		}
 			            		// use this to open a Shell in the UI thread
 			            	} catch (IOException e1) { 
