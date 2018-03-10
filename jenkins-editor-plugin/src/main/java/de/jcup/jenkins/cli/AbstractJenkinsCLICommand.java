@@ -13,7 +13,7 @@
  * and limitations under the License.
  *
  */
- package de.jcup.jenkins.cli;
+package de.jcup.jenkins.cli;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -24,8 +24,9 @@ import de.jcup.jenkins.cli.JenkinsCLIConfiguration.AuthMode;
 
 public abstract class AbstractJenkinsCLICommand<T extends JenkinsCLIResult, P> implements JenkinsCLICommand<T, P> {
 	private final static boolean DEBUG = Boolean.valueOf(System.getProperty("de.jcup.jenkins.cli.command.debug"));
-	private final static boolean INHERIT_IO = Boolean.valueOf(System.getProperty("de.jcup.jenkins.cli.command.inherit.io"));
-	
+	private final static boolean INHERIT_IO = Boolean
+			.valueOf(System.getProperty("de.jcup.jenkins.cli.command.inherit.io"));
+
 	protected abstract String getCLICommand();
 
 	/**
@@ -37,24 +38,20 @@ public abstract class AbstractJenkinsCLICommand<T extends JenkinsCLIResult, P> i
 	 *            parameter for the command
 	 */
 	public final T execute(JenkinsCLIConfiguration configuration, P parameter) throws IOException {
+		CLIJarCommandMessageBuilder<P> mb = new CLIJarCommandMessageBuilder<P>(this,configuration, parameter);
 
-		String[] commands = createCommands(configuration, parameter);
-		List<String> list = Arrays.asList(commands);
 		if (DEBUG) {
-			StringBuilder sb = new StringBuilder();
-			for (String s : list) {
-				sb.append(s);
-				sb.append(" ");
-			}
-			debug(sb.toString());
+			debug("execute:" + mb.buildMessage());
 		}
+		String[] commands = createCommands(configuration, parameter, false);
+		List<String> list = Arrays.asList(commands);
 
 		ProcessBuilder pb = new ProcessBuilder();
 		pb.command(list);
-		if (INHERIT_IO){
+		if (INHERIT_IO) {
 			pb.inheritIO();
 		}
-		
+
 		Process process = pb.start();
 		int timeOut = configuration.getTimeOutInSeconds();
 		if (timeOut > 0) {
@@ -63,32 +60,34 @@ public abstract class AbstractJenkinsCLICommand<T extends JenkinsCLIResult, P> i
 			t.setName("Jenkins command [" + getCLICommand() + "] timeout checker[" + timeOut + " seconds]");
 			t.start();
 		}
-		T result = handleStartedProcess(process, parameter);
+		T result = handleStartedProcess(process, parameter,mb);
 		return result;
 	}
+
 
 	protected void debug(String string) {
 		System.out.println("DEBUG: execute:" + string);
 	}
 
-	protected abstract T handleStartedProcess(Process process, P parameter) throws IOException;
+	protected abstract T handleStartedProcess(Process process, P parameter, CLIJarCommandMessageBuilder<P> mb) throws IOException;
 
-	protected String[] createCommands(JenkinsCLIConfiguration configuration, P parameter) {
-		return createExecutionStrings(configuration);
+	protected String[] createCommands(JenkinsCLIConfiguration configuration, P parameter, boolean hidePasswords) {
+		return createExecutionStrings(configuration, hidePasswords);
 	}
 
-	protected String[] createExecutionStrings(JenkinsCLIConfiguration configuration, String... parameters) {
+	protected String[] createExecutionStrings(JenkinsCLIConfiguration configuration, boolean hidePasswords,
+			String... parameters) {
 		List<String> list = new ArrayList<>();
 		list.add("java");
 		list.add("-jar");
 		list.add(configuration.getPathToJenkinsCLIJar());
 
-		if (configuration.getJenkinsURL()!=null){
+		if (configuration.getJenkinsURL() != null) {
 			list.add("-s");
 			list.add(configuration.getJenkinsURL());
 		}
-		
-		addOptions(configuration, list);
+
+		addOptions(configuration, hidePasswords, list);
 
 		list.add(getCLICommand());
 
@@ -97,14 +96,19 @@ public abstract class AbstractJenkinsCLICommand<T extends JenkinsCLIResult, P> i
 			list.add("--username");
 			list.add("" + configuration.getUser());
 			list.add("--secret");
-			list.add("" + configuration.getPassword());
+			if (hidePasswords) {
+				/* when for output we do NOT show the password... */
+				list.add("**********");
+			} else {
+				list.add("" + configuration.getPassword());
+			}
 		}
 
-		addParameters(list, parameters);
+		addParameters(list, hidePasswords, parameters);
 		return list.toArray(new String[list.size()]);
 	}
 
-	protected void addParameters(List<String> list, String... parameters) {
+	protected void addParameters(List<String> list, boolean hidePassords, String... parameters) {
 		for (String parameter : parameters) {
 			if (parameter == null) {
 				continue;
@@ -113,7 +117,7 @@ public abstract class AbstractJenkinsCLICommand<T extends JenkinsCLIResult, P> i
 		}
 	}
 
-	protected void addOptions(JenkinsCLIConfiguration configuration, List<String> list) {
+	protected void addOptions(JenkinsCLIConfiguration configuration, boolean hidePasswords, List<String> list) {
 		/* ------------------ */
 		/* - OPTIONS (opts) - */
 		/* ------------------ */
@@ -123,18 +127,24 @@ public abstract class AbstractJenkinsCLICommand<T extends JenkinsCLIResult, P> i
 		if (configuration.isSSHenabled()) {
 			list.add("-ssh");
 		}
-		
-		if (configuration.isCertificateCheckDisabled()){
+
+		if (configuration.isCertificateCheckDisabled()) {
 			list.add("-noCertificateCheck");
 		}
-		
 
 		AuthMode authMode = configuration.getAuthMode();
 		switch (authMode) {
 		case API_TOKEN:
 			String apiToken = configuration.getAPIToken();
 			list.add("-auth");
-			list.add(user + ":" + apiToken);
+			StringBuilder authSb = new StringBuilder();
+			authSb.append(user).append(":");
+			if (hidePasswords){
+				authSb.append("*******");
+			}else {
+				authSb.append(apiToken);
+			}
+			list.add(authSb.toString());
 			break;
 		case PASSWORD:
 			// done later:
@@ -174,7 +184,7 @@ public abstract class AbstractJenkinsCLICommand<T extends JenkinsCLIResult, P> i
 					}
 				} catch (InterruptedException e) {
 					/* ignore */
-					break;
+					Thread.currentThread().interrupt();
 				}
 			}
 		}

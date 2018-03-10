@@ -50,8 +50,9 @@ public class JenkinsCLIHelpTestMain {
 		}
 
 		@Override
-		protected JenkinsCLIResult handleStartedProcess(Process process, String parameter) throws IOException {
-			return null;
+		protected JenkinsCLIResult handleStartedProcess(Process process, String parameter,
+				CLIJarCommandMessageBuilder<String> mb) throws IOException {
+			return new JenkinsHelpResult();
 		}
 		
 	}

@@ -35,9 +35,9 @@ public class JenkinsLinterCLICommand extends AbstractJenkinsCLICommand<JenkinsLi
 	public String getCLICommand() {
 		return "declarative-linter";
 	}
-
-	@Override
-	protected JenkinsLinterCLIResult handleStartedProcess(Process process, String code) throws IOException {
+@Override
+protected JenkinsLinterCLIResult handleStartedProcess(Process process, String code,
+		CLIJarCommandMessageBuilder<String> mb) throws IOException {
 
 		JenkinsLinterCLIResult result = new JenkinsLinterCLIResult();
 		if (!process.isAlive()) {
@@ -57,9 +57,19 @@ public class JenkinsLinterCLICommand extends AbstractJenkinsCLICommand<JenkinsLi
 		}
 		result.exitCode = exitValue;
 		if (! result.wasCLICallSuccessFul()) {
-			result.cliCallFailureMessage = "Access to Jenkins was not possible.\nMaybe credentials not valid or hostname/firewall problems.\nPlease check Jenkins CLI setup in preferences";
+			
+			result.cliCallFailureMessage = buildNoAccessToJenkinsMessage(mb);
 		}
 		return result;
+	}
+
+	private String buildNoAccessToJenkinsMessage(CLIJarCommandMessageBuilder<String> mb) {
+		StringBuilder sb = new StringBuilder();
+		sb.append("Access to Jenkins was not possible by command:\n\n");
+		sb.append(mb.buildMessage()).append("\n\n");
+		sb.append("Maybe credentials not valid or hostname/firewall problems.\n");
+		sb.append("Please check Jenkins CLI setup in preferences");
+		return sb.toString();
 	}
 
 	protected void waitForProcessTermination(Process process) {

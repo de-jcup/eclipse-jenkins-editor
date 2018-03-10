@@ -17,6 +17,9 @@ package de.jcup.jenkinseditor;
 
 import static de.jcup.egradle.eclipse.util.EclipseUtil.*;
 
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Shell;
 
@@ -62,6 +65,20 @@ public class JenkinsEditorMessageDialogSupport {
 			public void run() {
 				Shell shell = getActiveWorkbenchShell();
 				MessageDialog.openError(shell, JENKINS_EDITOR, message);
+			}
+
+		});
+
+	}
+	
+	public void showErrorWithDetails(String message,String details) {
+		EclipseUtil.safeAsyncExec(new Runnable() {
+
+			@Override
+			public void run() {
+				Shell shell = getActiveWorkbenchShell();
+				IStatus status = new Status(IStatus.ERROR,JenkinsEditorActivator.PLUGIN_ID,message, new Throwable(details));
+				ErrorDialog.openError(shell, JENKINS_EDITOR, null, status);
 			}
 
 		});
