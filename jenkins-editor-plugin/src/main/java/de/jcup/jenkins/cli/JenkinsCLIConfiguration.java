@@ -15,6 +15,9 @@
  */
  package de.jcup.jenkins.cli;
 
+import java.util.LinkedHashSet;
+import java.util.Set;
+
 public class JenkinsCLIConfiguration {
 
 	private String JenkinsURL;
@@ -50,6 +53,7 @@ public class JenkinsCLIConfiguration {
 	
 	private AuthMode authMode;
 	private boolean certificateCheckDisabled;
+	private Set<String> systemProxyProperties;
 	
 	public void setAuthMode(AuthMode authMode) {
 		this.authMode = authMode;
@@ -132,6 +136,17 @@ public class JenkinsCLIConfiguration {
 	
 	public boolean isCertificateCheckDisabled() {
 		return certificateCheckDisabled;
+	}
+
+	public void setProxySystemProperties(Set<String> systemProperties) {
+		systemProxyProperties=systemProperties;
+	}
+	
+	public Set<String> getSystemProxyProperties() {
+		if (systemProxyProperties==null){
+			return new LinkedHashSet<>();
+		}
+		return systemProxyProperties;
 	}
 	
 }

@@ -18,8 +18,10 @@ package de.jcup.jenkinseditor;
 import java.io.File;
 import java.io.IOException;
 
+import org.eclipse.core.net.proxy.IProxyService;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
+import org.osgi.util.tracker.ServiceTracker;
 
 import de.jcup.egradle.eclipse.util.ColorManager;
 import de.jcup.egradle.eclipse.util.EclipseResourceHelper;
@@ -37,6 +39,7 @@ public class JenkinsEditorActivator extends AbstractUIPlugin {
 	private static JenkinsEditorActivator plugin;
 	private ColorManager colorManager;
 
+	private ServiceTracker<IProxyService, ?> proxyTracker;
 
 	/**
 	 * The constructor
@@ -45,15 +48,19 @@ public class JenkinsEditorActivator extends AbstractUIPlugin {
 		colorManager = new ColorManager();
 		// setup log adapter with editor log support
 		JenkinsLogAdapter.INSTANCE.delegatesTo(JenkinsEditorLogSupport.INSTANCE);
+
 	}
 
 	public ColorManager getColorManager() {
 		return colorManager;
 	}
 
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
 		plugin = this;
+		proxyTracker = new ServiceTracker(context, IProxyService.class, null);
+		proxyTracker.open();
 	}
 
 	public void stop(BundleContext context) throws Exception {
@@ -76,4 +83,7 @@ public class JenkinsEditorActivator extends AbstractUIPlugin {
 		return file;
 	}
 
+	public IProxyService getProxyService() {
+		return (IProxyService) proxyTracker.getService();
+	}
 }

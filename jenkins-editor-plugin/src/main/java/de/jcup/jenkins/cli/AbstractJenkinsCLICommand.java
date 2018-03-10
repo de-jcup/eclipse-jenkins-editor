@@ -74,6 +74,7 @@ public abstract class AbstractJenkinsCLICommand<T extends JenkinsCLIResult, P> i
 			String... parameters) {
 		List<String> list = new ArrayList<>();
 		list.add("java");
+		addSystemSettings(list, configuration);
 		list.add("-jar");
 		list.add(configuration.getPathToJenkinsCLIJar());
 
@@ -100,7 +101,14 @@ public abstract class AbstractJenkinsCLICommand<T extends JenkinsCLIResult, P> i
 		}
 
 		addParameters(list, hidePasswords, parameters);
+		
 		return list.toArray(new String[list.size()]);
+	}
+
+	private void addSystemSettings(List<String> list, JenkinsCLIConfiguration configuration) {
+		/* FIXME Albert: 11.03.2018: make proxy list entry about password not visible inside messages!*/
+		list.addAll(configuration.getSystemProxyProperties());
+		
 	}
 
 	protected void addParameters(List<String> list, boolean hidePassords, String... parameters) {

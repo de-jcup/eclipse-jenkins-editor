@@ -60,6 +60,7 @@ import de.jcup.jenkinseditor.JenkinsEditorLogSupport;
 import de.jcup.jenkinseditor.JenkinsEditorMessageDialogSupport;
 import de.jcup.jenkinseditor.JenkinsEditorUtil;
 import de.jcup.jenkinseditor.handlers.CallLinterHandler;
+import de.jcup.jenkinseditor.handlers.ConfigurationBuilder;
 
 /**
  * Parts are inspired by <a href=
@@ -98,10 +99,12 @@ public class JenkinsEditorPreferencePage extends FieldEditorPreferencePage imple
 	private FileFieldEditor jarFileLocation;
 	// private RadioGroupFieldEditor authorizationType;
 	private UserCredentials temporaryCredentials;
+	private ConfigurationBuilder configBuilder;
 
 	public JenkinsEditorPreferencePage() {
 		super(GRID);
 		setPreferenceStore(JenkinsEditorPreferences.getInstance().getPreferenceStore());
+		configBuilder=new ConfigurationBuilder();
 	}
 
 	@Override
@@ -345,8 +348,7 @@ public class JenkinsEditorPreferencePage extends FieldEditorPreferencePage imple
 				JenkinsLinterCLICommand command = new JenkinsLinterCLICommand();
 				JenkinsEditorMessageDialogSupport dialogSupport = JenkinsEditorMessageDialogSupport.INSTANCE;
 				try {
-					JenkinsCLIConfiguration configuration = CallLinterHandler
-							.createConfiguration(new JenkinsDefaultURLProvider());
+					JenkinsCLIConfiguration configuration = configBuilder.createConfiguration(new JenkinsDefaultURLProvider());
 					if (temporaryCredentials != null) {
 						/*
 						 * if temporary credentials exists, we use the temporary
