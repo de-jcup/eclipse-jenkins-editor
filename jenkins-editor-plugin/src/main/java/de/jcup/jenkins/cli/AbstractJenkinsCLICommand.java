@@ -121,6 +121,8 @@ public abstract class AbstractJenkinsCLICommand<T extends JenkinsCLIResult, P> i
 
 		if (configuration.isSSHenabled()) {
 			list.add("-ssh");
+		}else{
+			list.add("-http");
 		}
 
 		if (configuration.isCertificateCheckDisabled()) {
