@@ -40,6 +40,7 @@ protected JenkinsLinterCLIResult handleStartedProcess(Process process, String co
 		CLIJarCommandMessageBuilder<String> mb) throws IOException {
 
 		JenkinsLinterCLIResult result = new JenkinsLinterCLIResult();
+
 		if (!process.isAlive()) {
 			int exitValue = process.exitValue();
 			result.exitCode = exitValue;
@@ -85,6 +86,12 @@ protected JenkinsLinterCLIResult handleStartedProcess(Process process, String co
 	protected void fetchResult(Process process, JenkinsLinterCLIResult result) throws IOException {
 		/* fetch output to result */
 		try (BufferedReader br = new BufferedReader(new InputStreamReader(process.getInputStream()))) {
+			String line = null;
+			while ((line = br.readLine()) != null) {
+				result.appendOutput(line);
+			}
+		}
+		try (BufferedReader br = new BufferedReader(new InputStreamReader(process.getErrorStream()))) {
 			String line = null;
 			while ((line = br.readLine()) != null) {
 				result.appendOutput(line);

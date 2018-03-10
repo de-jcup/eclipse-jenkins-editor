@@ -24,8 +24,6 @@ import de.jcup.jenkins.cli.JenkinsCLIConfiguration.AuthMode;
 
 public abstract class AbstractJenkinsCLICommand<T extends JenkinsCLIResult, P> implements JenkinsCLICommand<T, P> {
 	private final static boolean DEBUG = Boolean.valueOf(System.getProperty("de.jcup.jenkins.cli.command.debug"));
-	private final static boolean INHERIT_IO = Boolean
-			.valueOf(System.getProperty("de.jcup.jenkins.cli.command.inherit.io"));
 
 	protected abstract String getCLICommand();
 
@@ -48,9 +46,6 @@ public abstract class AbstractJenkinsCLICommand<T extends JenkinsCLIResult, P> i
 
 		ProcessBuilder pb = new ProcessBuilder();
 		pb.command(list);
-		if (INHERIT_IO) {
-			pb.inheritIO();
-		}
 
 		Process process = pb.start();
 		int timeOut = configuration.getTimeOutInSeconds();
