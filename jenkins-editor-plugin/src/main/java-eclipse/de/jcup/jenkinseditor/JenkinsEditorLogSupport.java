@@ -20,10 +20,11 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 
 import de.jcup.egradle.core.util.ILogSupport;
+import de.jcup.jenkins.util.JenkinsLogAdaptable;
 
-public class JenkinsEditorLogSupport implements ILogSupport{
+public class JenkinsEditorLogSupport implements ILogSupport, JenkinsLogAdaptable{
 
-	public static final ILogSupport INSTANCE = new JenkinsEditorLogSupport();
+	public static final JenkinsEditorLogSupport INSTANCE = new JenkinsEditorLogSupport();
 	
 	@Override
 	public void logInfo(String info) {

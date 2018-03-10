@@ -21,7 +21,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 
-import de.jcup.jenkinseditor.JenkinsEditorUtil;
+import de.jcup.jenkins.util.JenkinsLogAdapter;
 
 /**
  * Transfers given code on execution time to jenkins server for validation
@@ -53,7 +53,7 @@ public class JenkinsLinterCLICommand extends AbstractJenkinsCLICommand<JenkinsLi
 			waitForProcessTermination(process);
 			exitValue = process.exitValue();
 		}catch(IOException e){
-			JenkinsEditorUtil.logError("IO problems on executing jenkins linter command", e);
+			JenkinsLogAdapter.INSTANCE.logError("IO problems on executing jenkins linter command", e);
 		}
 		result.exitCode = exitValue;
 		if (! result.wasCLICallSuccessFul()) {

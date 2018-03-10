@@ -23,6 +23,7 @@ import org.osgi.framework.BundleContext;
 
 import de.jcup.egradle.eclipse.util.ColorManager;
 import de.jcup.egradle.eclipse.util.EclipseResourceHelper;
+import de.jcup.jenkins.util.JenkinsLogAdapter;
 
 /**
  * The activator class controls the plug-in life cycle
@@ -42,6 +43,8 @@ public class JenkinsEditorActivator extends AbstractUIPlugin {
 	 */
 	public JenkinsEditorActivator() {
 		colorManager = new ColorManager();
+		// setup log adapter with editor log support
+		JenkinsLogAdapter.INSTANCE.delegatesTo(JenkinsEditorLogSupport.INSTANCE);
 	}
 
 	public ColorManager getColorManager() {

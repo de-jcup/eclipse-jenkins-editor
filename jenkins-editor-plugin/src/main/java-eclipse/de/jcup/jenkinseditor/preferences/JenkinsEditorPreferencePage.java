@@ -56,6 +56,7 @@ import de.jcup.jenkins.cli.JenkinsCLIConfiguration;
 import de.jcup.jenkins.cli.JenkinsDefaultURLProvider;
 import de.jcup.jenkins.cli.JenkinsLinterCLICommand;
 import de.jcup.jenkins.cli.JenkinsLinterCLIResult;
+import de.jcup.jenkinseditor.JenkinsEditorLogSupport;
 import de.jcup.jenkinseditor.JenkinsEditorMessageDialogSupport;
 import de.jcup.jenkinseditor.JenkinsEditorUtil;
 import de.jcup.jenkinseditor.handlers.CallLinterHandler;
@@ -129,7 +130,7 @@ public class JenkinsEditorPreferencePage extends FieldEditorPreferencePage imple
 					node.put(ID_SECURED_USER_KEY, temporaryCredentials.username, true);
 					node.put(ID_SECURED_API_KEY, temporaryCredentials.secret, true);
 				} catch (StorageException e1) {
-					JenkinsEditorUtil.logError("Wasn't able to store credentials", e1);
+					JenkinsEditorLogSupport.INSTANCE.logError("Wasn't able to store credentials", e1);
 					return false;
 				}
 			}
@@ -379,7 +380,7 @@ public class JenkinsEditorPreferencePage extends FieldEditorPreferencePage imple
 									
 			            			String errorMessage = sb.toString();
 									dialogSupport.showError(errorMessage);
-									JenkinsEditorUtil.logError(errorMessage, null);
+									JenkinsEditorLogSupport.INSTANCE.logError(errorMessage, null);
 			            		}
 			            		// use this to open a Shell in the UI thread
 			            	} catch (IOException e1) { 

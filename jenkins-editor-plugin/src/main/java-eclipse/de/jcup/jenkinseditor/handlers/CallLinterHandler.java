@@ -39,6 +39,7 @@ import de.jcup.jenkins.linter.JenkinsLinterError;
 import de.jcup.jenkins.linter.JenkinsLinterErrorBuilder;
 import de.jcup.jenkinseditor.JenkinsEditor;
 import de.jcup.jenkinseditor.JenkinsEditorActivator;
+import de.jcup.jenkinseditor.JenkinsEditorLogSupport;
 import de.jcup.jenkinseditor.JenkinsEditorMessageDialogSupport;
 import de.jcup.jenkinseditor.JenkinsEditorUtil;
 import de.jcup.jenkinseditor.preferences.JenkinsEditorPreferences;
@@ -62,7 +63,7 @@ public class CallLinterHandler extends AbstractJenkinsEditorHandler {
 		try {
 			executeLinterFor(code, editor);
 		} catch (IOException e) {
-			JenkinsEditorUtil.logError("Lint call not possible", e);
+			editor.getLogSupport().logError("Lint call not possible", e);
 		}
 	}
 
@@ -115,7 +116,7 @@ public class CallLinterHandler extends AbstractJenkinsEditorHandler {
 					sb.append(e.getMessage());
 					JenkinsEditorMessageDialogSupport.INSTANCE.showError(sb.toString());
 					
-					JenkinsEditorUtil.logError(sb.toString(), e);
+					JenkinsEditorLogSupport.INSTANCE.logError(sb.toString(), e);
 				} finally{
 					monitor.done();
 				}
@@ -125,7 +126,7 @@ public class CallLinterHandler extends AbstractJenkinsEditorHandler {
 		try {
 			dialog.run(true, false, runnable);
 		} catch (InvocationTargetException | InterruptedException e) {
-			JenkinsEditorUtil.logError("Linter execution failed", e);
+			JenkinsEditorLogSupport.INSTANCE.logError("Linter execution failed", e);
 		}
 		
 		
@@ -157,7 +158,7 @@ public class CallLinterHandler extends AbstractJenkinsEditorHandler {
 
 			} catch (StorageException e1) {
 				JenkinsEditorMessageDialogSupport.INSTANCE.showError("No access to secured user credentials!");
-				JenkinsEditorUtil.logError("Was not able to fetch secured credentials", e1);
+				JenkinsEditorLogSupport.INSTANCE.logError("Was not able to fetch secured credentials", e1);
 				return null;
 			}
 		}

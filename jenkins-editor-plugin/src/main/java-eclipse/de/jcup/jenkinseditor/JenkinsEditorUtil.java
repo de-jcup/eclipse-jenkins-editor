@@ -30,17 +30,7 @@ public class JenkinsEditorUtil {
 
 	private static UnpersistedMarkerHelper linterMarkerHelper = new UnpersistedMarkerHelper(
 			"de.jcup.jenkinseditor.linter.error");
-	public static void logInfo(String info) {
-		getLog().log(new Status(IStatus.INFO, JenkinsEditorActivator.PLUGIN_ID, info));
-	}
-
-	public static void logWarning(String warning) {
-		getLog().log(new Status(IStatus.WARNING, JenkinsEditorActivator.PLUGIN_ID, warning));
-	}
-
-	public static void logError(String error, Throwable t) {
-		getLog().log(new Status(IStatus.ERROR, JenkinsEditorActivator.PLUGIN_ID, error, t));
-	}
+	
 
 	public static void removeLinterErrors(IEditorPart editor) {
 		if (editor == null) {
@@ -76,7 +66,7 @@ public class JenkinsEditorUtil {
 		try {
 			linterMarkerHelper.createErrorMarker(editorResource, error.getMessage(), error.getLine());
 		} catch (CoreException e) {
-			logError("Was not able to add error markers", e);
+			JenkinsEditorLogSupport.INSTANCE.logError("Was not able to add error markers", e);
 		}
 
 	}
