@@ -113,5 +113,9 @@ public class JenkinsEditorPreferences extends AbstractEditorPreferences {
 	public boolean isCertficateCheckDisabled() {
 		return getBooleanPreference(P_CERTIFICATE_CHECK_DISABLED);
 	}
+	
+	public boolean isUseExclipseProxyEnabled() {
+		return getBooleanPreference(P_USE_ECLIPSE_PROXY_SETTINGS_ENABLED);
+	}
 
 }

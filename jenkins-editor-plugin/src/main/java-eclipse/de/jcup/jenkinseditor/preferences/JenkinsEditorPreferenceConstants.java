@@ -43,7 +43,10 @@ public enum JenkinsEditorPreferenceConstants implements PreferenceIdentifiable{
 	
 	P_PATH_TO_JENKINS_CLI_JAR("pathToJenkinsCliJar"),
 	
-	P_CERTIFICATE_CHECK_DISABLED("certificateCheckIsDisabled")
+	P_CERTIFICATE_CHECK_DISABLED("certificateCheckIsDisabled"),
+	
+	P_USE_ECLIPSE_PROXY_SETTINGS_ENABLED("useEclipseProxySettingsEnabled")
+	
 	
 	;
 

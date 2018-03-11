@@ -28,7 +28,8 @@ import org.eclipse.jface.preference.IPreferenceStore;
 public class JenkinsEditorPreferenceInitializer extends AbstractPreferenceInitializer {
 
 	public void initializeDefaultPreferences() {
-		IPreferenceStore store = getPreferences().getPreferenceStore();
+		JenkinsEditorPreferences preferences = getPreferences();
+		IPreferenceStore store = preferences.getPreferenceStore();
 		store.setDefault(P_LINK_OUTLINE_WITH_EDITOR.getId(), true);
 		
 		/* bracket rendering configuration */
@@ -48,27 +49,28 @@ public class JenkinsEditorPreferenceInitializer extends AbstractPreferenceInitia
 		
 		/* CLI setup */
 		store.setDefault(P_CERTIFICATE_CHECK_DISABLED.getId(), false);
+		store.setDefault(P_USE_ECLIPSE_PROXY_SETTINGS_ENABLED.getId(), true);
 		
 		/* bracket color */
-		getPreferences().setDefaultColor(P_EDITOR_MATCHING_BRACKETS_COLOR, JenkinsEditorColorConstants.GRAY_JAVA);
+		preferences.setDefaultColor(P_EDITOR_MATCHING_BRACKETS_COLOR, JenkinsEditorColorConstants.GRAY_JAVA);
 		
 		/* editor colors */
-		getPreferences().setDefaultColor(COLOR_NORMAL_TEXT, JenkinsEditorColorConstants.BLACK);
+		preferences.setDefaultColor(COLOR_NORMAL_TEXT, JenkinsEditorColorConstants.BLACK);
 
-		getPreferences().setDefaultColor(COLOR_JAVA_KEYWORD, JenkinsEditorColorConstants.KEYWORD_DEFAULT_PURPLE);
-		getPreferences().setDefaultColor(COLOR_GROOVY_KEYWORD, JenkinsEditorColorConstants.KEYWORD_DEFAULT_PURPLE);
-		getPreferences().setDefaultColor(COLOR_GROOVY_DOC, JenkinsEditorColorConstants.DARK_BLUE);
-		getPreferences().setDefaultColor(COLOR_NORMAL_STRING, JenkinsEditorColorConstants.STRING_DEFAULT_BLUE);
-		getPreferences().setDefaultColor(COLOR_ANNOTATION, JenkinsEditorColorConstants.MIDDLE_GRAY);
+		preferences.setDefaultColor(COLOR_JAVA_KEYWORD, JenkinsEditorColorConstants.KEYWORD_DEFAULT_PURPLE);
+		preferences.setDefaultColor(COLOR_GROOVY_KEYWORD, JenkinsEditorColorConstants.KEYWORD_DEFAULT_PURPLE);
+		preferences.setDefaultColor(COLOR_GROOVY_DOC, JenkinsEditorColorConstants.DARK_BLUE);
+		preferences.setDefaultColor(COLOR_NORMAL_STRING, JenkinsEditorColorConstants.STRING_DEFAULT_BLUE);
+		preferences.setDefaultColor(COLOR_ANNOTATION, JenkinsEditorColorConstants.MIDDLE_GRAY);
 		
 		
-		getPreferences().setDefaultColor(COLOR_GSTRING, JenkinsEditorColorConstants.ROYALBLUE);
-		getPreferences().setDefaultColor(COLOR_COMMENT, JenkinsEditorColorConstants.GREEN_JAVA);
+		preferences.setDefaultColor(COLOR_GSTRING, JenkinsEditorColorConstants.ROYALBLUE);
+		preferences.setDefaultColor(COLOR_COMMENT, JenkinsEditorColorConstants.GREEN_JAVA);
 		
-		getPreferences().setDefaultColor(COLOR_JENKINS_KEYWORDS, JenkinsEditorColorConstants.RED_KEYWORD);
+		preferences.setDefaultColor(COLOR_JENKINS_KEYWORDS, JenkinsEditorColorConstants.RED_KEYWORD);
 		
-		getPreferences().setDefaultColor(COLOR_JENKINS_VARIABLES, JenkinsEditorColorConstants.DARK_BLUE);
-		getPreferences().setDefaultColor(COLOR_JAVA_LITERAL, JenkinsEditorColorConstants.KEYWORD_DEFAULT_PURPLE);
+		preferences.setDefaultColor(COLOR_JENKINS_VARIABLES, JenkinsEditorColorConstants.DARK_BLUE);
+		preferences.setDefaultColor(COLOR_JAVA_LITERAL, JenkinsEditorColorConstants.KEYWORD_DEFAULT_PURPLE);
 	}
 
 	private JenkinsEditorPreferences getPreferences() {

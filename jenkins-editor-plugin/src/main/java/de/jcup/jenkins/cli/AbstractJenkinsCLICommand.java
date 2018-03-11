@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import de.jcup.egradle.core.util.StringUtilsAccess;
 import de.jcup.jenkins.cli.JenkinsCLIConfiguration.AuthMode;
 
 public abstract class AbstractJenkinsCLICommand<T extends JenkinsCLIResult, P> implements JenkinsCLICommand<T, P> {
@@ -36,7 +37,7 @@ public abstract class AbstractJenkinsCLICommand<T extends JenkinsCLIResult, P> i
 	 *            parameter for the command
 	 */
 	public final T execute(JenkinsCLIConfiguration configuration, P parameter) throws IOException {
-		CLIJarCommandMessageBuilder<P> mb = new CLIJarCommandMessageBuilder<P>(this,configuration, parameter);
+		CLIJarCommandMessageBuilder<P> mb = new CLIJarCommandMessageBuilder<P>(this, configuration, parameter);
 
 		if (DEBUG) {
 			debug("execute:" + mb.buildMessage());
@@ -55,16 +56,16 @@ public abstract class AbstractJenkinsCLICommand<T extends JenkinsCLIResult, P> i
 			t.setName("Jenkins command [" + getCLICommand() + "] timeout checker[" + timeOut + " seconds]");
 			t.start();
 		}
-		T result = handleStartedProcess(process, parameter,mb);
+		T result = handleStartedProcess(process, parameter, mb);
 		return result;
 	}
-
 
 	protected void debug(String string) {
 		System.out.println("DEBUG: execute:" + string);
 	}
 
-	protected abstract T handleStartedProcess(Process process, P parameter, CLIJarCommandMessageBuilder<P> mb) throws IOException;
+	protected abstract T handleStartedProcess(Process process, P parameter, CLIJarCommandMessageBuilder<P> mb)
+			throws IOException;
 
 	protected String[] createCommands(JenkinsCLIConfiguration configuration, P parameter, boolean hidePasswords) {
 		return createExecutionStrings(configuration, hidePasswords);
@@ -74,7 +75,7 @@ public abstract class AbstractJenkinsCLICommand<T extends JenkinsCLIResult, P> i
 			String... parameters) {
 		List<String> list = new ArrayList<>();
 		list.add("java");
-		addSystemSettings(list, configuration);
+		addSystemProperties(list, configuration);
 		list.add("-jar");
 		list.add(configuration.getPathToJenkinsCLIJar());
 
@@ -99,16 +100,19 @@ public abstract class AbstractJenkinsCLICommand<T extends JenkinsCLIResult, P> i
 				list.add("" + configuration.getPassword());
 			}
 		}
-
 		addParameters(list, hidePasswords, parameters);
-		
+
 		return list.toArray(new String[list.size()]);
 	}
 
-	private void addSystemSettings(List<String> list, JenkinsCLIConfiguration configuration) {
-		/* FIXME Albert: 11.03.2018: make proxy list entry about password not visible inside messages!*/
+	private void addSystemProperties(List<String> list, JenkinsCLIConfiguration configuration) {
+		/*
+		 * TODO Albert: 11.03.2018: when system proxy properties will be used
+		 * again we hae to ensure proxy list entries containing passwords are
+		 * not visible inside messages!
+		 */
 		list.addAll(configuration.getSystemProxyProperties());
-		
+
 	}
 
 	protected void addParameters(List<String> list, boolean hidePassords, String... parameters) {
@@ -129,10 +133,14 @@ public abstract class AbstractJenkinsCLICommand<T extends JenkinsCLIResult, P> i
 
 		if (configuration.isSSHenabled()) {
 			list.add("-ssh");
-		}else{
+		} else {
 			list.add("-http");
 		}
-
+		String proxyParam = configuration.getProxyParameter();
+		if (! StringUtilsAccess.isBlank(proxyParam)){
+			list.add("-p");
+			list.add(proxyParam);
+		}
 		if (configuration.isCertificateCheckDisabled()) {
 			list.add("-noCertificateCheck");
 		}
@@ -144,9 +152,9 @@ public abstract class AbstractJenkinsCLICommand<T extends JenkinsCLIResult, P> i
 			list.add("-auth");
 			StringBuilder authSb = new StringBuilder();
 			authSb.append(user).append(":");
-			if (hidePasswords){
+			if (hidePasswords) {
 				authSb.append("*******");
-			}else {
+			} else {
 				authSb.append(apiToken);
 			}
 			list.add(authSb.toString());

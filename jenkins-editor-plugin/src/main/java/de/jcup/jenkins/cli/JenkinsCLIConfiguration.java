@@ -13,7 +13,7 @@
  * and limitations under the License.
  *
  */
- package de.jcup.jenkins.cli;
+package de.jcup.jenkins.cli;
 
 import java.util.LinkedHashSet;
 import java.util.Set;
@@ -30,42 +30,43 @@ public class JenkinsCLIConfiguration {
 	private String apiToken;
 	private String password;
 
-	public enum AuthMode{
+	public enum AuthMode {
 		API_TOKEN("apitoken"),
-		
+
 		PASSWORD("secret"),
-		
+
 		PRIVATE_KEY("privatekey"),
-		
+
 		ANONYMOUS("anonymous");
 
 		private String id;
 
-		private AuthMode(String id){
-			this.id=id;
+		private AuthMode(String id) {
+			this.id = id;
 		}
-		
+
 		public String getId() {
 			return id;
 		}
-		
+
 	}
-	
+
 	private AuthMode authMode;
 	private boolean certificateCheckDisabled;
 	private Set<String> systemProxyProperties;
-	
+	private String proxyParameter;
+
 	public void setAuthMode(AuthMode authMode) {
 		this.authMode = authMode;
 	}
-	
+
 	public AuthMode getAuthMode() {
-		if (authMode==null){
-			authMode=AuthMode.API_TOKEN;
+		if (authMode == null) {
+			authMode = AuthMode.API_TOKEN;
 		}
 		return authMode;
 	}
-	
+
 	public void setSSHenabled(boolean sshEnabled) {
 		this.sshEnabled = sshEnabled;
 	}
@@ -125,7 +126,7 @@ public class JenkinsCLIConfiguration {
 	public void setPassword(String password) {
 		this.password = password;
 	}
-	
+
 	public String getPassword() {
 		return password;
 	}
@@ -133,20 +134,26 @@ public class JenkinsCLIConfiguration {
 	public void setCertificateCheckDisabled(boolean certificateCheckDisabled) {
 		this.certificateCheckDisabled = certificateCheckDisabled;
 	}
-	
+
 	public boolean isCertificateCheckDisabled() {
 		return certificateCheckDisabled;
 	}
 
 	public void setProxySystemProperties(Set<String> systemProperties) {
-		systemProxyProperties=systemProperties;
+		systemProxyProperties = systemProperties;
 	}
-	
+
 	public Set<String> getSystemProxyProperties() {
-		if (systemProxyProperties==null){
+		if (systemProxyProperties == null) {
 			return new LinkedHashSet<>();
 		}
 		return systemProxyProperties;
 	}
-	
+
+	public void setProxyParameter(String proxyParameter) {
+		this.proxyParameter = proxyParameter;
+	}
+	public String getProxyParameter() {
+		return proxyParameter;
+	}
 }

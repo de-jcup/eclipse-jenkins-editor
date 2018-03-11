@@ -312,6 +312,8 @@ public class JenkinsEditorPreferencePage extends FieldEditorPreferencePage imple
 		BooleanFieldEditor certificateCheckDisabled = new BooleanFieldEditor(P_CERTIFICATE_CHECK_DISABLED.getId(), "Disable certificate check",  jenkinsCLIComposite);
 		addField(certificateCheckDisabled);		
 		
+		BooleanFieldEditor useEclipseProxySettingsEnabled = new BooleanFieldEditor(P_USE_ECLIPSE_PROXY_SETTINGS_ENABLED.getId(), "Use eclipse proxy settings",  jenkinsCLIComposite);
+		addField(useEclipseProxySettingsEnabled);		
 		
 		jarFileLocation = new FileFieldEditor(P_PATH_TO_JENKINS_CLI_JAR.getId(), "Path to jenkins-cli.jar (optional)",
 				jenkinsCLIComposite);
@@ -381,7 +383,7 @@ public class JenkinsEditorPreferencePage extends FieldEditorPreferencePage imple
 			            			sb.append(result.toString());
 									
 			            			String errorMessage = sb.toString();
-									dialogSupport.showError(errorMessage);
+									dialogSupport.showErrorWithDetails("Connection test failed", errorMessage);
 									JenkinsEditorLogSupport.INSTANCE.logError(errorMessage, null);
 			            		}
 			            		// use this to open a Shell in the UI thread
