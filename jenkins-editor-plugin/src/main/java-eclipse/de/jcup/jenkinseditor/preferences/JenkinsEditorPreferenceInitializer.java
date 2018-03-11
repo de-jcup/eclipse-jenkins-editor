@@ -49,7 +49,7 @@ public class JenkinsEditorPreferenceInitializer extends AbstractPreferenceInitia
 		
 		/* CLI setup */
 		store.setDefault(P_CERTIFICATE_CHECK_DISABLED.getId(), false);
-		store.setDefault(P_USE_ECLIPSE_PROXY_SETTINGS_ENABLED.getId(), true);
+		store.setDefault(P_USE_ECLIPSE_PROXY_SETTINGS_ENABLED.getId(), false);// false so user have same setup as before the feature.
 		
 		/* bracket color */
 		preferences.setDefaultColor(P_EDITOR_MATCHING_BRACKETS_COLOR, JenkinsEditorColorConstants.GRAY_JAVA);

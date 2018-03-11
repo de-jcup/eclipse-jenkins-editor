@@ -60,7 +60,7 @@ public class JenkinsLinterCLIResult extends AbstractJenkinsCLIResult{
 				return code.name();
 			}
 		}
-		return "No explaination available";
+		return "No explanation available";
 	}
 
 	@Override

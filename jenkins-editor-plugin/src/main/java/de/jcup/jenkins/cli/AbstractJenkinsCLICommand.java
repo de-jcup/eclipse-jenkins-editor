@@ -15,15 +15,17 @@
  */
 package de.jcup.jenkins.cli;
 
+import java.beans.PropertyChangeListenerProxy;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Set;
 
-import de.jcup.egradle.core.util.StringUtilsAccess;
 import de.jcup.jenkins.cli.JenkinsCLIConfiguration.AuthMode;
 
 public abstract class AbstractJenkinsCLICommand<T extends JenkinsCLIResult, P> implements JenkinsCLICommand<T, P> {
+	private static final String PROXY_PASSWORD = "proxyPassword=";
 	private final static boolean DEBUG = Boolean.valueOf(System.getProperty("de.jcup.jenkins.cli.command.debug"));
 
 	protected abstract String getCLICommand();
@@ -75,7 +77,7 @@ public abstract class AbstractJenkinsCLICommand<T extends JenkinsCLIResult, P> i
 			String... parameters) {
 		List<String> list = new ArrayList<>();
 		list.add("java");
-		addSystemProperties(list, configuration);
+		addSystemProxyProperties(list, configuration, hidePasswords);
 		list.add("-jar");
 		list.add(configuration.getPathToJenkinsCLIJar());
 
@@ -87,7 +89,6 @@ public abstract class AbstractJenkinsCLICommand<T extends JenkinsCLIResult, P> i
 		addOptions(configuration, hidePasswords, list);
 
 		list.add(getCLICommand());
-
 		// special handling for secret auth mode
 		if (AuthMode.PASSWORD.equals(configuration.getAuthMode())) {
 			list.add("--username");
@@ -105,13 +106,23 @@ public abstract class AbstractJenkinsCLICommand<T extends JenkinsCLIResult, P> i
 		return list.toArray(new String[list.size()]);
 	}
 
-	private void addSystemProperties(List<String> list, JenkinsCLIConfiguration configuration) {
-		/*
-		 * TODO Albert: 11.03.2018: when system proxy properties will be used
-		 * again we hae to ensure proxy list entries containing passwords are
-		 * not visible inside messages!
-		 */
-		list.addAll(configuration.getSystemProxyProperties());
+	private void addSystemProxyProperties(List<String> list, JenkinsCLIConfiguration configuration,
+			boolean hidePasswords) {
+
+		Set<String> systemProxyProperties = configuration.getSystemProxyProperties();
+		for (String property : systemProxyProperties) {
+			if (property == null) {
+				continue;
+			}
+			int index = property.indexOf(PROXY_PASSWORD);
+			if (hidePasswords && index != -1) {
+				String sub = property.substring(0,index+PROXY_PASSWORD.length());
+				String newProperty = sub+"******";
+				list.add(newProperty);
+			}else{
+				list.add(property);
+			}
+		}
 
 	}
 
@@ -137,7 +148,7 @@ public abstract class AbstractJenkinsCLICommand<T extends JenkinsCLIResult, P> i
 			list.add("-http");
 		}
 		String proxyParam = configuration.getProxyParameter();
-		if (! StringUtilsAccess.isBlank(proxyParam)){
+		if (proxyParam != null && !proxyParam.isEmpty()) {
 			list.add("-p");
 			list.add(proxyParam);
 		}

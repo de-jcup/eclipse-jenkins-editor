@@ -58,8 +58,6 @@ import de.jcup.jenkins.cli.JenkinsLinterCLICommand;
 import de.jcup.jenkins.cli.JenkinsLinterCLIResult;
 import de.jcup.jenkinseditor.JenkinsEditorLogSupport;
 import de.jcup.jenkinseditor.JenkinsEditorMessageDialogSupport;
-import de.jcup.jenkinseditor.JenkinsEditorUtil;
-import de.jcup.jenkinseditor.handlers.CallLinterHandler;
 import de.jcup.jenkinseditor.handlers.ConfigurationBuilder;
 
 /**

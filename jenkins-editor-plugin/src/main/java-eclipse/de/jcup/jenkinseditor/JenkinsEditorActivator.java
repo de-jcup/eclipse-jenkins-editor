@@ -55,12 +55,9 @@ public class JenkinsEditorActivator extends AbstractUIPlugin {
 		return colorManager;
 	}
 
-	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
 		plugin = this;
-		proxyTracker = new ServiceTracker(context, IProxyService.class, null);
-		proxyTracker.open();
 	}
 
 	public void stop(BundleContext context) throws Exception {
@@ -83,7 +80,13 @@ public class JenkinsEditorActivator extends AbstractUIPlugin {
 		return file;
 	}
 
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public IProxyService getProxyService() {
+		if (proxyTracker==null){
+			BundleContext context = getBundle().getBundleContext();
+			proxyTracker = new ServiceTracker(context, IProxyService.class, null);
+			proxyTracker.open();
+		}
 		return (IProxyService) proxyTracker.getService();
 	}
 }

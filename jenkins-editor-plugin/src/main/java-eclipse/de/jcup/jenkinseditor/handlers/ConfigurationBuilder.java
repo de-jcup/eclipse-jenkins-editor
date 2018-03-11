@@ -4,10 +4,8 @@ import static de.jcup.jenkinseditor.JenkinsEditorConstants.*;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
@@ -21,8 +19,8 @@ import org.eclipse.equinox.security.storage.SecurePreferencesFactory;
 import org.eclipse.equinox.security.storage.StorageException;
 
 import de.jcup.jenkins.cli.JenkinsCLIConfiguration;
-import de.jcup.jenkins.cli.JenkinsDefaultURLProvider;
 import de.jcup.jenkins.cli.JenkinsCLIConfiguration.AuthMode;
+import de.jcup.jenkins.cli.JenkinsDefaultURLProvider;
 import de.jcup.jenkins.util.SystemPropertyListBuilder;
 import de.jcup.jenkinseditor.JenkinsEditorActivator;
 import de.jcup.jenkinseditor.JenkinsEditorLogSupport;
@@ -91,13 +89,8 @@ public class ConfigurationBuilder {
 		} catch (URISyntaxException e) {
 			throw new IOException("JENKINS URI not correct", e);
 		}
-		/*
-		 * TODO Albert, 11.03.2018: When jenkins CLi supports normal System
-		 * proxy settings we should use the next two out commented lines:
-		 */
 		Set<String> systemProperties = buildProxySetupWhenJenkinsCouldUseStandardSettings(uri);
 		configuration.setProxySystemProperties(systemProperties);
-		// configuration.setProxyParameter(buildSimpleCLIProxyParameter(uri));
 	}
 
 	private SystemPropertyListBuilder builder;
@@ -105,57 +98,7 @@ public class ConfigurationBuilder {
 	public ConfigurationBuilder() {
 		builder = new SystemPropertyListBuilder();
 	}
-
-	protected String buildSimpleCLIProxyParameter(URI uri) throws IOException {
-		IProxyService proxyService = JenkinsEditorActivator.getDefault().getProxyService();
-		IProxyData[] proxyDataForHost = proxyService.select(uri);
-
-		List<String> propertyList = new ArrayList<>();
-		StringBuilder sb = new StringBuilder();
-		String protocol;
-		try {
-			protocol = uri.toURL().getProtocol();
-		} catch (MalformedURLException e) {
-			throw new IOException("URL malformed", e);
-		}
-		for (IProxyData data : proxyDataForHost) {
-			if (protocol == null) {
-				break;
-			}
-			String host = data.getHost();
-			if (host != null) {
-				String type = data.getType();
-				if (type == null) {
-					continue;
-				}
-				if (!protocol.equals(type.toLowerCase())) {
-					continue;
-				}
-
-				propertyList.add("-p");
-				sb.append(data.getHost());
-				sb.append(':');
-				sb.append(data.getPort());
-				propertyList.add(sb.toString());
-
-				if (data.isRequiresAuthentication()) {
-					/* @formatter:off */
-					throw new IOException(
-							"Your proxy settings in eclipse are containing a password.\n"
-							+ "Sorrowly jenkins CLI does not support passwords for proxy authentication.\n\n"
-							+ "So Jenkins Editor cannot use those settings.\n"
-							+ " You will have to use a local proxy without need to authenticate\n"
-							+ "(e.g. use CNTLM). Sorry about the inconvenience but this is Jenkins CLi behaviour.");
-					/* @formatter:on */
-				}
-
-				break;
-			}
-		}
-		// Close the service and close the service tracker
-		proxyService = null;
-		return sb.toString();
-	}
+	
 
 	/**
 	 * Would work if jenkins CLI.java (and CLiConnectionFactroy.java etc.) would
