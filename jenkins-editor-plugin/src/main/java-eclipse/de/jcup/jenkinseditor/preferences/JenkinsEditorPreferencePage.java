@@ -15,6 +15,7 @@ package de.jcup.jenkinseditor.preferences;
  *
  */
 
+
 import static de.jcup.jenkinseditor.JenkinsEditorConstants.*;
 import static de.jcup.jenkinseditor.preferences.JenkinsEditorPreferenceConstants.*;
 
@@ -31,6 +32,7 @@ import org.eclipse.jface.dialogs.ProgressMonitorDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.preference.BooleanFieldEditor;
 import org.eclipse.jface.preference.ColorFieldEditor;
+import org.eclipse.jface.preference.ComboFieldEditor;
 import org.eclipse.jface.preference.FieldEditorPreferencePage;
 import org.eclipse.jface.preference.FileFieldEditor;
 import org.eclipse.jface.preference.StringFieldEditor;
@@ -57,6 +59,7 @@ import de.jcup.jenkins.cli.JenkinsDefaultURLProvider;
 import de.jcup.jenkins.cli.JenkinsLinterCLICommand;
 import de.jcup.jenkins.cli.JenkinsLinterCLIResult;
 import de.jcup.jenkinseditor.JenkinsEditorLogSupport;
+import de.jcup.jenkins.linter.JenkinsLinterErrorLevel;
 import de.jcup.jenkinseditor.JenkinsEditorMessageDialogSupport;
 import de.jcup.jenkinseditor.handlers.ConfigurationBuilder;
 
@@ -146,7 +149,28 @@ public class JenkinsEditorPreferencePage extends FieldEditorPreferencePage imple
 		master.addSelectionListener(listener);
 		this.masterSlaveListeners.add(listener);
 	}
+	
+	private void createJenkinsLinterErrorLevelComboBox(Composite parent) {
+		String name = JenkinsEditorPreferenceConstants.JENKINS_LINTER_ERROR_LEVEL.getId();
+		String labelText = "Error level";
 
+		/* @formatter:off */
+		String[][] entryNamesAndValues = 
+				new String[][] { 
+					getLabelAndValue(JenkinsLinterErrorLevel.ERROR),
+					getLabelAndValue(JenkinsLinterErrorLevel.WARNING),
+					getLabelAndValue(JenkinsLinterErrorLevel.INFO)
+		};
+		/* @formatter:on */
+		
+		Composite composite = new Composite(parent, SWT.NONE);
+		
+		ComboFieldEditor comboFieldEditor = new ComboFieldEditor(name, labelText, entryNamesAndValues, composite);
+		addField(comboFieldEditor);
+	}
+	private String[] getLabelAndValue(JenkinsLinterErrorLevel errorLevel) {
+		return new String[] { errorLevel.name(), errorLevel.getId() };
+	}
 	@Override
 	protected void createFieldEditors() {
 
@@ -271,6 +295,8 @@ public class JenkinsEditorPreferencePage extends FieldEditorPreferencePage imple
 		autoCreateEndBrackets = new BooleanFieldEditor(P_EDITOR_AUTO_CREATE_END_BRACKETSY.getId(),
 				"Auto create ending brackets", getFieldEditorParent());
 		addField(autoCreateEndBrackets);
+		
+		createJenkinsLinterErrorLevelComboBox(getFieldEditorParent());
 	}
 
 	protected void createJenkinsCLIFieldEditors() {
