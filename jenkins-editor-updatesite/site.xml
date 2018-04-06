@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <site>
-   <feature url="features/de.jcup.jenkinseditor.feature_0.4.0.jar" id="de.jcup.jenkinseditor.feature" version="0.4.0"/>
    <feature url="features/de.jcup.jenkinseditor.feature_1.0.0.jar" id="de.jcup.jenkinseditor.feature" version="1.0.0"/>
    <feature url="features/de.jcup.jenkinseditor.feature_1.0.1.jar" id="de.jcup.jenkinseditor.feature" version="1.0.1"/>
    <feature url="features/de.jcup.jenkinseditor.feature_1.1.0.jar" id="de.jcup.jenkinseditor.feature" version="1.1.0"/>
+   <feature url="features/de.jcup.jenkinseditor.feature_1.2.0.jar" id="de.jcup.jenkinseditor.feature" version="1.2.0"/>
 </site>
