@@ -18,8 +18,6 @@
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.ILog;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
 
@@ -28,8 +26,9 @@ import de.jcup.jenkins.linter.JenkinsLinterError;
 
 public class JenkinsEditorUtil {
 
+	private static final String LINTER_ERROR_ID = "de.jcup.jenkinseditor.linter.error";
 	private static UnpersistedMarkerHelper linterMarkerHelper = new UnpersistedMarkerHelper(
-			"de.jcup.jenkinseditor.linter.error");
+			LINTER_ERROR_ID);
 	
 
 	public static void removeLinterErrors(IEditorPart editor) {
@@ -46,8 +45,7 @@ public class JenkinsEditorUtil {
 		}
 		linterMarkerHelper.removeMarkers(editorResource);
 	}
-
-	public static void addLinterError(IEditorPart editor, JenkinsLinterError error) {
+	public static void addLinterError(IEditorPart editor, JenkinsLinterError error, int severity) {
 		if (editor == null) {
 			return;
 		}
@@ -64,7 +62,7 @@ public class JenkinsEditorUtil {
 			return;
 		}
 		try {
-			linterMarkerHelper.createErrorMarker(editorResource, error.getMessage(), error.getLine());
+			linterMarkerHelper.createMarker(editorResource, error.getMessage(), error.getLine(), LINTER_ERROR_ID, severity, -1, -1);
 		} catch (CoreException e) {
 			JenkinsEditorLogSupport.INSTANCE.logError("Was not able to add error markers", e);
 		}

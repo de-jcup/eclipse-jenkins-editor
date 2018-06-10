@@ -18,6 +18,7 @@ package de.jcup.jenkinseditor.handlers;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 
+import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.dialogs.ProgressMonitorDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
@@ -30,11 +31,13 @@ import de.jcup.jenkins.cli.JenkinsLinterCLICommand;
 import de.jcup.jenkins.cli.JenkinsLinterCLIResult;
 import de.jcup.jenkins.linter.JenkinsLinterError;
 import de.jcup.jenkins.linter.JenkinsLinterErrorBuilder;
+import de.jcup.jenkins.linter.JenkinsLinterErrorLevel;
 import de.jcup.jenkinseditor.JenkinsEditor;
 import de.jcup.jenkinseditor.JenkinsEditorLogSupport;
 import de.jcup.jenkinseditor.JenkinsEditorMessageDialogSupport;
 import de.jcup.jenkinseditor.JenkinsEditorUtil;
-
+import de.jcup.jenkinseditor.preferences.JenkinsEditorPreferences;
+import static de.jcup.jenkinseditor.preferences.JenkinsEditorPreferenceConstants.*;
 public class CallLinterHandler extends AbstractJenkinsCLIHandler {
 
 	private JenkinsLinterErrorBuilder errorBuilder = new JenkinsLinterErrorBuilder();
@@ -72,6 +75,10 @@ public class CallLinterHandler extends AbstractJenkinsCLIHandler {
 		JenkinsLinterCLICommand command = new JenkinsLinterCLICommand();
 		
 		ProgressMonitorDialog dialog = new ProgressMonitorDialog(EclipseUtil.getActiveWorkbenchShell());
+		
+		String errorLevelId = JenkinsEditorPreferences.getInstance().getStringPreference(JENKINS_LINTER_ERROR_LEVEL);
+		JenkinsLinterErrorLevel errorLevel = JenkinsLinterErrorLevel.fromId(errorLevelId);
+		
 		IRunnableWithProgress runnable = new IRunnableWithProgress() {
 			
 			@Override
@@ -88,13 +95,21 @@ public class CallLinterHandler extends AbstractJenkinsCLIHandler {
 					JenkinsEditorUtil.removeLinterErrors(editor);
 
 					int errorCount =0;
+					int severity;
+					if (JenkinsLinterErrorLevel.INFO.equals(errorLevel)) {
+						severity = IMarker.SEVERITY_INFO;
+					} else if (JenkinsLinterErrorLevel.WARNING.equals(errorLevel)) {
+						severity = IMarker.SEVERITY_WARNING;
+					} else {
+						severity = IMarker.SEVERITY_ERROR;
+					}
 					for (String line : result.getLines()) {
 						JenkinsLinterError error = errorBuilder.build(line);
 						if (error == null) {
 							continue;
 						}
 						/* add linter error */
-						JenkinsEditorUtil.addLinterError(editor, error);
+						JenkinsEditorUtil.addLinterError(editor, error,severity);
 						errorCount++;
 					}
 

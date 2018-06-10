@@ -48,6 +48,7 @@ public enum JenkinsEditorPreferenceConstants implements PreferenceIdentifiable{
 	P_USE_ECLIPSE_PROXY_SETTINGS_ENABLED("useEclipseProxySettingsEnabled"),
 	
 	JENKINS_LINTER_ERROR_LEVEL("jenkinsLinterErrorLevel"),
+	
 	;
 
 	private String id;

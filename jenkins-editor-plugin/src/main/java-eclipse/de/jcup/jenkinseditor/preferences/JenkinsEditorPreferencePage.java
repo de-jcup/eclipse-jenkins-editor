@@ -58,8 +58,8 @@ import de.jcup.jenkins.cli.JenkinsCLIConfiguration;
 import de.jcup.jenkins.cli.JenkinsDefaultURLProvider;
 import de.jcup.jenkins.cli.JenkinsLinterCLICommand;
 import de.jcup.jenkins.cli.JenkinsLinterCLIResult;
-import de.jcup.jenkinseditor.JenkinsEditorLogSupport;
 import de.jcup.jenkins.linter.JenkinsLinterErrorLevel;
+import de.jcup.jenkinseditor.JenkinsEditorLogSupport;
 import de.jcup.jenkinseditor.JenkinsEditorMessageDialogSupport;
 import de.jcup.jenkinseditor.handlers.ConfigurationBuilder;
 
@@ -152,7 +152,7 @@ public class JenkinsEditorPreferencePage extends FieldEditorPreferencePage imple
 	
 	private void createJenkinsLinterErrorLevelComboBox(Composite parent) {
 		String name = JenkinsEditorPreferenceConstants.JENKINS_LINTER_ERROR_LEVEL.getId();
-		String labelText = "Error level";
+		String labelText = "Jenkins validation failures are shown as ";
 
 		/* @formatter:off */
 		String[][] entryNamesAndValues = 
@@ -162,10 +162,7 @@ public class JenkinsEditorPreferencePage extends FieldEditorPreferencePage imple
 					getLabelAndValue(JenkinsLinterErrorLevel.INFO)
 		};
 		/* @formatter:on */
-		
-		Composite composite = new Composite(parent, SWT.NONE);
-		
-		ComboFieldEditor comboFieldEditor = new ComboFieldEditor(name, labelText, entryNamesAndValues, composite);
+		ComboFieldEditor comboFieldEditor = new ComboFieldEditor(name, labelText, entryNamesAndValues, parent);
 		addField(comboFieldEditor);
 	}
 	private String[] getLabelAndValue(JenkinsLinterErrorLevel errorLevel) {
@@ -174,13 +171,16 @@ public class JenkinsEditorPreferencePage extends FieldEditorPreferencePage imple
 	@Override
 	protected void createFieldEditors() {
 
+		/* -------------------------------------------------------------- */
+		/* ------------------------ CLI setup ------------------------- */
+		/* -------------------------------------------------------------- */
 		createJenkinsCLIFieldEditors();
 
-		Label spacer2 = new Label(getFieldEditorParent(), SWT.LEFT);
-		GridData gd2 = new GridData(GridData.HORIZONTAL_ALIGN_FILL);
-		gd2.horizontalSpan = 2;
-		gd2.heightHint = convertHeightInCharsToPixels(1) / 2;
-		spacer2.setLayoutData(gd2);
+		
+		/* -------------------------------------------------------------- */
+		/* ------------------------ ERROR LEVEL ------------------------- */
+		/* -------------------------------------------------------------- */
+		createJenkinsLinterErrorLevelComboBox(getFieldEditorParent());
 
 		/* -------------------------------------------------------------- */
 		/* ------------------------ APPEARANCE -------------------------- */
@@ -199,6 +199,7 @@ public class JenkinsEditorPreferencePage extends FieldEditorPreferencePage imple
 		appearanceComposite.setLayout(layout);
 		appearanceComposite.setLayoutData(appearanceLayoutData);
 
+		
 		createOtherFieldEditors(appearanceComposite);
 
 		createBracketsFieldEditors(appearanceComposite);
@@ -296,7 +297,6 @@ public class JenkinsEditorPreferencePage extends FieldEditorPreferencePage imple
 				"Auto create ending brackets", getFieldEditorParent());
 		addField(autoCreateEndBrackets);
 		
-		createJenkinsLinterErrorLevelComboBox(getFieldEditorParent());
 	}
 
 	protected void createJenkinsCLIFieldEditors() {
