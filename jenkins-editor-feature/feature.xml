@@ -230,7 +230,6 @@ and limitations under the License.
 
    <url>
       <update label="Jenkins Editor update site" url="https://dl.bintray.com/de-jcup/jenkinseditor"/>
-      <discovery label="Jenkins Editor Wiki (github)" url="https://github.com/de-jcup/eclipse-jenkins-editor/wiki"/>
    </url>
 
    <plugin
