@@ -49,8 +49,10 @@ public enum JenkinsSpecialVariableKeyWords implements DocumentKeyWord, de.jcup.e
 	REUSE_NODE("reuseNode"),
 	
 	ECHO("echo","https://jenkins.io/doc/pipeline/steps/workflow-basic-steps/#echo-print-message"),
-	SH("sh"),
-	BAT("bat"),
+	
+	SH("sh","https://jenkins.io/doc/pipeline/steps/workflow-durable-task-step/#sh-shell-script"),
+	BAT("bat","https://jenkins.io/doc/pipeline/steps/workflow-durable-task-step/#-bat-%20windows%20batch%20script"),
+	POWERSHELL("powershell","https://jenkins.io/doc/pipeline/steps/workflow-durable-task-step/#powershell-powershell-script"),
 	
 	CREDENTIALS("credentials"),
 	
@@ -99,7 +101,7 @@ public enum JenkinsSpecialVariableKeyWords implements DocumentKeyWord, de.jcup.e
 	private JenkinsSpecialVariableKeyWords(String text, String linkToDocumentation) {
 		this.text = text;
 		this.linkToDocumentation=linkToDocumentation;
-		this.tooltip=TooltipTextSupport.getTooltipText(name());
+		this.tooltip=TooltipTextSupport.getTooltipText(name().toLowerCase());
 	}
 
 

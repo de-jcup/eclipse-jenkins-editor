@@ -183,7 +183,7 @@ public enum JenkinsDefaultClosureKeyWords implements DocumentKeyWord, de.jcup.ec
 		}
 		String identifier=null;
 		if (extraTooltip==null){
-			identifier = name();
+			identifier = name().toLowerCase();
 		}else{
 			identifier=extraTooltip.getIdentifier();
 		}

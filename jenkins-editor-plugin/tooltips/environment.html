@@ -1,11 +1,21 @@
 <div class="sect3">
 <h4 id="environment"><a class="anchor" href="#environment"></a>environment<a class="anchorjs-link " href="#environment" aria-label="Anchor link for: environment" data-anchorjs-icon="" style="font: 1em/1 anchorjs-icons; padding-left: 0.375em;"></a></h4>
-<div>
-	Jenkins pipeline scripts can have this as a directive and also as a built-in condition.
-	The next text describes the directive. If you want information about the built-in condition
+<table style="border:1px solid green">
+<tr>
+	<td style="background-color:lightgreen">
+	Jenkins pipeline scripts can have this as a <b>directive</b> and also as a <b>built-in condition</b> in a <b>when</b> block.
+	The given online link above describes the directive. If you want onle help about the built-in condition
 	please look at <a href="https://jenkins.io/doc/book/pipeline/syntax/#built-in-conditions">Built-In condition online documentation.</a>
+	</td>
+</tr>
+</table>
+<h5>environment as built-in-condition for when</h5>
+<div class="paragraph">
+<p>When <code>environment</code>is used inside a when block:</p>
+<p>Execute the stage when the specified environment variable is set
+to the given value, for example: <code>when { environment name: 'DEPLOY_TO', value: 'production' }</code></p>
 </div>
-
+<h5>environment as directive</h5>
 <div class="paragraph">
 <p>The <code>environment</code> directive specifies a sequence of key-value pairs which will
 be defined as environment variables for the all steps, or stage-specific steps,
