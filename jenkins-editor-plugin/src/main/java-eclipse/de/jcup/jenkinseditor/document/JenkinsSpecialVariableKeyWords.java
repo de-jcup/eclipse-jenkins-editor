@@ -15,6 +15,7 @@
  */
  package de.jcup.jenkinseditor.document;
 
+import de.jcup.eclipse.commons.keyword.TooltipTextSupport;
 import de.jcup.egradle.eclipse.document.DocumentKeyWord;
 
 /**
@@ -22,14 +23,22 @@ import de.jcup.egradle.eclipse.document.DocumentKeyWord;
  * @author Albert Tregnaghi
  *
  */
-public enum JenkinsSpecialVariableKeyWords implements DocumentKeyWord {
+public enum JenkinsSpecialVariableKeyWords implements DocumentKeyWord, de.jcup.eclipse.commons.keyword.DocumentKeyWord {
 
-	SYSTEM("System"),
+	SYSTEM("System","http://docs.groovy-lang.org/2.4.3/html/groovy-jdk/java/lang/System.html"),
 	
-	JUNIT("junit"),
+	JUNIT("junit","https://jenkins.io/doc/pipeline/steps/junit/"),
 	
-	
+	ARCHIVE("archive","https://jenkins.io/doc/pipeline/steps/workflow-basic-steps/#archive-archive-artifacts"),
 	/* agent parameters: */
+	ARCHIVE_ARTIFACTS("archiveArtifacts","https://jenkins.io/doc/pipeline/steps/core/#-archiveartifacts-%20archive%20the%20artifacts"),
+	
+	
+	IS_UNIX("isUnix","https://jenkins.io/doc/pipeline/steps/workflow-basic-steps/#isunix-checks-if-running-on-a-unix-like-node"),
+	
+	MAIL("mail","https://jenkins.io/doc/pipeline/steps/workflow-basic-steps/#mail-mail"),
+	
+	STEP("step","https://jenkins.io/doc/pipeline/steps/workflow-basic-steps/#step-general-build-step"),
 	
 	ANY("any"),
 	NONE("none"),
@@ -39,8 +48,9 @@ public enum JenkinsSpecialVariableKeyWords implements DocumentKeyWord {
 	CUSTOM_WORKSPACE("customWorkspace"),
 	REUSE_NODE("reuseNode"),
 	
-	ECHO("echo"),
+	ECHO("echo","https://jenkins.io/doc/pipeline/steps/workflow-basic-steps/#echo-print-message"),
 	SH("sh"),
+	BAT("bat"),
 	
 	CREDENTIALS("credentials"),
 	
@@ -80,14 +90,39 @@ public enum JenkinsSpecialVariableKeyWords implements DocumentKeyWord {
 	;
 
 	private String text;
-
+	private String linkToDocumentation;
+	private String tooltip;
+	
 	private JenkinsSpecialVariableKeyWords(String text) {
+		this(text,null);
+	}
+	private JenkinsSpecialVariableKeyWords(String text, String linkToDocumentation) {
 		this.text = text;
+		this.linkToDocumentation=linkToDocumentation;
+		this.tooltip=TooltipTextSupport.getTooltipText(name());
 	}
 
 
 	@Override
 	public String getText() {
 		return text;
+	}
+
+
+	@Override
+	public String getLinkToDocumentation() {
+		return linkToDocumentation;
+	}
+
+
+	@Override
+	public String getTooltip() {
+		return tooltip;
+	}
+
+
+	@Override
+	public boolean isBreakingOnEof() {
+		return false;
 	}
 }

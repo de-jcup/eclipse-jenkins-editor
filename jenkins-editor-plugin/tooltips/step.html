@@ -1,0 +1,30 @@
+<div class="sect2">
+<h3 id="step-general-build-step"><a class="anchor" href="#step-general-build-step"></a><code>step</code>: General Build Step<a class="anchorjs-link " href="#step-general-build-step" aria-label="Anchor link for: step general build step" data-anchorjs-icon="" style="font: 1em/1 anchorjs-icons; padding-left: 0.375em;"></a></h3>
+<div><div>
+ <p> This is a special step that allows to call builders or post-build actions (as in freestyle or similar projects), in general "build steps". </p>
+ <p> The online help does contain a full list of Pipeline-compatible steps. </p>
+</div></div>
+Here is a pseudo step, but it shows the structure and how to use it. You are able to generate those steps from Jenkins UI automatically and
+paste it to your jenkinsfile.
+<div class="example">
+stage('Code Scan'){
+	    steps{
+	       step([$class: 'XYZScanBuilder', 
+          	   comment: 'Pipeline Scan', 
+           	   failBuildOnNewResults: true, 
+           	   filterPattern: 
+	             			'''!**/_cvs/**/*, !**/.svn/**/*,   !**/.hg/**/*,   
+	                         !**/.git/**/*, !**/.bzr/**/*, !**/bin/**/*,
+	                         !**/*.stml,    !**/*.ttml,    !**/*.txn,     
+	                         !**/*.exe,    !**/*.xhtml,   !**/*.class, 
+	                         !**/*.iml, !Checkmarx/Reports/*.*''', 
+			   archiveIncludePatterns: '*.zip, *.war, *.ear, *.tgz', 
+			   userName: 'username1', 
+			   token: '{xyzAVerySecreteOne=}', 
+			   projectName: 'my-project', 
+			   serverUrl: 'https://you.havetonow.server.com', 
+			   waitForResultsEnabled: true])
+	             
+	         }
+        }
+</div>

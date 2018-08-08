@@ -1,0 +1,92 @@
+<div class="sect3">
+<h4 id="triggers"><a class="anchor" href="#triggers"></a>triggers<a class="anchorjs-link " href="#triggers" aria-label="Anchor link for: triggers" data-anchorjs-icon="" style="font: 1em/1 anchorjs-icons; padding-left: 0.375em;"></a></h4>
+<div class="paragraph">
+<p>The <code>triggers</code> directive defines the automated ways in which the Pipeline
+should be re-triggered. For Pipelines which are integrated with a source such
+as GitHub or BitBucket, <code>triggers</code> may not be necessary as webhooks-based
+integration will likely already be present. The triggers currently available are
+<code>cron</code>, <code>pollSCM</code> and <code>upstream</code>.</p>
+</div>
+<table class="tableblock frame-all grid-all stretch syntax">
+<colgroup>
+<col style="width: 10%;">
+<col style="width: 90%;">
+</colgroup>
+<tbody>
+<tr>
+<th class="tableblock halign-center valign-top"><p class="tableblock">Required</p></th>
+<td class="tableblock halign-right valign-top"><div class="content"><div class="paragraph">
+<p>No</p>
+</div></div></td>
+</tr>
+<tr>
+<th class="tableblock halign-center valign-top"><p class="tableblock">Parameters</p></th>
+<td class="tableblock halign-right valign-top"><div class="content"><div class="paragraph">
+<p><em>None</em></p>
+</div></div></td>
+</tr>
+<tr>
+<th class="tableblock halign-center valign-top"><p class="tableblock">Allowed</p></th>
+<td class="tableblock halign-right valign-top"><div class="content"><div class="paragraph">
+<p>Only once, inside the <code>pipeline</code> block.</p>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">cron</dt>
+<dd>
+<p>Accepts a cron-style string to define a regular interval at which the
+Pipeline should be re-triggered, for example: <code>triggers { cron('H */4 * * 1-5') }</code></p>
+</dd>
+<dt class="hdlist1">pollSCM</dt>
+<dd>
+<p>Accepts a cron-style string to define a regular interval at which
+Jenkins should check for new source changes. If new changes exist, the Pipeline
+will be re-triggered. For example: <code>triggers { pollSCM('H */4 * * 1-5') }</code></p>
+</dd>
+<dt class="hdlist1">upstream</dt>
+<dd>
+<p>Accepts a comma separated string of jobs and a threshold. When any
+job in the string finishes with the minimum threshold, the Pipeline will be
+re-triggered. For example:
+<code>triggers { upstream(upstreamProjects: 'job1,job2', threshold: hudson.model.Result.SUCCESS) }</code></p>
+</dd>
+</dl>
+</div>
+<div class="admonitionblock note">
+<table>
+<tbody><tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>The <code>pollSCM</code> trigger is only available in Jenkins 2.22 or later.</p>
+</div>
+</td>
+</tr>
+</tbody></table>
+</div>
+<div class="sect4">
+<h5 id="triggers-example"><a class="anchor" href="#triggers-example"></a>Example<a class="anchorjs-link " href="#triggers-example" aria-label="Anchor link for: triggers example" data-anchorjs-icon="" style="font: 1em/1 anchorjs-icons; padding-left: 0.375em;"></a></h5>
+<div class="pipeline-block">  <div class="listingblock pipeline-declarative">
+    <div class="title">Jenkinsfile (Declarative Pipeline)</div>
+    <div class="content">
+  <pre class="CodeRay highlight nowrap"><code class="language-groovy" data-lang="groovy">pipeline {
+    agent any
+    triggers {
+        cron(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">H */4 * * 1-5</span><span style="color:#710">'</span></span>)
+    }
+    stages {
+        stage(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">Example</span><span style="color:#710">'</span></span>) {
+            steps {
+                echo <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">Hello World</span><span style="color:#710">'</span></span>
+            }
+        }
+    }
+}</code></pre>
+</div></div></div>
+</div>
+</div>

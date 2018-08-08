@@ -1,0 +1,239 @@
+<div class="sect3">
+<h4 id="agent"><a class="anchor" href="#agent"></a>agent<a class="anchorjs-link " href="#agent" aria-label="Anchor link for: agent" data-anchorjs-icon="" style="font: 1em/1 anchorjs-icons; padding-left: 0.375em;"></a></h4>
+<div class="paragraph">
+<p>The <code>agent</code> section specifies where the entire Pipeline, or a specific stage,
+will execute in the Jenkins environment depending on where the <code>agent</code>
+section is placed. The section must be defined at the top-level inside the
+<code>pipeline</code> block, but stage-level usage is optional.</p>
+</div>
+<table class="tableblock frame-all grid-all stretch syntax">
+<colgroup>
+<col style="width: 10%;">
+<col style="width: 90%;">
+</colgroup>
+<tbody>
+<tr>
+<th class="tableblock halign-center valign-top"><p class="tableblock">Required</p></th>
+<td class="tableblock halign-right valign-top"><div class="content"><div class="paragraph">
+<p>Yes</p>
+</div></div></td>
+</tr>
+<tr>
+<th class="tableblock halign-center valign-top"><p class="tableblock">Parameters</p></th>
+<td class="tableblock halign-right valign-top"><div class="content"><div class="paragraph">
+<p><a href="#agent-parameters">Described below</a></p>
+</div></div></td>
+</tr>
+<tr>
+<th class="tableblock halign-center valign-top"><p class="tableblock">Allowed</p></th>
+<td class="tableblock halign-right valign-top"><div class="content"><div class="paragraph">
+<p>In the top-level <code>pipeline</code> block and each <code>stage</code> block.</p>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+<div class="sect4">
+<h5 id="agent-parameters"><a class="anchor" href="#agent-parameters"></a>Parameters<a class="anchorjs-link " href="#agent-parameters" aria-label="Anchor link for: agent parameters" data-anchorjs-icon="" style="font: 1em/1 anchorjs-icons; padding-left: 0.375em;"></a></h5>
+<div class="paragraph">
+<p>In order to support the wide variety of use-cases Pipeline authors may have,
+the <code>agent</code> section supports a few different types of parameters. These
+parameters can be applied at the top-level of the <code>pipeline</code> block, or within
+each <code>stage</code> directive.</p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">any</dt>
+<dd>
+<p>Execute the Pipeline, or stage, on any available agent. For example: <code>agent any</code></p>
+</dd>
+<dt class="hdlist1">none</dt>
+<dd>
+<p>When applied at the top-level of the <code>pipeline</code> block no global agent
+will be allocated for the entire Pipeline run and each <code>stage</code> section will
+need to contain its own <code>agent</code> section. For example: <code>agent none</code></p>
+</dd>
+<dt class="hdlist1">label</dt>
+<dd>
+<p>Execute the Pipeline, or stage, on an agent available in the Jenkins
+environment with the provided label. For example: <code>agent { label 'my-defined-label' }</code></p>
+</dd>
+<dt class="hdlist1">node</dt>
+<dd>
+<p><code>agent { node { label 'labelName' } }</code> behaves the same as
+<code>agent { label 'labelName' }</code>, but <code>node</code> allows for additional options (such
+as <code>customWorkspace</code>).</p>
+</dd>
+<dt class="hdlist1">docker</dt>
+<dd>
+<p>Execute the Pipeline, or stage, with the given container which will be
+dynamically provisioned on a <a href="../../glossary/#node">node</a> pre-configured to
+accept Docker-based Pipelines, or on a node matching the optionally defined
+<code>label</code> parameter.  <code>docker</code> also optionally accepts an <code>args</code> parameter
+which may contain arguments to pass directly to a <code>docker run</code> invocation, and
+an <code>alwaysPull</code> option, which will force a <code>docker pull</code> even if the image
+name is already present.
+ For example: <code>agent { docker 'maven:3-alpine' }</code> or</p>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight nowrap"><code data-lang="groovy">agent {
+    docker {
+        image <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">maven:3-alpine</span><span style="color:#710">'</span></span>
+        label <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">my-defined-label</span><span style="color:#710">'</span></span>
+        args  <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">-v /tmp:/tmp</span><span style="color:#710">'</span></span>
+    }
+}</code></pre>
+</div>
+</div>
+</dd>
+<dt class="hdlist1">dockerfile</dt>
+<dd>
+<p>Execute the Pipeline, or stage, with a container built from a
+<code>Dockerfile</code> contained in the source repository. In order to use this option,
+the <code>Jenkinsfile</code> must be loaded from either a  Multibranch Pipeline, or a
+"Pipeline from SCM." Conventionally this is the <code>Dockerfile</code> in the root of the
+source repository: <code>agent { dockerfile true }</code>. If building a <code>Dockerfile</code> in
+another directory, use the <code>dir</code> option: <code>agent { dockerfile { dir 'someSubDir'
+} }</code>. If your <code>Dockerfile</code> has another name, you can specify the file name with
+the <code>filename</code> option. You can pass additional arguments to the <code>docker build …​</code>
+command with the <code>additionalBuildArgs</code> option, like <code>agent { dockerfile {
+additionalBuildArgs '--build-arg foo=bar' } }</code>.
+For example, a repository with the file <code>build/Dockerfile.build</code>, expecting
+a build argument <code>version</code>:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight nowrap"><code data-lang="groovy">agent {
+    <span style="color:#777">// Equivalent to "docker build -f Dockerfile.build --build-arg version=1.0.2 ./build/</span>
+    dockerfile {
+        filename <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">Dockerfile.build</span><span style="color:#710">'</span></span>
+        dir <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">build</span><span style="color:#710">'</span></span>
+        label <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">my-defined-label</span><span style="color:#710">'</span></span>
+        additionalBuildArgs  <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">--build-arg version=1.0.2</span><span style="color:#710">'</span></span>
+    }
+}</code></pre>
+</div>
+</div>
+</dd>
+</dl>
+</div>
+</div>
+<div class="sect4">
+<h5 id="common-options"><a class="anchor" href="#common-options"></a>Common Options<a class="anchorjs-link " href="#common-options" aria-label="Anchor link for: common options" data-anchorjs-icon="" style="font: 1em/1 anchorjs-icons; padding-left: 0.375em;"></a></h5>
+<div class="paragraph">
+<p>These are a few options that can be applied two or more <code>agent</code> implementations.
+They are not required unless explicitly stated.</p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">label</dt>
+<dd>
+<p>A string. The label on which to run the Pipeline or individual <code>stage</code>.</p>
+<div class="paragraph">
+<p>This option is valid for <code>node</code>, <code>docker</code> and <code>dockerfile</code>, and is required for
+<code>node</code>.</p>
+</div>
+</dd>
+<dt class="hdlist1">customWorkspace</dt>
+<dd>
+<p>A string. Run the Pipeline or individual <code>stage</code> this <code>agent</code>
+is applied to within this custom workspace, rather than the default. It can be
+either a relative path, in which case the custom workspace will be under the
+workspace root on the node, or an absolute path. For example:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight nowrap"><code data-lang="groovy">agent {
+    node {
+        label <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">my-defined-label</span><span style="color:#710">'</span></span>
+        customWorkspace <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">/some/other/path</span><span style="color:#710">'</span></span>
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This option is valid for <code>node</code>, <code>docker</code> and <code>dockerfile</code>.</p>
+</div>
+</dd>
+<dt class="hdlist1">reuseNode</dt>
+<dd>
+<p>A boolean, false by default. If true, run the container on the node
+specified at the top-level of the Pipeline, in the same workspace, rather than
+on a new node entirely.</p>
+<div class="paragraph">
+<p>This option is valid for <code>docker</code> and <code>dockerfile</code>, and only has an effect when
+used on an <code>agent</code> for an individual <code>stage</code>.</p>
+</div>
+</dd>
+</dl>
+</div>
+</div>
+<div class="sect4">
+<h5 id="agent-example"><a class="anchor" href="#agent-example"></a>Example<a class="anchorjs-link " href="#agent-example" aria-label="Anchor link for: agent example" data-anchorjs-icon="" style="font: 1em/1 anchorjs-icons; padding-left: 0.375em;"></a></h5>
+<div class="pipeline-block">  <div class="listingblock pipeline-declarative">
+    <div class="title">Jenkinsfile (Declarative Pipeline)</div>
+    <div class="content">
+  <pre class="CodeRay highlight nowrap"><code class="language-groovy" data-lang="groovy">pipeline {
+    agent { docker <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">maven:3-alpine</span><span style="color:#710">'</span></span> } <span style="color:#777"><i class="conum" data-value="1"></i><b>(1)</b></span>
+    stages {
+        stage(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">Example Build</span><span style="color:#710">'</span></span>) {
+            steps {
+                sh <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">mvn -B clean verify</span><span style="color:#710">'</span></span>
+            }
+        }
+    }
+}</code></pre>
+</div></div></div>
+<div class="colist arabic">
+<table>
+<tbody><tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>Execute all the steps defined in this Pipeline within a newly created container
+of the given name and tag (<code>maven:3-alpine</code>).</td>
+</tr>
+</tbody></table>
+</div>
+<div class="sect5">
+<h6 id="stage-level-agent-section"><a class="anchor" href="#stage-level-agent-section"></a>Stage-level <code>agent</code> section<a class="anchorjs-link " href="#stage-level-agent-section" aria-label="Anchor link for: stage level agent section" data-anchorjs-icon="" style="font: 1em/1 anchorjs-icons; padding-left: 0.375em;"></a></h6>
+<div class="pipeline-block">  <div class="listingblock pipeline-declarative">
+    <div class="title">Jenkinsfile (Declarative Pipeline)</div>
+    <div class="content">
+  <pre class="CodeRay highlight nowrap"><code class="language-groovy" data-lang="groovy">pipeline {
+    agent none <span style="color:#777"><i class="conum" data-value="1"></i><b>(1)</b></span>
+    stages {
+        stage(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">Example Build</span><span style="color:#710">'</span></span>) {
+            agent { docker <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">maven:3-alpine</span><span style="color:#710">'</span></span> } <span style="color:#777"><i class="conum" data-value="2"></i><b>(2)</b></span>
+            steps {
+                echo <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">Hello, Maven</span><span style="color:#710">'</span></span>
+                sh <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">mvn --version</span><span style="color:#710">'</span></span>
+            }
+        }
+        stage(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">Example Test</span><span style="color:#710">'</span></span>) {
+            agent { docker <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">openjdk:8-jre</span><span style="color:#710">'</span></span> } <span style="color:#777"><i class="conum" data-value="3"></i><b>(3)</b></span>
+            steps {
+                echo <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">Hello, JDK</span><span style="color:#710">'</span></span>
+                sh <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">java -version</span><span style="color:#710">'</span></span>
+            }
+        }
+    }
+}</code></pre>
+</div></div></div>
+<div class="colist arabic">
+<table>
+<tbody><tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>Defining <code>agent none</code> at the top-level of the Pipeline ensures that
+<a href="../../glossary/#executor">an Executor</a> will not be assigned unnecessarily.
+Using <code>agent none</code> also forces each <code>stage</code> section to contain its own <code>agent</code> section.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>Execute the steps in this stage in a newly created container using this image.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>Execute the steps in this stage in a newly created container using a different image
+from the previous stage.</td>
+</tr>
+</tbody></table>
+</div>
+</div>
+</div>
+</div>

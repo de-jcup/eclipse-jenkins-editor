@@ -1,0 +1,48 @@
+<div class="sect2">
+<h3 id="archiveartifacts-archive-the-artifacts"><a class="anchor" href="#archiveartifacts-archive-the-artifacts"></a><code>archiveArtifacts</code>: Archive the artifacts<a class="anchorjs-link " href="#archiveartifacts-archive-the-artifacts" aria-label="Anchor link for: archiveartifacts archive the artifacts" data-anchorjs-icon="" style="font: 1em/1 anchorjs-icons; padding-left: 0.375em;"></a></h3>
+<div><div>
+  Archives the build artifacts (for example, distribution zip files or jar files) so that they can be downloaded later. Archived files will be accessible from the Jenkins webpage.
+ <br> Normally, Jenkins keeps artifacts for a build as long as a build log itself is kept, but if you don't need old artifacts and would rather save disk space, you can do so.
+</div>
+<br>
+<div>
+  Note that the Maven job type automatically archives any produced Maven artifacts. Any artifacts configured here will be archived on top of that. Automatic artifact archiving can be disabled under the advanced Maven options.
+</div></div>
+<ul><li><code>artifacts</code>
+<div><div>
+  You can use wildcards like 'module/dist/**/*.zip'. See
+ <a href="http://ant.apache.org/manual/Types/fileset.html" rel="nofollow"> the includes attribute of Ant fileset</a> for the exact format. The base directory is
+ <a rel="nofollow">the workspace</a>. You can only archive files that are located in your workspace.
+</div></div>
+
+<ul><li><b>Type:</b> <code>String</code></li></ul></li>
+<li><code>allowEmptyArchive</code> (optional)
+<div><div>
+  Normally, a build fails if archiving returns zero artifacts. This option allows the archiving process to return nothing without failing the build. Instead, the build will simply throw a warning.
+</div></div>
+
+<ul><li><b>Type:</b> <code>boolean</code></li></ul></li>
+<li><code>caseSensitive</code> (optional)
+<div><div>
+  Artifact archiver uses Ant
+ <code>org.apache.tools.ant.DirectoryScanner</code> which by default is case sensitive. For instance, if the job produces *.hpi files, pattern "**/*.HPI" will fail to find them.
+ <br>
+ <br> This option can be used to disable case sensitivity. When it's unchecked, pattern "**/*.HPI" will match any *.hpi files, or pattern "**/cAsEsEnSiTiVe.jar" will match a file called caseSensitive.jar.
+</div></div>
+
+<ul><li><b>Type:</b> <code>boolean</code></li></ul></li>
+<li><code>defaultExcludes</code> (optional)
+<ul><li><b>Type:</b> <code>boolean</code></li></ul></li>
+<li><code>excludes</code> (optional)
+<div><div>
+  Optionally specify
+ <a href="http://ant.apache.org/manual/Types/fileset.html" rel="nofollow">the 'excludes' pattern</a>, such as "foo/bar/**/*". A file that matches this mask will not be archived even if it matches the mask specified in 'files to archive' section.
+</div></div>
+
+<ul><li><b>Type:</b> <code>String</code></li></ul></li>
+<li><code>fingerprint</code> (optional)
+<ul><li><b>Type:</b> <code>boolean</code></li></ul></li>
+<li><code>onlyIfSuccessful</code> (optional)
+<ul><li><b>Type:</b> <code>boolean</code></li></ul></li>
+</ul>
+</div>

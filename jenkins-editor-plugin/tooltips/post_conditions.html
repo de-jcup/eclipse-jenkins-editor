@@ -1,0 +1,52 @@
+<h2 id="post-conditions"><a class="anchor" href="#post-conditions"></a>Post Conditions<a class="anchorjs-link " href="#post-conditions" aria-label="Anchor link for: post conditions" data-anchorjs-icon="" style="font: 1em/1 anchorjs-icons; padding-left: 0.375em;"></a></h2>
+<dl>
+<dt class="hdlist1"><code>always</code></dt>
+<dd>
+<p>Run the steps in the <code>post</code> section regardless of the completion
+status of the Pipeline's or stage's run.</p>
+</dd>
+<dt class="hdlist1"><code>changed</code></dt>
+<dd>
+<p>Only run the steps in <code>post</code> if the current Pipeline's or stage's
+run has a different completion status from its previous run.</p>
+</dd>
+<dt class="hdlist1"><code>fixed</code></dt>
+<dd>
+<p>Only run the steps in <code>post</code> if the current Pipeline's or
+stage's run is successful and the previous run failed or was unstable.</p>
+</dd>
+<dt class="hdlist1"><code>regression</code></dt>
+<dd>
+<p>Only run the steps in <code>post</code> if the current Pipeline's
+or stage's run’s status is failure, unstable, or aborted and the previous run
+was successful.</p>
+</dd>
+<dt class="hdlist1"><code>aborted</code></dt>
+<dd>
+<p>Only run the steps in <code>post</code> if the current Pipeline's or stage's
+run has an "aborted" status, usually due to the Pipeline being manually aborted.
+This is typically denoted by gray in the web UI.</p>
+</dd>
+<dt class="hdlist1"><code>failure</code></dt>
+<dd>
+<p>Only run the steps in <code>post</code> if the current Pipeline's or stage's
+run has a "failed" status, typically denoted by red in the web UI.</p>
+</dd>
+<dt class="hdlist1"><code>success</code></dt>
+<dd>
+<p>Only run the steps in <code>post</code> if the current Pipeline's or stage's
+run has a "success" status, typically denoted by blue or green in the web UI.</p>
+</dd>
+<dt class="hdlist1"><code>unstable</code></dt>
+<dd>
+<p>Only run the steps in <code>post</code> if the current Pipeline's or stage's
+run has an "unstable" status, usually caused by test failures, code violations,
+etc. This is typically denoted by yellow in the web UI.</p>
+</dd>
+<dt class="hdlist1"><code>cleanup</code></dt>
+<dd>
+<p>Run the steps in this <code>post</code> condition after every other
+<code>post</code> condition has been evaluated, regardless of the Pipeline or
+stage's status.</p>
+</dd>
+</dl>

@@ -23,6 +23,8 @@ import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 import org.osgi.util.tracker.ServiceTracker;
 
+import de.jcup.eclipse.commons.keyword.TooltipTextSupport;
+import de.jcup.eclipse.commons.resource.EclipseResourceInputStreamProvider;
 import de.jcup.egradle.eclipse.util.ColorManager;
 import de.jcup.egradle.eclipse.util.EclipseResourceHelper;
 import de.jcup.jenkins.util.JenkinsLogAdapter;
@@ -46,6 +48,7 @@ public class JenkinsEditorActivator extends AbstractUIPlugin {
 	 */
 	public JenkinsEditorActivator() {
 		colorManager = new ColorManager();
+		TooltipTextSupport.setTooltipInputStreamProvider(new EclipseResourceInputStreamProvider(PLUGIN_ID));
 		// setup log adapter with editor log support
 		JenkinsLogAdapter.INSTANCE.delegatesTo(JenkinsEditorLogSupport.INSTANCE);
 

@@ -1,0 +1,34 @@
+<div class="sect3">
+<h4 id="script"><a class="anchor" href="#script"></a>script<a class="anchorjs-link " href="#script" aria-label="Anchor link for: script" data-anchorjs-icon="" style="font: 1em/1 anchorjs-icons; padding-left: 0.375em;"></a></h4>
+<div class="paragraph">
+<p>The <code>script</code> step takes a block of <a href="#scripted-pipeline">Scripted Pipeline</a> and executes that in
+the Declarative Pipeline. For most use-cases, the <code>script</code> step should be
+unnecessary in Declarative Pipelines, but it can provide a useful "escape
+hatch." <code>script</code> blocks of non-trivial size and/or complexity should be moved
+into <a href="../shared-libraries/">Shared Libraries</a> instead.</p>
+</div>
+<div class="sect4">
+<h5 id="script-example"><a class="anchor" href="#script-example"></a>Example<a class="anchorjs-link " href="#script-example" aria-label="Anchor link for: script example" data-anchorjs-icon="" style="font: 1em/1 anchorjs-icons; padding-left: 0.375em;"></a></h5>
+<div class="pipeline-block">  <div class="listingblock pipeline-declarative">
+    <div class="title">Jenkinsfile (Declarative Pipeline)</div>
+    <div class="content">
+  <pre class="CodeRay highlight nowrap"><code class="language-groovy" data-lang="groovy">pipeline {
+    agent any
+    stages {
+        stage(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">Example</span><span style="color:#710">'</span></span>) {
+            steps {
+                echo <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">Hello World</span><span style="color:#710">'</span></span>
+
+                script {
+                    <span style="color:#080;font-weight:bold">def</span> browsers = [<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">chrome</span><span style="color:#710">'</span></span>, <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">firefox</span><span style="color:#710">'</span></span>]
+                    <span style="color:#080;font-weight:bold">for</span> (<span style="color:#339;font-weight:bold">int</span> i = <span style="color:#00D">0</span>; i &lt; browsers.size(); ++i) {
+                        echo <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">Testing the </span><span style="background-color:hsla(0,0%,0%,0.07);color:black"><span style="font-weight:bold;color:#666">${</span>browsers[i]<span style="font-weight:bold;color:#666">}</span></span><span style="color:#D20"> browser</span><span style="color:#710">"</span></span>
+                    }
+                }
+            }
+        }
+    }
+}</code></pre>
+</div></div></div>
+</div>
+</div>

@@ -1,0 +1,72 @@
+<div class="sect3">
+<h4 id="input"><a class="anchor" href="#input"></a>input<a class="anchorjs-link " href="#input" aria-label="Anchor link for: input" data-anchorjs-icon="" style="font: 1em/1 anchorjs-icons; padding-left: 0.375em;"></a></h4>
+<div class="paragraph">
+<p>The <code>input</code> directive on a <code>stage</code> allows you to prompt for input, using the
+<a href="https://jenkins.io/doc/pipeline/steps/pipeline-input-step/#input-wait-for-interactive-input"><code>input</code> step</a>.
+The <code>stage</code> will pause after any <code>options</code> have been applied, and before
+entering the <code>stage`s `agent</code> or evaluating its <code>when</code> condition. If the <code>input</code>
+is approved, the <code>stage</code> will then continue. Any parameters provided as part of
+the <code>input</code> submission will be available in the environment for the rest of the
+<code>stage</code>.</p>
+</div>
+<div class="sect4">
+<h5 id="configuration-options"><a class="anchor" href="#configuration-options"></a>Configuration options<a class="anchorjs-link " href="#configuration-options" aria-label="Anchor link for: configuration options" data-anchorjs-icon="" style="font: 1em/1 anchorjs-icons; padding-left: 0.375em;"></a></h5>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">message</dt>
+<dd>
+<p>Required. This will be presented to the user when they go to submit
+the <code>input</code>.</p>
+</dd>
+<dt class="hdlist1">id</dt>
+<dd>
+<p>An optional identifier for this <code>input</code>. Defaults to the <code>stage</code> name.</p>
+</dd>
+<dt class="hdlist1">ok</dt>
+<dd>
+<p>Optional text for the "ok" button on the <code>input</code> form.</p>
+</dd>
+<dt class="hdlist1">submitter</dt>
+<dd>
+<p>An optional comma-separated list of users or external group names
+who are allowed to submit this <code>input</code>. Defaults to allowing any user.</p>
+</dd>
+<dt class="hdlist1">submitterParameter</dt>
+<dd>
+<p>An optional name of an environment variable to set with
+the <code>submitter</code> name, if present.</p>
+</dd>
+<dt class="hdlist1">parameters</dt>
+<dd>
+<p>An optional list of parameters to prompt the submitter to provide.
+See <a href="#parameters">parameters</a> for more information.</p>
+</dd>
+</dl>
+</div>
+</div>
+<div class="sect4">
+<h5 id="input-example"><a class="anchor" href="#input-example"></a>Example<a class="anchorjs-link " href="#input-example" aria-label="Anchor link for: input example" data-anchorjs-icon="" style="font: 1em/1 anchorjs-icons; padding-left: 0.375em;"></a></h5>
+<div class="pipeline-block">  <div class="listingblock pipeline-declarative">
+    <div class="title">Jenkinsfile (Declarative Pipeline)</div>
+    <div class="content">
+  <pre class="CodeRay highlight nowrap"><code class="language-groovy" data-lang="groovy">pipeline {
+    agent any
+    stages {
+        stage(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">Example</span><span style="color:#710">'</span></span>) {
+            input {
+                message <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">Should we continue?</span><span style="color:#710">"</span></span>
+                ok <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">Yes, we should.</span><span style="color:#710">"</span></span>
+                submitter <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">alice,bob</span><span style="color:#710">"</span></span>
+                parameters {
+                    string(<span style="color:#606">name</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">PERSON</span><span style="color:#710">'</span></span>, <span style="color:#606">defaultValue</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">Mr Jenkins</span><span style="color:#710">'</span></span>, <span style="color:#606">description</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">Who should I say hello to?</span><span style="color:#710">'</span></span>)
+                }
+            }
+            steps {
+                echo <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">Hello, </span><span style="background-color:hsla(0,0%,0%,0.07);color:black"><span style="font-weight:bold;color:#666">${</span>PERSON<span style="font-weight:bold;color:#666">}</span></span><span style="color:#D20">, nice to meet you.</span><span style="color:#710">"</span></span>
+            }
+        }
+    }
+}</code></pre>
+</div></div></div>
+</div>
+</div>

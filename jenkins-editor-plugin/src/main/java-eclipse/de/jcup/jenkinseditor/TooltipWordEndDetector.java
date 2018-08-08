@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 Albert Tregnaghi
+ * Copyright 2018 Albert Tregnaghi
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,34 +13,15 @@
  * and limitations under the License.
  *
  */
- package de.jcup.jenkinseditor.document;
+package de.jcup.jenkinseditor;
 
-import de.jcup.egradle.core.text.DocumentIdentifier;
+import de.jcup.eclipse.commons.WordEndDetector;
 
-public enum JenkinsDocumentIdentifiers implements DocumentIdentifier {
-	
-	JENKINS_KEYWORD,
-	
-	JENKINS_VARIABLE,
-	;
-
+public class TooltipWordEndDetector implements WordEndDetector{
 
 	@Override
-	public String getId() {
-		return name();
-	}
-
-	public static boolean isContaining(String contentType) {
-		if (contentType==null){
-			return false;
-		}
-		for (JenkinsDocumentIdentifiers identifier: values()){
-			if (identifier.getId().equals(contentType)){
-				return true;
-			}
-		}
-		
-		return false;
+	public boolean isWordEnd(char c) {
+		return Character.isWhitespace(c)|| c=='=' || c=='['|| c=='{'|| c=='(';
 	}
 
 }
