@@ -15,56 +15,12 @@
  */
 package de.jcup.jenkinseditor.codeassist;
 
-import org.eclipse.jface.text.ITextViewer;
-import org.eclipse.jface.text.contentassist.ICompletionProposal;
-import org.eclipse.jface.text.contentassist.IContentAssistProcessor;
-import org.eclipse.jface.text.contentassist.IContextInformation;
-import org.eclipse.jface.text.contentassist.IContextInformationValidator;
+import de.jcup.eclipse.commons.codeassist.SupportableContentAssistProcessor;
+import de.jcup.jenkinseditor.JenkinsEditorActivator;
 
-import de.jcup.egradle.core.ModelProvider;
-import de.jcup.egradle.core.model.Model;
+public class JenkinsContentAssistProcessor extends SupportableContentAssistProcessor {
 
-public class JenkinsContentAssistProcessor implements IContentAssistProcessor, ModelProvider {
-
-	@Override
-	public Model getModel() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public ICompletionProposal[] computeCompletionProposals(ITextViewer viewer, int offset) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public IContextInformation[] computeContextInformation(ITextViewer viewer, int offset) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public char[] getCompletionProposalAutoActivationCharacters() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public char[] getContextInformationAutoActivationCharacters() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public String getErrorMessage() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public IContextInformationValidator getContextInformationValidator() {
-		// TODO Auto-generated method stub
-		return null;
+	public JenkinsContentAssistProcessor(){
+		super(new JenkinsDSLContentAssistSupport(JenkinsEditorActivator.getDefault()));
 	}
 }

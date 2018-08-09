@@ -23,6 +23,7 @@ import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 import org.osgi.util.tracker.ServiceTracker;
 
+import de.jcup.eclipse.commons.PluginContextProvider;
 import de.jcup.eclipse.commons.keyword.TooltipTextSupport;
 import de.jcup.eclipse.commons.resource.EclipseResourceInputStreamProvider;
 import de.jcup.egradle.eclipse.util.ColorManager;
@@ -32,7 +33,7 @@ import de.jcup.jenkins.util.JenkinsLogAdapter;
 /**
  * The activator class controls the plug-in life cycle
  */
-public class JenkinsEditorActivator extends AbstractUIPlugin {
+public class JenkinsEditorActivator extends AbstractUIPlugin implements PluginContextProvider {
 
 	// The plug-in COMMAND_ID
 	public static final String PLUGIN_ID = "de.jcup.jenkinseditor.plugin"; //$NON-NLS-1$
@@ -91,5 +92,15 @@ public class JenkinsEditorActivator extends AbstractUIPlugin {
 			proxyTracker.open();
 		}
 		return (IProxyService) proxyTracker.getService();
+	}
+
+	@Override
+	public AbstractUIPlugin getActivator() {
+		return this;
+	}
+
+	@Override
+	public String getPluginID() {
+		return PLUGIN_ID;
 	}
 }

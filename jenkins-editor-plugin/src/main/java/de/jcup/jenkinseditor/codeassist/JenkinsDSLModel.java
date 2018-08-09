@@ -40,7 +40,67 @@ public class JenkinsDSLModel {
 		addNode(JenkinsDefaultClosureKeyWords.UNSTABLE, post);
 		addNode(JenkinsDefaultClosureKeyWords.CLEANUP, post);
 		
-		
+	}
+	
+	private enum SearchType{
+		LOWERCASE_EQUAL,
+		LOWERCASE_STARTSWITH,
+	}
+	
+	private class SearchScope{
+		private List<Node> result = new ArrayList<>();
+		private String keyword;
+		private SearchType searchType = SearchType.LOWERCASE_EQUAL;
+		public String keywordLowerCased;
+	}
+	
+	public List<Node> findByKeyword(String keyword){
+		return findBy(keyword, SearchType.LOWERCASE_EQUAL);
+	}
+	
+	public List<Node> findByKeywordStartingWith(String start){
+		return findBy(start, SearchType.LOWERCASE_STARTSWITH);
+	}
+
+
+	protected List<Node> findBy(String keyword, SearchType type) {
+		SearchScope scope = new SearchScope();
+		if (keyword==null){
+			return scope.result;
+		}
+		scope.keyword=keyword;
+		scope.keywordLowerCased=keyword.toLowerCase();
+		scope.searchType=type;
+		findByKeyword(scope, pipelineNode);
+		return scope.result;
+	}
+	
+	
+	private void findByKeyword(SearchScope scope, Node parent){
+		if (parent==null){
+			return;
+		}
+		if (parent.keyword==null){
+			return;
+		}
+		for (Node child: parent.children){
+			findByKeyword(scope,child);
+		}
+		if (parent.lowercasedKeywordText==null){
+			return;
+		}
+		switch(scope.searchType){
+		case LOWERCASE_STARTSWITH:
+			if (parent.lowercasedKeywordText.startsWith(scope.keywordLowerCased)){
+				scope.result.add(parent);
+			}
+			break;
+		case LOWERCASE_EQUAL:
+			if (parent.lowercasedKeywordText.equals(scope.keywordLowerCased)){
+				scope.result.add(parent);
+			}
+			break;
+		}
 	}
 	
 	private Node addNode(DocumentKeyWord keyword, Node parent){
@@ -52,6 +112,7 @@ public class JenkinsDSLModel {
 	public class Node {
 		List<Node> children = new ArrayList<>();
 		DocumentKeyWord keyword;
+		String lowercasedKeywordText;
 		Node parent;
 		public Node(DocumentKeyWord keyword) {
 			this(keyword,null);
@@ -59,6 +120,11 @@ public class JenkinsDSLModel {
 		public Node(DocumentKeyWord keyword, Node parent) {
 			this.keyword=keyword;
 			this.parent=parent;
+			String text = keyword.getText();
+			if (text==null){
+				throw new IllegalStateException("keyword text may not be null, but is in keyword:"+keyword);
+			}
+			this.lowercasedKeywordText=text.toLowerCase();
 		}
 	}
 

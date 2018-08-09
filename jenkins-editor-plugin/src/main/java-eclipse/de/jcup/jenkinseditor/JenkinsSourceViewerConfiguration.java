@@ -25,6 +25,8 @@ import java.util.List;
 
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.ITextHover;
+import org.eclipse.jface.text.contentassist.ContentAssistant;
+import org.eclipse.jface.text.contentassist.IContentAssistant;
 import org.eclipse.jface.text.hyperlink.IHyperlinkDetector;
 import org.eclipse.jface.text.hyperlink.URLHyperlinkDetector;
 import org.eclipse.jface.text.presentation.IPresentationReconciler;
@@ -39,6 +41,7 @@ import de.jcup.egradle.core.text.DocumentIdentifier;
 import de.jcup.egradle.eclipse.AbstractGroovySourceViewerConfiguration;
 import de.jcup.egradle.eclipse.document.GroovyDocumentIdentifiers;
 import de.jcup.egradle.eclipse.preferences.IEditorPreferences;
+import de.jcup.jenkinseditor.codeassist.JenkinsContentAssistProcessor;
 import de.jcup.jenkinseditor.document.JenkinsDefaultClosureKeyWords;
 import de.jcup.jenkinseditor.document.JenkinsDocumentIdentifiers;
 import de.jcup.jenkinseditor.document.JenkinsSpecialVariableKeyWords;
@@ -55,8 +58,23 @@ public class JenkinsSourceViewerConfiguration extends AbstractGroovySourceViewer
 		allKeywords=list.toArray(new DocumentKeyWord[list.size()]);
 	}
 
+	private JenkinsContentAssistProcessor contentAssistProcessor;
+
 	public JenkinsSourceViewerConfiguration(JenkinsEditor jenkinsEditor) {
 		super(jenkinsEditor,COLOR_NORMAL_TEXT);
+		
+		this.contentAssistant = new ContentAssistant();
+		contentAssistProcessor = new JenkinsContentAssistProcessor();
+		contentAssistant.enableColoredLabels(true);
+		
+		contentAssistant.setContentAssistProcessor(contentAssistProcessor, IDocument.DEFAULT_CONTENT_TYPE);
+		for (JenkinsDocumentIdentifiers identifier: JenkinsDocumentIdentifiers.values()){
+			contentAssistant.setContentAssistProcessor(contentAssistProcessor, identifier.getId());
+		}
+		
+		contentAssistant.addCompletionListener(contentAssistProcessor.getCompletionListener());
+
+	
 	}
 
 	@Override
@@ -138,4 +156,8 @@ public class JenkinsSourceViewerConfiguration extends AbstractGroovySourceViewer
 		return allKeywords;
 	}
 
+	@Override
+	public IContentAssistant getContentAssistant(ISourceViewer sourceViewer) {
+		return contentAssistant;
+	}
 }
