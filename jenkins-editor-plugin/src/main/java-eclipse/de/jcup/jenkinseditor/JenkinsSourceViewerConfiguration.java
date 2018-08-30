@@ -37,6 +37,7 @@ import org.eclipse.swt.SWT;
 import de.jcup.eclipse.commons.keyword.DocumentKeyWord;
 import de.jcup.eclipse.commons.keyword.DocumentKeywordTextHover;
 import de.jcup.eclipse.commons.keyword.TooltipTextSupportPreferences;
+import de.jcup.eclipse.commons.ui.ReducedBrowserInformationControlCreator;
 import de.jcup.egradle.core.text.DocumentIdentifier;
 import de.jcup.egradle.eclipse.AbstractGroovySourceViewerConfiguration;
 import de.jcup.egradle.eclipse.document.GroovyDocumentIdentifiers;
@@ -73,6 +74,8 @@ public class JenkinsSourceViewerConfiguration extends AbstractGroovySourceViewer
 		}
 		
 		contentAssistant.addCompletionListener(contentAssistProcessor.getCompletionListener());
+		
+		contentAssistant.setInformationControlCreator(new ReducedBrowserInformationControlCreator());
 
 	
 	}

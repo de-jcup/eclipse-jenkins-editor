@@ -21,8 +21,11 @@ import java.util.List;
 
 import org.eclipse.jface.text.rules.IPredicateRule;
 import org.eclipse.jface.text.rules.IToken;
+import org.eclipse.jface.text.rules.IWordDetector;
 
+import de.jcup.eclipse.commons.keyword.DocumentKeyWord;
 import de.jcup.egradle.eclipse.document.AbstractGroovyBasedDocumentPartitionScanner;
+import de.jcup.egradle.eclipse.document.ExactWordPatternRule;
 public class JenkinsDocumentPartitionScanner extends AbstractGroovyBasedDocumentPartitionScanner {
 
 	@Override
@@ -30,8 +33,17 @@ public class JenkinsDocumentPartitionScanner extends AbstractGroovyBasedDocument
 		IToken jenkinsDefaultClosureKeywords = createToken(JENKINS_KEYWORD);
 		IToken jenkinsVariables = createToken(JENKINS_VARIABLE);
 		
-		buildWordRules(rules, jenkinsDefaultClosureKeywords, JenkinsDefaultClosureKeyWords.values(),onlyLettersWordDetector);
-		buildWordRules(rules, jenkinsVariables, JenkinsSpecialVariableKeyWords.values(),onlyLettersWordDetector);
+		buildWordRulesByCommons(rules, jenkinsDefaultClosureKeywords, JenkinsDefaultClosureKeyWords.values(),onlyLettersWordDetector);
+		buildWordRulesByCommons(rules, jenkinsVariables, JenkinsSpecialVariableKeyWords.values(),onlyLettersWordDetector);
 	}
 
+	protected void buildWordRulesByCommons(List<IPredicateRule> rules, IToken token, DocumentKeyWord[] values,
+			IWordDetector wordDetector) {
+		for (DocumentKeyWord keyWord : values) {
+			rules.add(new ExactWordPatternRule(wordDetector, createWordStartByCommons(keyWord), token));
+		}
+	}
+	private String createWordStartByCommons(DocumentKeyWord keyWord) {
+		return keyWord.getText();
+	}
 }

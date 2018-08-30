@@ -17,12 +17,12 @@ stage('Code Scan'){
 	                         !**/.git/**/*, !**/.bzr/**/*, !**/bin/**/*,
 	                         !**/*.stml,    !**/*.ttml,    !**/*.txn,     
 	                         !**/*.exe,    !**/*.xhtml,   !**/*.class, 
-	                         !**/*.iml, !Checkmarx/Reports/*.*''', 
+	                         !**/*.iml, !XYZScanBuilder/Reports/*.*''', 
 			   archiveIncludePatterns: '*.zip, *.war, *.ear, *.tgz', 
 			   userName: 'username1', 
 			   token: '{xyzAVerySecreteOne=}', 
 			   projectName: 'my-project', 
-			   serverUrl: 'https://you.havetonow.server.com', 
+			   serverUrl: 'https://you-have-to-know.server.com', 
 			   waitForResultsEnabled: true])
 	             
 	         }

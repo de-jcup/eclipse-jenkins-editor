@@ -15,6 +15,8 @@
  */
 package de.jcup.jenkinseditor.handlers;
 
+import static de.jcup.jenkinseditor.preferences.JenkinsEditorPreferenceConstants.*;
+
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 
@@ -37,7 +39,6 @@ import de.jcup.jenkinseditor.JenkinsEditorLogSupport;
 import de.jcup.jenkinseditor.JenkinsEditorMessageDialogSupport;
 import de.jcup.jenkinseditor.JenkinsEditorUtil;
 import de.jcup.jenkinseditor.preferences.JenkinsEditorPreferences;
-import static de.jcup.jenkinseditor.preferences.JenkinsEditorPreferenceConstants.*;
 public class CallLinterHandler extends AbstractJenkinsCLIHandler {
 
 	private JenkinsLinterErrorBuilder errorBuilder = new JenkinsLinterErrorBuilder();

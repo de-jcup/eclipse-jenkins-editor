@@ -5,12 +5,16 @@ import org.eclipse.swt.graphics.Image;
 
 import de.jcup.eclipse.commons.PluginContextProvider;
 import de.jcup.eclipse.commons.codeassist.ProposalInfoProvider;
-import de.jcup.eclipse.commons.codeassist.simpleword.WordContentAssistSupport;
+import de.jcup.eclipse.commons.codeassist.ProposalProviderContentAssistSupport;
 import de.jcup.eclipse.commons.keyword.TooltipTextSupport;
 import de.jcup.eclipse.commons.ui.EclipseUtil;
+import de.jcup.jenkins.OutlinePipelineDSL;
+import de.jcup.jenkinseditor.outline.JenkinsEditorOutlineLabelProvider;
 
-public class JenkinsDSLContentAssistSupport extends WordContentAssistSupport{
+public class JenkinsDSLContentAssistSupport extends ProposalProviderContentAssistSupport{
 
+	private JenkinsEditorOutlineLabelProvider labelProvider = new JenkinsEditorOutlineLabelProvider();
+	
 	public JenkinsDSLContentAssistSupport(PluginContextProvider provider) {
 		super(provider, new JenkinsWordCompletion());
 	}
@@ -30,7 +34,16 @@ public class JenkinsDSLContentAssistSupport extends WordContentAssistSupport{
 
 			@Override
 			public Image getImage(Object target) {
-				return EclipseUtil.getImage("icons/jenkinseditor/codeassist/jenkins-dsl.png", getPluginContextProvider());
+				if (! (target instanceof String)){
+					return null;
+				}
+				String word = (String) target;
+				OutlinePipelineDSL found = OutlinePipelineDSL.tryToFind(word);
+				if (found==null){
+					return EclipseUtil.getImage("icons/jenkinseditor/codeassist/jenkins-dsl.png", getPluginContextProvider());
+				}else{
+					return labelProvider.getOutlineImage(found);
+				}
 			}
 		};
 	}

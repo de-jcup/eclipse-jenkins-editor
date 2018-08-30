@@ -15,11 +15,11 @@
  */
  package de.jcup.jenkins.cli;
 
+import static de.jcup.jenkins.cli.JenkinsExitCodes.*;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-
-import static de.jcup.jenkins.cli.JenkinsExitCodes.*;
 
 public class JenkinsLinterCLIResult extends AbstractJenkinsCLIResult{
 	
