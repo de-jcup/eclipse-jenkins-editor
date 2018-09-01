@@ -1,0 +1,103 @@
+<div class="sect3">
+<h4 id="environment"><a class="anchor" href="#environment"></a>environment<a class="anchorjs-link " href="#environment" aria-label="Anchor link for: environment" data-anchorjs-icon="" style="font: 1em/1 anchorjs-icons; padding-left: 0.375em;"></a></h4>
+<table style="border:1px solid green">
+<tr>
+	<td style="background-color:lightgreen">
+	Jenkins pipeline scripts can have this as a <b>directive</b> and also as a <b>built-in condition</b> in a <b>when</b> block.
+	The given online link above describes the directive. If you want onle help about the built-in condition
+	please look at <a href="https://jenkins.io/doc/book/pipeline/syntax/#built-in-conditions">Built-In condition online documentation.</a>
+	</td>
+</tr>
+</table>
+<h5>environment as built-in-condition for when</h5>
+<div class="paragraph">
+<p>When <code>environment</code>is used inside a when block:</p>
+<p>Execute the stage when the specified environment variable is set
+to the given value, for example: <code>when { environment name: 'DEPLOY_TO', value: 'production' }</code></p>
+</div>
+<h5>environment as directive</h5>
+<div class="paragraph">
+<p>The <code>environment</code> directive specifies a sequence of key-value pairs which will
+be defined as environment variables for the all steps, or stage-specific steps,
+depending on where the <code>environment</code> directive is located within the Pipeline.</p>
+</div>
+<div class="paragraph">
+<p>This directive supports a special helper method <code>credentials()</code> which can be
+used to access pre-defined Credentials by their identifier in the Jenkins
+environment. For Credentials which are of type "Secret Text", the
+<code>credentials()</code> method will ensure that the environment variable specified
+contains the Secret Text contents. For Credentials which are of type "Standard
+username and password", the environment variable specified will be set to
+<code>username:password</code> and two additional environment variables will be
+automatically be defined: <code>MYVARNAME_USR</code> and <code>MYVARNAME_PSW</code> respectively.</p>
+</div>
+<table class="tableblock frame-all grid-all stretch syntax">
+<colgroup>
+<col style="width: 10%;">
+<col style="width: 90%;">
+</colgroup>
+<tbody>
+<tr>
+<th class="tableblock halign-center valign-top"><p class="tableblock">Required</p></th>
+<td class="tableblock halign-right valign-top"><div class="content"><div class="paragraph">
+<p>No</p>
+</div></div></td>
+</tr>
+<tr>
+<th class="tableblock halign-center valign-top"><p class="tableblock">Parameters</p></th>
+<td class="tableblock halign-right valign-top"><div class="content"><div class="paragraph">
+<p><em>None</em></p>
+</div></div></td>
+</tr>
+<tr>
+<th class="tableblock halign-center valign-top"><p class="tableblock">Allowed</p></th>
+<td class="tableblock halign-right valign-top"><div class="content"><div class="paragraph">
+<p>Inside the <code>pipeline</code> block, or within <code>stage</code> directives.</p>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+<div class="sect4">
+<h5 id="environment-example"><a class="anchor" href="#environment-example"></a>Example<a class="anchorjs-link " href="#environment-example" aria-label="Anchor link for: environment example" data-anchorjs-icon="" style="font: 1em/1 anchorjs-icons; padding-left: 0.375em;"></a></h5>
+<div class="pipeline-block">  <div class="listingblock pipeline-declarative">
+    <div class="title">Jenkinsfile (Declarative Pipeline)</div>
+    <div class="content">
+  <pre class="CodeRay highlight nowrap"><code class="language-groovy" data-lang="groovy">pipeline {
+    agent any
+    environment { <span style="color:#777"><i class="conum" data-value="1"></i><b>(1)</b></span>
+        CC = <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">clang</span><span style="color:#710">'</span></span>
+    }
+    stages {
+        stage(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">Example</span><span style="color:#710">'</span></span>) {
+            environment { <span style="color:#777"><i class="conum" data-value="2"></i><b>(2)</b></span>
+                AN_ACCESS_KEY = credentials(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">my-prefined-secret-text</span><span style="color:#710">'</span></span>) <span style="color:#777"><i class="conum" data-value="3"></i><b>(3)</b></span>
+            }
+            steps {
+                sh <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">printenv</span><span style="color:#710">'</span></span>
+            }
+        }
+    }
+}</code></pre>
+</div></div></div>
+<div class="colist arabic">
+<table>
+<tbody><tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>An <code>environment</code> directive used in the top-level <code>pipeline</code> block will
+apply to all steps within the Pipeline.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>An <code>environment</code> directive defined within a <code>stage</code> will only apply the
+given environment variables to steps within the <code>stage</code>.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>The <code>environment</code> block has a helper method <code>credentials()</code> defined which
+can be used to access pre-defined Credentials by their identifier in the
+Jenkins environment.</td>
+</tr>
+</tbody></table>
+</div>
+</div>
+</div>

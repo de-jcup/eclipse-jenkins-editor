@@ -1,0 +1,32 @@
+<div class="sect2">
+<h3 id="sh-shell-script"><a class="anchor" href="#sh-shell-script"></a><code>sh</code>: Shell Script<a class="anchorjs-link " href="#sh-shell-script" aria-label="Anchor link for: sh shell script" data-anchorjs-icon="" style="font: 1em/1 anchorjs-icons; padding-left: 0.375em;"></a></h3>
+<ul><li><code>script</code>
+<div><div>
+ <p> Runs a Bourne shell script, typically on a Unix node. Multiple lines are accepted. </p>
+ <p> An interpreter selector may be used, for example: <code>#!/usr/bin/perl</code> </p>
+ <p> Otherwise the system default shell will be run, using the <code>-xe</code> flags (you can specify <code>set +e</code> and/or <code>set +x</code> to disable those). </p>
+</div></div>
+
+<ul><li><b>Type:</b> <code>String</code></li></ul></li>
+<li><code>encoding</code> (optional)
+<div><div>
+  Encoding of standard output, if it is being captured.
+</div></div>
+
+<ul><li><b>Type:</b> <code>String</code></li></ul></li>
+<li><code>returnStatus</code> (optional)
+<div><div>
+  Normally, a script which exits with a nonzero status code will cause the step to fail with an exception. If this option is checked, the return value of the step will instead be the status code. You may then compare it to zero, for example.
+</div></div>
+
+<ul><li><b>Type:</b> <code>boolean</code></li></ul></li>
+<li><code>returnStdout</code> (optional)
+<div><div>
+  If checked, standard output from the task is returned as the step value as a
+ <code>String</code>, rather than being printed to the build log. (Standard error, if any, will still be printed to the log.) You will often want to call
+ <code>.trim()</code> on the result to strip off a trailing newline.
+</div></div>
+
+<ul><li><b>Type:</b> <code>boolean</code></li></ul></li>
+</ul>
+</div>

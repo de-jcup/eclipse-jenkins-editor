@@ -1,0 +1,23 @@
+<div class="sect2">
+<h3 id="archive-archive-artifacts"><a class="anchor" href="#archive-archive-artifacts"></a><code>archive</code>: Archive artifacts</h3>
+<div><div>
+  Archives build output artifacts for later use. As of Jenkins 2.x, this step is deprecated in favor of the more configurable
+ <code>archiveArtifacts</code>.
+</div></div>
+<ul><li><code>includes</code>
+<div><div>
+  Include artifacts matching this
+ <a href="https://ant.apache.org/manual/dirtasks.html#patterns" rel="nofollow">Ant style pattern</a>. Use a comma separated list to add more than one expression.
+</div></div>
+
+<ul><li><b>Type:</b> <code>String</code></li></ul></li>
+<li><code>excludes</code> (optional)
+<div><div>
+  Exclude artifacts matching this
+ <a href="https://ant.apache.org/manual/dirtasks.html#patterns" rel="nofollow">Ant-style pattern</a>.
+ <br> Use a comma-separated list to add more than one expression.
+</div></div>
+
+<ul><li><b>Type:</b> <code>String</code></li></ul></li>
+</ul>
+</div>

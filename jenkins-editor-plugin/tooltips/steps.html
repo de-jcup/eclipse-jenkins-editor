@@ -1,0 +1,65 @@
+<div class="sect3">
+<h4 id="steps"><a class="anchor" href="#steps"></a>steps<a class="anchorjs-link " href="#steps" aria-label="Anchor link for: steps" data-anchorjs-icon="" style="font: 1em/1 anchorjs-icons; padding-left: 0.375em;"></a></h4>
+<div class="paragraph">
+<p>The <code>steps</code> section defines a series of one or more <a href="#declarative-steps">steps</a>
+to be executed in a given <code>stage</code> directive.</p>
+</div>
+<table style="border:1px solid green">
+<tr>
+	<td style="background-color:lightgreen">
+	For more detailed links about possible pipeline steps  please refer <a href="https://jenkins.io/doc/pipeline/steps/">Pipeline Steps Reference</a>
+	</td>
+</tr>
+</table>
+<table class="tableblock frame-all grid-all stretch syntax">
+<colgroup>
+<col style="width: 10%;">
+<col style="width: 90%;">
+</colgroup>
+<tbody>
+<tr>
+<th class="tableblock halign-center valign-top"><p class="tableblock">Required</p></th>
+<td class="tableblock halign-right valign-top"><div class="content"><div class="paragraph">
+<p>Yes</p>
+</div></div></td>
+</tr>
+<tr>
+<th class="tableblock halign-center valign-top"><p class="tableblock">Parameters</p></th>
+<td class="tableblock halign-right valign-top"><div class="content"><div class="paragraph">
+<p><em>None</em></p>
+</div></div></td>
+</tr>
+<tr>
+<th class="tableblock halign-center valign-top"><p class="tableblock">Allowed</p></th>
+<td class="tableblock halign-right valign-top"><div class="content"><div class="paragraph">
+<p>Inside each <code>stage</code> block.</p>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+<div class="sect4">
+<h5 id="steps-example"><a class="anchor" href="#steps-example"></a>Example<a class="anchorjs-link " href="#steps-example" aria-label="Anchor link for: steps example" data-anchorjs-icon="" style="font: 1em/1 anchorjs-icons; padding-left: 0.375em;"></a></h5>
+<div class="pipeline-block">  <div class="listingblock pipeline-declarative">
+    <div class="title">Jenkinsfile (Declarative Pipeline)</div>
+    <div class="content">
+  <pre class="CodeRay highlight nowrap"><code class="language-groovy" data-lang="groovy">pipeline {
+    agent any
+    stages {
+        stage(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">Example</span><span style="color:#710">'</span></span>) {
+            steps { <span style="color:#777"><i class="conum" data-value="1"></i><b>(1)</b></span>
+                echo <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">Hello World</span><span style="color:#710">'</span></span>
+            }
+        }
+    }
+}</code></pre>
+</div></div></div>
+<div class="colist arabic">
+<table>
+<tbody><tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>The <code>steps</code> section must contain one or more steps.</td>
+</tr>
+</tbody></table>
+</div>
+</div>
+</div>

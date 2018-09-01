@@ -1,0 +1,308 @@
+<div class="sect3">
+<h4 id="when"><a class="anchor" href="#when"></a>when<a class="anchorjs-link " href="#when" aria-label="Anchor link for: when" data-anchorjs-icon="" style="font: 1em/1 anchorjs-icons; padding-left: 0.375em;"></a></h4>
+<div class="paragraph">
+<p>The <code>when</code> directive allows the Pipeline to determine whether the stage should
+be executed depending on the given condition.
+The <code>when</code> directive must contain at least one condition.
+If the <code>when</code> directive contains more than one condition,
+all the child conditions must return true for the stage to execute.
+This is the same as if the child conditions were nested in an <code>allOf</code> condition
+(see the <a href="#when-example">examples</a> below). If an <code>anyOf</code> condition is used, note that the condition skips remaining tests as soon as the first "true" condition is found.</p>
+</div>
+<div class="paragraph">
+<p>More complex conditional structures can be built
+using the nesting conditions: <code>not</code>, <code>allOf</code>, or <code>anyOf</code>.
+Nesting conditions may be nested to any arbitrary depth.</p>
+</div>
+<table class="tableblock frame-all grid-all stretch syntax">
+<colgroup>
+<col style="width: 10%;">
+<col style="width: 90%;">
+</colgroup>
+<tbody>
+<tr>
+<th class="tableblock halign-center valign-top"><p class="tableblock">Required</p></th>
+<td class="tableblock halign-right valign-top"><div class="content"><div class="paragraph">
+<p>No</p>
+</div></div></td>
+</tr>
+<tr>
+<th class="tableblock halign-center valign-top"><p class="tableblock">Parameters</p></th>
+<td class="tableblock halign-right valign-top"><div class="content"><div class="paragraph">
+<p><em>None</em></p>
+</div></div></td>
+</tr>
+<tr>
+<th class="tableblock halign-center valign-top"><p class="tableblock">Allowed</p></th>
+<td class="tableblock halign-right valign-top"><div class="content"><div class="paragraph">
+<p>Inside a <code>stage</code> directive</p>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+<div class="sect4">
+<h5 id="built-in-conditions"><a class="anchor" href="#built-in-conditions"></a>Built-in Conditions<a class="anchorjs-link " href="#built-in-conditions" aria-label="Anchor link for: built in conditions" data-anchorjs-icon="" style="font: 1em/1 anchorjs-icons; padding-left: 0.375em;"></a></h5>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">branch</dt>
+<dd>
+<p>Execute the stage when the branch being built matches the branch
+pattern given, for example: <code>when { branch 'master' }</code>. Note that this only works on
+a multibranch Pipeline.</p>
+</dd>
+<dt class="hdlist1">buildingTag</dt>
+<dd>
+<p>Execute the stage when the build is building a tag.
+Example: <code>when { buildingTag() }</code></p>
+</dd>
+<dt class="hdlist1">changelog</dt>
+<dd>
+<p>Execute the stage if the build’s SCM changelog contains a given regular expression pattern,
+for example: <code>when { changelog '.*^\\[DEPENDENCY\\] .+$' }</code></p>
+</dd>
+<dt class="hdlist1">changeset</dt>
+<dd>
+<p>Execute the stage if the build’s SCM changeset contains one or more files matching the given string or glob.
+Example: <code>when { changeset "**/*.js" }</code></p>
+<div class="paragraph">
+<p>By default the path matching will be case insensitive, this can be turned off with the <code>caseSensitive</code> parameter,
+for example: <code>when { changeset glob: "ReadMe.*", caseSensitive: true }</code></p>
+</div>
+</dd>
+<dt class="hdlist1">changeRequest</dt>
+<dd>
+<p>Executes the stage if the current build is for a "change request"
+(a.k.a. Pull Request on GitHub and Bitbucket, Merge Request on GitLab or Change in Gerrit etc.).
+When no parameters are passed the stage runs on every change request,
+for example: <code>when { changeRequest() }</code>.</p>
+<div class="paragraph">
+<p>By adding a filter attribute with parameter to the change request,
+the stage can be made to run only on matching change requests.
+Possible attributes are
+<code>id</code>, <code>target</code>, <code>branch</code>, <code>fork</code>, <code>url</code>, <code>title</code>, <code>author</code>, <code>authorDisplayName</code>, and <code>authorEmail</code>.
+Each of these corresponds to
+a <code>CHANGE_*</code> environment variable, for example: <code>when { changeRequest target: 'master' }</code>.</p>
+</div>
+<div class="paragraph">
+<p>The optional parameter <code>comparator</code> may be added after an attribute
+to specify how any patterns are evaluated for a match:
+<code>EQUALS</code> for a simple string comparison (the default),
+<code>GLOB</code> for an ANT style path glob (same as for example <code>changeset</code>), or
+<code>REGEXP</code> for regular expression matching.
+Example: <code>when { changeRequest authorEmail: "[\\w_-.]+@example.com", comparator: 'REGEXP' }</code></p>
+</div>
+</dd>
+<dt class="hdlist1">environment</dt>
+<dd>
+<p>Execute the stage when the specified environment variable is set
+to the given value, for example: <code>when { environment name: 'DEPLOY_TO', value: 'production' }</code></p>
+</dd>
+<dt class="hdlist1">equals</dt>
+<dd>
+<p>Execute the stage when the expected value is equal to the actual value,
+for example: <code>when { equals expected: 2, actual: currentBuild.number }</code></p>
+</dd>
+<dt class="hdlist1">expression</dt>
+<dd>
+<p>Execute the stage when the specified Groovy expression evaluates
+to true, for example: <code>when { expression { return params.DEBUG_BUILD } }</code> Note that when returning strings from your expressions they must be converted to booleans or return <code>null</code> to evaluate to false. Simply returning "0" or "false" will still evaluate to "true".</p>
+</dd>
+<dt class="hdlist1">tag</dt>
+<dd>
+<p>Execute the stage if the <code>TAG_NAME</code> variable matches the given pattern.
+Example: <code>when { tag "release-*" }</code>.
+If an empty pattern is provided the stage will execute if the <code>TAG_NAME</code> variable exists
+(same as <code>buildingTag()</code>).</p>
+<div class="paragraph">
+<p>The optional parameter <code>comparator</code> may be added after an attribute
+to specify how any patterns are evaluated for a match:
+<code>EQUALS</code> for a simple string comparison,
+<code>GLOB</code> (the default) for an ANT style path glob (same as for example <code>changeset</code>), or
+<code>REGEXP</code> for regular expression matching.
+For example: <code>when { tag pattern: "release-\\d+", comparator: "REGEXP"}</code></p>
+</div>
+</dd>
+<dt class="hdlist1">not</dt>
+<dd>
+<p>Execute the stage when the nested condition is false.
+Must contain one condition.
+For example: <code>when { not { branch 'master' } }</code></p>
+</dd>
+<dt class="hdlist1">allOf</dt>
+<dd>
+<p>Execute the stage when all of the nested conditions are true.
+Must contain at least one condition.
+For example: <code>when { allOf { branch 'master'; environment name: 'DEPLOY_TO', value: 'production' } }</code></p>
+</dd>
+<dt class="hdlist1">anyOf</dt>
+<dd>
+<p>Execute the stage when at least one of the nested conditions is true.
+Must contain at least one condition.
+For example: <code>when { anyOf { branch 'master'; branch 'staging' } }</code></p>
+</dd>
+</dl>
+</div>
+</div>
+<div class="sect4">
+<h5 id="evaluating-when-before-entering-the-stages-agent"><a class="anchor" href="#evaluating-when-before-entering-the-stages-agent"></a>Evaluating <code>when</code> before entering the <code>stage’s `agent</code><a class="anchorjs-link " href="#evaluating-when-before-entering-the-stages-agent" aria-label="Anchor link for: evaluating when before entering the stages agent" data-anchorjs-icon="" style="font: 1em/1 anchorjs-icons; padding-left: 0.375em;"></a></h5>
+<div class="paragraph">
+<p>By default, the <code>when</code> condition for a <code>stage</code> will be evaluated after
+entering the <code>agent</code> for that <code>stage</code>, if one is defined. However, this can
+be changed by specifying the <code>beforeAgent</code> option within the <code>when</code>
+block. If <code>beforeAgent</code> is set to <code>true</code>, the <code>when</code> condition will be
+evaluated first, and the <code>agent</code> will only be entered if the <code>when</code>
+condition evaluates to true.</p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="when-example"><a class="anchor" href="#when-example"></a>Examples<a class="anchorjs-link " href="#when-example" aria-label="Anchor link for: when example" data-anchorjs-icon="" style="font: 1em/1 anchorjs-icons; padding-left: 0.375em;"></a></h5>
+<div class="pipeline-block">  <div class="listingblock pipeline-declarative">
+    <div class="title">Jenkinsfile (Declarative Pipeline)</div>
+    <div class="content">
+  <pre class="CodeRay highlight nowrap"><code class="language-groovy" data-lang="groovy">pipeline {
+    agent any
+    stages {
+        stage(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">Example Build</span><span style="color:#710">'</span></span>) {
+            steps {
+                echo <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">Hello World</span><span style="color:#710">'</span></span>
+            }
+        }
+        stage(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">Example Deploy</span><span style="color:#710">'</span></span>) {
+            when {
+                branch <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">production</span><span style="color:#710">'</span></span>
+            }
+            steps {
+                echo <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">Deploying</span><span style="color:#710">'</span></span>
+            }
+        }
+    }
+}</code></pre>
+</div></div></div>
+<div class="pipeline-block">  <div class="listingblock pipeline-declarative">
+    <div class="title">Jenkinsfile (Declarative Pipeline)</div>
+    <div class="content">
+  <pre class="CodeRay highlight nowrap"><code class="language-groovy" data-lang="groovy">pipeline {
+    agent any
+    stages {
+        stage(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">Example Build</span><span style="color:#710">'</span></span>) {
+            steps {
+                echo <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">Hello World</span><span style="color:#710">'</span></span>
+            }
+        }
+        stage(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">Example Deploy</span><span style="color:#710">'</span></span>) {
+            when {
+                branch <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">production</span><span style="color:#710">'</span></span>
+                environment <span style="color:#606">name</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">DEPLOY_TO</span><span style="color:#710">'</span></span>, <span style="color:#606">value</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">production</span><span style="color:#710">'</span></span>
+            }
+            steps {
+                echo <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">Deploying</span><span style="color:#710">'</span></span>
+            }
+        }
+    }
+}</code></pre>
+</div></div></div>
+<div class="pipeline-block">  <div class="listingblock pipeline-declarative">
+    <div class="title">Jenkinsfile (Declarative Pipeline)</div>
+    <div class="content">
+  <pre class="CodeRay highlight nowrap"><code class="language-groovy" data-lang="groovy">pipeline {
+    agent any
+    stages {
+        stage(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">Example Build</span><span style="color:#710">'</span></span>) {
+            steps {
+                echo <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">Hello World</span><span style="color:#710">'</span></span>
+            }
+        }
+        stage(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">Example Deploy</span><span style="color:#710">'</span></span>) {
+            when {
+                allOf {
+                    branch <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">production</span><span style="color:#710">'</span></span>
+                    environment <span style="color:#606">name</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">DEPLOY_TO</span><span style="color:#710">'</span></span>, <span style="color:#606">value</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">production</span><span style="color:#710">'</span></span>
+                }
+            }
+            steps {
+                echo <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">Deploying</span><span style="color:#710">'</span></span>
+            }
+        }
+    }
+}</code></pre>
+</div></div></div>
+<div class="pipeline-block">  <div class="listingblock pipeline-declarative">
+    <div class="title">Jenkinsfile (Declarative Pipeline)</div>
+    <div class="content">
+  <pre class="CodeRay highlight nowrap"><code class="language-groovy" data-lang="groovy">pipeline {
+    agent any
+    stages {
+        stage(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">Example Build</span><span style="color:#710">'</span></span>) {
+            steps {
+                echo <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">Hello World</span><span style="color:#710">'</span></span>
+            }
+        }
+        stage(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">Example Deploy</span><span style="color:#710">'</span></span>) {
+            when {
+                branch <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">production</span><span style="color:#710">'</span></span>
+                anyOf {
+                    environment <span style="color:#606">name</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">DEPLOY_TO</span><span style="color:#710">'</span></span>, <span style="color:#606">value</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">production</span><span style="color:#710">'</span></span>
+                    environment <span style="color:#606">name</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">DEPLOY_TO</span><span style="color:#710">'</span></span>, <span style="color:#606">value</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">staging</span><span style="color:#710">'</span></span>
+                }
+            }
+            steps {
+                echo <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">Deploying</span><span style="color:#710">'</span></span>
+            }
+        }
+    }
+}</code></pre>
+</div></div></div>
+<div class="pipeline-block">  <div class="listingblock pipeline-declarative">
+    <div class="title">Jenkinsfile (Declarative Pipeline)</div>
+    <div class="content">
+  <pre class="CodeRay highlight nowrap"><code class="language-groovy" data-lang="groovy">pipeline {
+    agent any
+    stages {
+        stage(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">Example Build</span><span style="color:#710">'</span></span>) {
+            steps {
+                echo <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">Hello World</span><span style="color:#710">'</span></span>
+            }
+        }
+        stage(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">Example Deploy</span><span style="color:#710">'</span></span>) {
+            when {
+                expression { BRANCH_NAME ==~ <span style="background-color:hsla(300,100%,50%,0.06)"><span style="color:#404">/</span><span style="color:#808">(production|staging)</span><span style="color:#404">/</span></span> }
+                anyOf {
+                    environment <span style="color:#606">name</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">DEPLOY_TO</span><span style="color:#710">'</span></span>, <span style="color:#606">value</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">production</span><span style="color:#710">'</span></span>
+                    environment <span style="color:#606">name</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">DEPLOY_TO</span><span style="color:#710">'</span></span>, <span style="color:#606">value</span>: <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">staging</span><span style="color:#710">'</span></span>
+                }
+            }
+            steps {
+                echo <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">Deploying</span><span style="color:#710">'</span></span>
+            }
+        }
+    }
+}</code></pre>
+</div></div></div>
+<div class="pipeline-block">  <div class="listingblock pipeline-declarative">
+    <div class="title">Jenkinsfile (Declarative Pipeline)</div>
+    <div class="content">
+  <pre class="CodeRay highlight nowrap"><code class="language-groovy" data-lang="groovy">pipeline {
+    agent none
+    stages {
+        stage(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">Example Build</span><span style="color:#710">'</span></span>) {
+            steps {
+                echo <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">Hello World</span><span style="color:#710">'</span></span>
+            }
+        }
+        stage(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">Example Deploy</span><span style="color:#710">'</span></span>) {
+            agent {
+                label <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">some-label</span><span style="color:#710">"</span></span>
+            }
+            when {
+                beforeAgent <span style="color:#069">true</span>
+                branch <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">production</span><span style="color:#710">'</span></span>
+            }
+            steps {
+                echo <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">Deploying</span><span style="color:#710">'</span></span>
+            }
+        }
+    }
+}</code></pre>
+</div></div></div>
+</div>
+</div>

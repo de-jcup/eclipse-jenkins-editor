@@ -1,0 +1,75 @@
+<div class="sect2">
+<h3 id="parallel"><a class="anchor" href="#parallel"></a>Parallel<a class="anchorjs-link " href="#parallel" aria-label="Anchor link for: parallel" data-anchorjs-icon="" style="font: 1em/1 anchorjs-icons; padding-left: 0.375em;"></a></h3>
+<div class="paragraph">
+<p>Stages in Declarative Pipeline may declare a number of nested stages within
+a <code>parallel</code> block, which will be executed in parallel. Note that a stage must
+have one and only one of <code>steps</code>, <code>stages</code>, or <code>parallel</code>. The nested stages
+cannot contain further <code>parallel</code> stages themselves, but otherwise behave the
+same as any other <code>stage</code>, including a list of sequential stages within <code>stages</code>.
+Any stage containing <code>parallel</code> cannot contain <code>agent</code> or <code>tools</code>, since those
+are not relevant without <code>steps</code>.</p>
+</div>
+<div class="paragraph">
+<p>In addition, you can force your <code>parallel</code> stages to all be aborted when one
+of them fails, by adding <code>failFast true</code> to the <code>stage</code> containing the
+<code>parallel</code>.</p>
+</div>
+<div class="sect3">
+<h4 id="parallel-stages-example"><a class="anchor" href="#parallel-stages-example"></a>Example<a class="anchorjs-link " href="#parallel-stages-example" aria-label="Anchor link for: parallel stages example" data-anchorjs-icon="" style="font: 1em/1 anchorjs-icons; padding-left: 0.375em;"></a></h4>
+<div class="pipeline-block">  <div class="listingblock pipeline-declarative">
+    <div class="title">Jenkinsfile (Declarative Pipeline)</div>
+    <div class="content">
+  <pre class="CodeRay highlight nowrap"><code class="language-groovy" data-lang="groovy">pipeline {
+    agent any
+    stages {
+        stage(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">Non-Parallel Stage</span><span style="color:#710">'</span></span>) {
+            steps {
+                echo <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">This stage will be executed first.</span><span style="color:#710">'</span></span>
+            }
+        }
+        stage(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">Parallel Stage</span><span style="color:#710">'</span></span>) {
+            when {
+                branch <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">master</span><span style="color:#710">'</span></span>
+            }
+            failFast <span style="color:#069">true</span>
+            parallel {
+                stage(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">Branch A</span><span style="color:#710">'</span></span>) {
+                    agent {
+                        label <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">for-branch-a</span><span style="color:#710">"</span></span>
+                    }
+                    steps {
+                        echo <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">On Branch A</span><span style="color:#710">"</span></span>
+                    }
+                }
+                stage(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">Branch B</span><span style="color:#710">'</span></span>) {
+                    agent {
+                        label <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">for-branch-b</span><span style="color:#710">"</span></span>
+                    }
+                    steps {
+                        echo <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">On Branch B</span><span style="color:#710">"</span></span>
+                    }
+                }
+                stage(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">Branch C</span><span style="color:#710">'</span></span>) {
+                    agent {
+                        label <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">for-branch-c</span><span style="color:#710">"</span></span>
+                    }
+                    stages {
+                        stage(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">Nested 1</span><span style="color:#710">'</span></span>) {
+                            steps {
+                                echo <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">In stage Nested 1 within Branch C</span><span style="color:#710">"</span></span>
+                            }
+                        }
+                        stage(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">Nested 2</span><span style="color:#710">'</span></span>) {
+                            steps {
+                                echo <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">"</span><span style="color:#D20">In stage Nested 2 within Branch C</span><span style="color:#710">"</span></span>
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}</code></pre>
+</div></div></div>
+</div>
+</div>

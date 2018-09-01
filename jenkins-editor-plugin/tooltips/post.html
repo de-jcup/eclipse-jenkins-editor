@@ -1,0 +1,132 @@
+<div class="sect3">
+<h4 id="post"><a class="anchor" href="#post"></a>post<a class="anchorjs-link " href="#post" aria-label="Anchor link for: post" data-anchorjs-icon="" style="font: 1em/1 anchorjs-icons; padding-left: 0.375em;"></a></h4>
+<div class="paragraph">
+<p>The <code>post</code> section defines one or more additional <a href="#declarative-steps">steps</a>
+that are run upon the completion of a Pipeline’s or stage’s run (depending on
+the location of the <code>post</code> section within the Pipeline). <code>post</code> can support any of
+of the following <a href="#post-conditions">post-condition</a> blocks: <code>always</code>,
+<code>changed</code>, <code>fixed</code>, <code>regression</code>, <code>aborted</code>, <code>failure</code>, <code>success</code>,
+<code>unstable</code>, and <code>cleanup</code>. These condition blocks allow the execution
+of steps inside each condition depending on the completion status of
+the Pipeline or stage. The condition blocks are executed in the order
+shown below.</p>
+</div>
+<table class="tableblock frame-all grid-all stretch syntax">
+<colgroup>
+<col style="width: 10%;">
+<col style="width: 90%;">
+</colgroup>
+<tbody>
+<tr>
+<th class="tableblock halign-center valign-top"><p class="tableblock">Required</p></th>
+<td class="tableblock halign-right valign-top"><div class="content"><div class="paragraph">
+<p>No</p>
+</div></div></td>
+</tr>
+<tr>
+<th class="tableblock halign-center valign-top"><p class="tableblock">Parameters</p></th>
+<td class="tableblock halign-right valign-top"><div class="content"><div class="paragraph">
+<p><em>None</em></p>
+</div></div></td>
+</tr>
+<tr>
+<th class="tableblock halign-center valign-top"><p class="tableblock">Allowed</p></th>
+<td class="tableblock halign-right valign-top"><div class="content"><div class="paragraph">
+<p>In the top-level <code>pipeline</code> block and each <code>stage</code> block.</p>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+<div class="sect4">
+<h5 id="post-conditions"><a class="anchor" href="#post-conditions"></a>Conditions<a class="anchorjs-link " href="#post-conditions" aria-label="Anchor link for: post conditions" data-anchorjs-icon="" style="font: 1em/1 anchorjs-icons; padding-left: 0.375em;"></a></h5>
+<div class="dlist">
+<dl>
+<dt class="hdlist1"><code>always</code></dt>
+<dd>
+<p>Run the steps in the <code>post</code> section regardless of the completion
+status of the Pipeline’s or stage’s run.</p>
+</dd>
+<dt class="hdlist1"><code>changed</code></dt>
+<dd>
+<p>Only run the steps in <code>post</code> if the current Pipeline’s or stage’s
+run has a different completion status from its previous run.</p>
+</dd>
+<dt class="hdlist1"><code>fixed</code></dt>
+<dd>
+<p>Only run the steps in <code>post</code> if the current Pipeline’s or
+stage’s run is successful and the previous run failed or was unstable.</p>
+</dd>
+<dt class="hdlist1"><code>regression</code></dt>
+<dd>
+<p>Only run the steps in <code>post</code> if the current Pipeline’s
+or stage’s run’s status is failure, unstable, or aborted and the previous run
+was successful.</p>
+</dd>
+<dt class="hdlist1"><code>aborted</code></dt>
+<dd>
+<p>Only run the steps in <code>post</code> if the current Pipeline’s or stage’s
+run has an "aborted" status, usually due to the Pipeline being manually aborted.
+This is typically denoted by gray in the web UI.</p>
+</dd>
+<dt class="hdlist1"><code>failure</code></dt>
+<dd>
+<p>Only run the steps in <code>post</code> if the current Pipeline’s or stage’s
+run has a "failed" status, typically denoted by red in the web UI.</p>
+</dd>
+<dt class="hdlist1"><code>success</code></dt>
+<dd>
+<p>Only run the steps in <code>post</code> if the current Pipeline’s or stage’s
+run has a "success" status, typically denoted by blue or green in the web UI.</p>
+</dd>
+<dt class="hdlist1"><code>unstable</code></dt>
+<dd>
+<p>Only run the steps in <code>post</code> if the current Pipeline’s or stage’s
+run has an "unstable" status, usually caused by test failures, code violations,
+etc. This is typically denoted by yellow in the web UI.</p>
+</dd>
+<dt class="hdlist1"><code>cleanup</code></dt>
+<dd>
+<p>Run the steps in this <code>post</code> condition after every other
+<code>post</code> condition has been evaluated, regardless of the Pipeline or
+stage’s status.</p>
+</dd>
+</dl>
+</div>
+</div>
+<div class="sect4">
+<h5 id="post-example"><a class="anchor" href="#post-example"></a>Example<a class="anchorjs-link " href="#post-example" aria-label="Anchor link for: post example" data-anchorjs-icon="" style="font: 1em/1 anchorjs-icons; padding-left: 0.375em;"></a></h5>
+<div class="pipeline-block">  <div class="listingblock pipeline-declarative">
+    <div class="title">Jenkinsfile (Declarative Pipeline)</div>
+    <div class="content">
+  <pre class="CodeRay highlight nowrap"><code class="language-groovy" data-lang="groovy">pipeline {
+    agent any
+    stages {
+        stage(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">Example</span><span style="color:#710">'</span></span>) {
+            steps {
+                echo <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">Hello World</span><span style="color:#710">'</span></span>
+            }
+        }
+    }
+    post { <span style="color:#777"><i class="conum" data-value="1"></i><b>(1)</b></span>
+        always { <span style="color:#777"><i class="conum" data-value="2"></i><b>(2)</b></span>
+            echo <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">I will always say Hello again!</span><span style="color:#710">'</span></span>
+        }
+    }
+}</code></pre>
+</div></div></div>
+<div class="colist arabic">
+<table>
+<tbody><tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>Conventionally, the <code>post</code> section should be placed at the end of the
+Pipeline.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td><a href="#post-conditions">Post-condition</a> blocks contain <a href="#declarative-steps">steps</a>
+the same as the <a href="#steps">steps</a> section.</td>
+</tr>
+</tbody></table>
+</div>
+</div>
+</div>

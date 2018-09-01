@@ -15,7 +15,6 @@
  */
 package de.jcup.jenkins.cli;
 
-import java.beans.PropertyChangeListenerProxy;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;

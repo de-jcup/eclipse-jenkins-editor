@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 Albert Tregnaghi
+ * Copyright 2016 Albert Tregnaghi
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,17 +13,14 @@
  * and limitations under the License.
  *
  */
- package de.jcup.jenkins;
+package de.jcup.jenkinseditor.codeassist;
 
-import org.junit.Test;
+import de.jcup.eclipse.commons.codeassist.SupportableContentAssistProcessor;
+import de.jcup.jenkinseditor.JenkinsEditorActivator;
 
-public class PipelineDSLTest {
+public class JenkinsContentAssistProcessor extends SupportableContentAssistProcessor {
 
-	@Test
-	public void plugin_will_find_all_icons_given_by_path_of_dsl() throws Exception {
-		for (OutlinePipelineDSL dslEntry: OutlinePipelineDSL.values()){
-			PluginResourceLoader.assertFileInPluginExists(dslEntry.getRelativePathInsidePlugin());
-		}
+	public JenkinsContentAssistProcessor(){
+		super(new JenkinsDSLContentAssistSupport(JenkinsEditorActivator.getDefault()));
 	}
-
 }

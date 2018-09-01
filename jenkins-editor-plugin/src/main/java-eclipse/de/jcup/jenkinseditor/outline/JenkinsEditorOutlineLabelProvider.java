@@ -31,7 +31,7 @@ import de.jcup.egradle.core.model.Modifier;
 import de.jcup.egradle.eclipse.util.ColorManager;
 import de.jcup.egradle.eclipse.util.EclipseDevelopmentSettings;
 import de.jcup.egradle.eclipse.util.EclipseUtil;
-import de.jcup.jenkins.PipelineDSL;
+import de.jcup.jenkins.OutlinePipelineDSL;
 import de.jcup.jenkinseditor.JenkinsEditorActivator;
 import de.jcup.jenkinseditor.preferences.JenkinsEditorColorConstants;
 
@@ -171,7 +171,7 @@ public class JenkinsEditorOutlineLabelProvider extends BaseLabelProvider
 					return getOutlineImage(ICON_CLOSURE);
 				}
 				name = name.toUpperCase().split(" ")[0];
-				for (PipelineDSL dsl: PipelineDSL.values()){
+				for (OutlinePipelineDSL dsl: OutlinePipelineDSL.values()){
 					if (dsl.name().equals(name)){
 						return getOutlineImage(dsl);
 					}
@@ -311,12 +311,12 @@ public class JenkinsEditorOutlineLabelProvider extends BaseLabelProvider
 		return editorActivator.getColorManager();
 	}
 
-	private Image getOutlineImage(PipelineDSL dsl){
+	public Image getOutlineImage(OutlinePipelineDSL dsl){
 		return EclipseUtil.getImage(dsl.getRelativePathInsidePlugin(), JenkinsEditorActivator.PLUGIN_ID);
 	}
 	
 	
-	private Image getOutlineImage(String name) {
+	public Image getOutlineImage(String name) {
 		/* important: we use /icons/jenkinseditor as start so no conflicts with egradle editor parts
 		 * (The eclipse util implementation does cache images, so same pathes will make conflicts)
 		 */

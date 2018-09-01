@@ -16,11 +16,12 @@
  package de.jcup.jenkins;
 
 /**
+ * Pipeline DSL enum containing parts rendered in outline.
  * See https://jenkins.io/doc/book/pipeline/syntax/
  * @author Albert Tregnaghi
  *
  */
-public enum PipelineDSL{
+public enum OutlinePipelineDSL{
 	/* @formatter:off*/
 		AGENT,
 			DOCKER,
@@ -51,18 +52,31 @@ public enum PipelineDSL{
 			CHANGED,
 			SUCCESS,
 			UNSTABLE,
-			ABORTED
+			ABORTED,
+			
+		INPUT,
 		
-		,;
+		;
 		/* @formatter:on*/
 		
 		private String path;
+		private String id;
 		
-		private PipelineDSL(){
+		private OutlinePipelineDSL(){
 			path="/icons/jenkinseditor/outline/dsl/"+name().toLowerCase()+".png";
+			id=name().toLowerCase();
 		}
 		
 		public String getRelativePathInsidePlugin(){
 			return path;
+		}
+		
+		public static final OutlinePipelineDSL tryToFind(String lowerCasedId){
+			for (OutlinePipelineDSL dsl: values()){
+				if (dsl.id.equals(lowerCasedId)){
+					return dsl;
+				}
+			}
+			return null;
 		}
 	}

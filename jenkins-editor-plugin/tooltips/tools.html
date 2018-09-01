@@ -1,0 +1,72 @@
+<div class="sect3">
+<h4 id="tools"><a class="anchor" href="#tools"></a>tools<a class="anchorjs-link " href="#tools" aria-label="Anchor link for: tools" data-anchorjs-icon="" style="font: 1em/1 anchorjs-icons; padding-left: 0.375em;"></a></h4>
+<div class="paragraph">
+<p>A section defining tools to auto-install and put on the <code>PATH</code>. This is ignored
+if <code>agent none</code> is specified.</p>
+</div>
+<table class="tableblock frame-all grid-all stretch syntax">
+<colgroup>
+<col style="width: 10%;">
+<col style="width: 90%;">
+</colgroup>
+<tbody>
+<tr>
+<th class="tableblock halign-center valign-top"><p class="tableblock">Required</p></th>
+<td class="tableblock halign-right valign-top"><div class="content"><div class="paragraph">
+<p>No</p>
+</div></div></td>
+</tr>
+<tr>
+<th class="tableblock halign-center valign-top"><p class="tableblock">Parameters</p></th>
+<td class="tableblock halign-right valign-top"><div class="content"><div class="paragraph">
+<p><em>None</em></p>
+</div></div></td>
+</tr>
+<tr>
+<th class="tableblock halign-center valign-top"><p class="tableblock">Allowed</p></th>
+<td class="tableblock halign-right valign-top"><div class="content"><div class="paragraph">
+<p>Inside the <code>pipeline</code> block or a <code>stage</code> block.</p>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+<div class="sect4">
+<h5 id="supported-tools"><a class="anchor" href="#supported-tools"></a>Supported Tools<a class="anchorjs-link " href="#supported-tools" aria-label="Anchor link for: supported tools" data-anchorjs-icon="" style="font: 1em/1 anchorjs-icons; padding-left: 0.375em;"></a></h5>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">maven</dt>
+<dt class="hdlist1">jdk</dt>
+<dt class="hdlist1">gradle</dt>
+</dl>
+</div>
+</div>
+<div class="sect4">
+<h5 id="tools-example"><a class="anchor" href="#tools-example"></a>Example<a class="anchorjs-link " href="#tools-example" aria-label="Anchor link for: tools example" data-anchorjs-icon="" style="font: 1em/1 anchorjs-icons; padding-left: 0.375em;"></a></h5>
+<div class="pipeline-block">  <div class="listingblock pipeline-declarative">
+    <div class="title">Jenkinsfile (Declarative Pipeline)</div>
+    <div class="content">
+  <pre class="CodeRay highlight nowrap"><code class="language-groovy" data-lang="groovy">pipeline {
+    agent any
+    tools {
+        maven <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">apache-maven-3.0.1</span><span style="color:#710">'</span></span> <span style="color:#777"><i class="conum" data-value="1"></i><b>(1)</b></span>
+    }
+    stages {
+        stage(<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">Example</span><span style="color:#710">'</span></span>) {
+            steps {
+                sh <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">'</span><span style="color:#D20">mvn --version</span><span style="color:#710">'</span></span>
+            }
+        }
+    }
+}</code></pre>
+</div></div></div>
+<div class="colist arabic">
+<table>
+<tbody><tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>The tool name must be pre-configured in Jenkins under <strong>Manage Jenkins</strong> →
+<strong>Global Tool Configuration</strong>.</td>
+</tr>
+</tbody></table>
+</div>
+</div>
+</div>

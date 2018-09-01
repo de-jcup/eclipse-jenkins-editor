@@ -30,4 +30,17 @@ public enum JenkinsDocumentIdentifiers implements DocumentIdentifier {
 		return name();
 	}
 
+	public static boolean isContaining(String contentType) {
+		if (contentType==null){
+			return false;
+		}
+		for (JenkinsDocumentIdentifiers identifier: values()){
+			if (identifier.getId().equals(contentType)){
+				return true;
+			}
+		}
+		
+		return false;
+	}
+
 }

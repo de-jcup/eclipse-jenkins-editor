@@ -1,0 +1,10 @@
+//repositories {
+//   flatDir {
+//       dirs 'lib'
+//   }
+//}
+
+dependencies {
+    compile fileTree(dir: 'lib', include: '*.jar')
+}
+

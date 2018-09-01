@@ -17,8 +17,6 @@
 
 import java.io.IOException;
 
-import de.jcup.jenkins.cli.JenkinsCLIConfiguration.AuthMode;
-
 public class JenkinsCLIHelpTestMain {
 
 	/* just an api key for an temporary test jenkins*/
