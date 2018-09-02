@@ -69,13 +69,13 @@ public class JenkinsDSLModel {
 		addNode(JenkinsSpecialVariableKeyWords.CHANGE_LOG, when);
 		addNode(JenkinsSpecialVariableKeyWords.CHANGE_SET, when);
 		addNode(JenkinsSpecialVariableKeyWords.CHANGE_REQUEST, when);
-		addNode(JenkinsDefaultClosureKeyWords.ENVIRONMENT, when);
+		addNode(JenkinsSpecialVariableKeyWords.WHEN_ENVIRONMENT, when);
 		addNode(JenkinsSpecialVariableKeyWords.EQUALS, when);
-		addNode(JenkinsSpecialVariableKeyWords.EXPRESSION, when);
+		addNode(JenkinsDefaultClosureKeyWords.EXPRESSION, when);
 		addNode(JenkinsSpecialVariableKeyWords.TAG, when);
-		addNode(JenkinsSpecialVariableKeyWords.NOT, when);
-		addNode(JenkinsSpecialVariableKeyWords.ALLOF, when);
-		addNode(JenkinsSpecialVariableKeyWords.ANYOF, when);
+		addNode(JenkinsDefaultClosureKeyWords.NOT, when);
+		addNode(JenkinsDefaultClosureKeyWords.ALLOF, when);
+		addNode(JenkinsDefaultClosureKeyWords.ANYOF, when);
 		
 	}
 

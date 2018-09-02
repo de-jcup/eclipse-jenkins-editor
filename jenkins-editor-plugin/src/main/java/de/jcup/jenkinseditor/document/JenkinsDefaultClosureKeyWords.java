@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 Albert Tregnaghi
+ * Copyright 2018 Albert Tregnaghi
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -111,6 +111,14 @@ public enum JenkinsDefaultClosureKeyWords implements JenkinsfileKeyword {
 
 	WHEN("when","https://jenkins.io/doc/book/pipeline/syntax/#when"),
 	
+	/* when not built in conditions - being closures */	
+	NOT("not",ExtraTooltip.WHEN_BUILD_IN_CONDITIONS_TOOLTIP),
+
+	ALLOF("allOf",ExtraTooltip.WHEN_BUILD_IN_CONDITIONS_TOOLTIP),
+	
+	ANYOF("anyOf",ExtraTooltip.WHEN_BUILD_IN_CONDITIONS_TOOLTIP),
+	
+	EXPRESSION("expression",ExtraTooltip.WHEN_BUILD_IN_CONDITIONS_TOOLTIP,createExpressionClosure()),
 	
 	;
 	private String text;
@@ -121,6 +129,16 @@ public enum JenkinsDefaultClosureKeyWords implements JenkinsfileKeyword {
 	private JenkinsDefaultClosureKeyWords(String text) {
 		this(text,null,null,null);
 	}
+
+	private static List<String> createExpressionClosure() {
+
+		List<String> list = new ArrayList<>();
+		list.add("expression {");
+		list.add("   return params.DEBUG_BUILD");
+		list.add("}");
+		return list;
+	}
+
 	private static List<String> createStageTemplate() {
 		ArrayList<String> list = new ArrayList<>();
 		list.add("stage('Example Build') {");
