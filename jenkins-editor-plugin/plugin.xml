@@ -10,6 +10,14 @@
    		label="jenkins">
      </keyword>
       <keyword
+   		id="jenkinseditor.preferences.keyword.task"
+   		label="task">
+     </keyword>
+      <keyword
+   		id="jenkinseditor.preferences.keyword.tasks"
+   		label="tasks">
+     </keyword>
+      <keyword
    		id="jenkinseditor.preferences.keyword.color"
    		label="jenkins">
      </keyword>
@@ -43,7 +51,16 @@
         <super type="org.eclipse.core.resources.problemmarker"/>
         <super type="org.eclipse.core.resources.textmarker"/>
         <persistent value="false"/>
+   </extension>
+   <extension 
+   		id="de.jcup.jenkinseditor.script.task"
+    	point="org.eclipse.core.resources.markers"
+    	name="Jenkins editor task">
+        <super type="org.eclipse.core.resources.taskmarker"/>
+        <super type="org.eclipse.core.resources.textmarker"/>
+        <persistent value="true"/>
     </extension>
+    
    
    <!-- ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
    <!--                          CONTEXT                                     -->
@@ -244,11 +261,29 @@
                id="jenkinseditor.preferences.keyword.color">
          </keywordReference>
       </page>
+      <page
+         id="jenkinseditor.eclipse.gradleeditor.preferences.JenkinsEditorTaskTagsPreferencePage"
+         class="de.jcup.jenkinseditor.preferences.JenkinsEditorTaskTagsPreferencePage"
+         name="Tasks"
+         category="jenkinseditor.eclipse.gradleeditor.preferences.JenkinsEditorEditorPreferencePage">
+         <keywordReference
+               id="jenkinseditor.preferences.keyword.jenkins">
+         </keywordReference>
+         <keywordReference
+               id="jenkinseditor.preferences.keyword.task">
+         </keywordReference>
+         <keywordReference
+               id="jenkinseditor.preferences.keyword.tasks">
+         </keywordReference>
+      </page>
     </extension>
     <extension
          point="org.eclipse.core.runtime.preferences">
       <initializer
             class="de.jcup.jenkinseditor.preferences.JenkinsEditorPreferenceInitializer">
+      </initializer>
+      <initializer
+            class="de.jcup.jenkinseditor.preferences.JenkinsEditorTaskTagsPreferenceInitializer">
       </initializer>
    </extension>
    <!-- ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->

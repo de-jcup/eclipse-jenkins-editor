@@ -44,11 +44,14 @@ public class JenkinsEditorActivator extends AbstractUIPlugin implements PluginCo
 
 	private ServiceTracker<IProxyService, ?> proxyTracker;
 
+	private JenkinsTaskTagsSupportProvider taskSupportProvider;
+
 	/**
 	 * The constructor
 	 */
 	public JenkinsEditorActivator() {
 		colorManager = new ColorManager();
+		taskSupportProvider = new JenkinsTaskTagsSupportProvider(this) ;
 		TooltipTextSupport.setTooltipInputStreamProvider(new EclipseResourceInputStreamProvider(PLUGIN_ID));
 		// setup log adapter with editor log support
 		JenkinsLogAdapter.INSTANCE.delegatesTo(JenkinsEditorLogSupport.INSTANCE);
@@ -62,11 +65,13 @@ public class JenkinsEditorActivator extends AbstractUIPlugin implements PluginCo
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
 		plugin = this;
+		taskSupportProvider.getTodoTaskSupport().install();
 	}
 
 	public void stop(BundleContext context) throws Exception {
 		plugin = null;
 		colorManager.dispose();
+		taskSupportProvider.getTodoTaskSupport().uninstall();
 		super.stop(context);
 	}
 
@@ -103,4 +108,9 @@ public class JenkinsEditorActivator extends AbstractUIPlugin implements PluginCo
 	public String getPluginID() {
 		return PLUGIN_ID;
 	}
+	
+	public JenkinsTaskTagsSupportProvider getTaskSupportProvider() {
+		return taskSupportProvider;
+	}
+
 }
