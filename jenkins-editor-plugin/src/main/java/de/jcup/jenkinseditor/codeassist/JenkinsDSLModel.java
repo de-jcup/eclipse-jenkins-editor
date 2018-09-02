@@ -71,7 +71,7 @@ public class JenkinsDSLModel {
 		addNode(JenkinsSpecialVariableKeyWords.CHANGE_REQUEST, when);
 		addNode(JenkinsSpecialVariableKeyWords.WHEN_ENVIRONMENT, when);
 		addNode(JenkinsSpecialVariableKeyWords.EQUALS, when);
-		addNode(JenkinsSpecialVariableKeyWords.EXPRESSION, when);
+		addNode(JenkinsDefaultClosureKeyWords.EXPRESSION, when);
 		addNode(JenkinsSpecialVariableKeyWords.TAG, when);
 		addNode(JenkinsDefaultClosureKeyWords.NOT, when);
 		addNode(JenkinsDefaultClosureKeyWords.ALLOF, when);

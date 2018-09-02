@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 Albert Tregnaghi
+ * Copyright 2018 Albert Tregnaghi
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -58,26 +58,16 @@ public enum JenkinsSpecialVariableKeyWords implements JenkinsfileKeyword {
 
 	REUSE_NODE("reuseNode",ExtraTooltip.AGENT_PARAMETERS),
 
-	ECHO("echo", "https://jenkins.io/doc/pipeline/steps/workflow-basic-steps/#echo-print-message"),
+	ECHO("echo", "https://jenkins.io/doc/pipeline/steps/workflow-basic-steps/#echo-print-message","echo 'Hello Jenkins!'"),
 
-	SH("sh", "https://jenkins.io/doc/pipeline/steps/workflow-durable-task-step/#sh-shell-script"),
+	SH("sh", "https://jenkins.io/doc/pipeline/steps/workflow-durable-task-step/#sh-shell-script","sh 'gradlew build'"),
 
-	BAT("bat", "https://jenkins.io/doc/pipeline/steps/workflow-durable-task-step/#-bat-%20windows%20batch%20script"),
+	BAT("bat", "https://jenkins.io/doc/pipeline/steps/workflow-durable-task-step/#-bat-%20windows%20batch%20script","sh 'gradlew build'"),
 
 	POWERSHELL("powershell",
 			"https://jenkins.io/doc/pipeline/steps/workflow-durable-task-step/#powershell-powershell-script"),
 
-	CREDENTIALS("credentials", ExtraTooltip.ENVIRONMENT),
-
-	BUILDDISCARDER("buildDiscarder",ExtraTooltip.OPTIONS),
-
-	DISABLECONCURRENTBUILDS("disableConcurrentBuilds",ExtraTooltip.OPTIONS),
-
-	OVERRIDEINDEXTRIGGERS("overrideIndexTriggers",ExtraTooltip.OPTIONS),
-
-	SKIPDEFAULTCHECKOUT("skipDefaultCheckout",ExtraTooltip.OPTIONS),
-
-	SKIPSTAGESAFTERUNSTABLE("skipStagesAfterUnstable",ExtraTooltip.OPTIONS),
+	CREDENTIALS("credentials", ExtraTooltip.ENVIRONMENT, "credentials()"),
 
 	/* available parameters */
 	PARAM_STRING("string", ExtraTooltip.PARAMETERS,"string(name: '"+SourceCodeBuilder.CURSOR_TAG+"DEPLOY_ENV', defaultValue: 'staging', description: '')"),
@@ -106,35 +96,35 @@ public enum JenkinsSpecialVariableKeyWords implements JenkinsfileKeyword {
 	
 	GRADLE("gradle",ExtraTooltip.TOOLS),
 
-	BUILD_DISCARDER("buildDiscarder", ExtraTooltip.OPTIONS_AVAILABLE_TOOLTIP),
+	BUILD_DISCARDER("buildDiscarder", ExtraTooltip.OPTIONS_AVAILABLE_TOOLTIP,"buildDiscarder(logRotator(numToKeepStr: '1'))"),
 
-	CHECKOUT_TO_SUBDIRECTORY("checkoutToSubdirectory", ExtraTooltip.OPTIONS_AVAILABLE_TOOLTIP),
+	CHECKOUT_TO_SUBDIRECTORY("checkoutToSubdirectory", ExtraTooltip.OPTIONS_AVAILABLE_TOOLTIP,"checkoutToSubdirectory('foo')"),
 
-	DISABLE_CONCURRENT_BUILDS("disableConcurrentBuilds", ExtraTooltip.OPTIONS_AVAILABLE_TOOLTIP),
+	DISABLE_CONCURRENT_BUILDS("disableConcurrentBuilds", ExtraTooltip.OPTIONS_AVAILABLE_TOOLTIP, "disableConcurrentBuilds()"),
 
 	NEW_CONTAINER_PER_STAGE("newContainerPerStage", ExtraTooltip.OPTIONS_AVAILABLE_TOOLTIP),
 
-	OVERRIDE_INDEX_TRIGGERS("overrideIndexTriggers", ExtraTooltip.OPTIONS_AVAILABLE_TOOLTIP),
+	OVERRIDE_INDEX_TRIGGERS("overrideIndexTriggers", ExtraTooltip.OPTIONS_AVAILABLE_TOOLTIP, "overrideIndexTriggers(true)"),
 
-	PRESERVE_STASHES("preserveStashes", ExtraTooltip.OPTIONS_AVAILABLE_TOOLTIP),
+	PRESERVE_STASHES("preserveStashes", ExtraTooltip.OPTIONS_AVAILABLE_TOOLTIP,"preserveStashes(1)"),
 
-	RETRY("retry", ExtraTooltip.OPTIONS_AVAILABLE_TOOLTIP),
+	RETRY("retry", ExtraTooltip.OPTIONS_AVAILABLE_TOOLTIP,"retry(3)"),
 
-	SKIP_DEFAULT_CHECKOUT("skipDefaultCheckout", ExtraTooltip.OPTIONS_AVAILABLE_TOOLTIP),
+	SKIP_DEFAULT_CHECKOUT("skipDefaultCheckout", ExtraTooltip.OPTIONS_AVAILABLE_TOOLTIP,"skipDefaultCheckout()"),
 
-	SKIP_STAGES_AFTER_UNSTABLE("skipStagesAfterUnstable", ExtraTooltip.OPTIONS_AVAILABLE_TOOLTIP),
+	SKIP_STAGES_AFTER_UNSTABLE("skipStagesAfterUnstable", ExtraTooltip.OPTIONS_AVAILABLE_TOOLTIP,"skipStagesAfterUnstable()"),
 
-	TIMEOUT("timeout", ExtraTooltip.OPTIONS_AVAILABLE_TOOLTIP),
+	TIMEOUT("timeout", ExtraTooltip.OPTIONS_AVAILABLE_TOOLTIP,"timeout(time: 1, unit: 'HOURS')"),
 
-	TIMESTAMPS("timestamps", ExtraTooltip.OPTIONS_AVAILABLE_TOOLTIP), 
+	TIMESTAMPS("timestamps", ExtraTooltip.OPTIONS_AVAILABLE_TOOLTIP,"timestamps()"), 
 	
-	INPUT_MESSAGE("message",ExtraTooltip.INPUT),
+	INPUT_MESSAGE("message",ExtraTooltip.INPUT,"message \"Should we continue?\""),
 
-	INPUT_ID("id",ExtraTooltip.INPUT),
+	INPUT_ID("id",ExtraTooltip.INPUT,"id \"my_id_instead_stage_name\""),
 	
-	INPUT_OK("ok",ExtraTooltip.INPUT),
+	INPUT_OK("ok",ExtraTooltip.INPUT,"ok \"Yes, we should\""),
 	
-	INPUT_SUBMITTER("submitter",ExtraTooltip.INPUT),
+	INPUT_SUBMITTER("submitter",ExtraTooltip.INPUT,"submitter \"alice,bob\""),
 
 	INPUT_SUBMITTER_PARAM("submitterParameter",ExtraTooltip.INPUT),
 	
@@ -145,22 +135,20 @@ public enum JenkinsSpecialVariableKeyWords implements JenkinsfileKeyword {
 	/* -------------------------------------------- */
 	BRANCH("branch",ExtraTooltip.WHEN_BUILD_IN_CONDITIONS_TOOLTIP),
 	
-	BUILDING_TAG("buildingTag",ExtraTooltip.WHEN_BUILD_IN_CONDITIONS_TOOLTIP),
+	BUILDING_TAG("buildingTag",ExtraTooltip.WHEN_BUILD_IN_CONDITIONS_TOOLTIP,"buildingTag()"),
 
-	CHANGE_LOG("changelog",ExtraTooltip.WHEN_BUILD_IN_CONDITIONS_TOOLTIP),
+	CHANGE_LOG("changelog",ExtraTooltip.WHEN_BUILD_IN_CONDITIONS_TOOLTIP,"changelog '.*^\\\\[DEPENDENCY\\] .+$'"),
 
-	CHANGE_SET("changeset",ExtraTooltip.WHEN_BUILD_IN_CONDITIONS_TOOLTIP),
+	CHANGE_SET("changeset",ExtraTooltip.WHEN_BUILD_IN_CONDITIONS_TOOLTIP,"changeset \"**/*.js\""),
 	
-	CHANGE_REQUEST("changeRequest",ExtraTooltip.WHEN_BUILD_IN_CONDITIONS_TOOLTIP),
+	CHANGE_REQUEST("changeRequest",ExtraTooltip.WHEN_BUILD_IN_CONDITIONS_TOOLTIP,"changeRequest()"),
 
 //	we do not support next part, becausse problems with 
 //	ENVIRONMENT_IN_WHEN("environment name",ExtraTooltip.WHEN_BUILD_IN_CONDITIONS_TOOLTIP),
 
-	EQUALS("equals",ExtraTooltip.WHEN_BUILD_IN_CONDITIONS_TOOLTIP),
+	EQUALS("equals",ExtraTooltip.WHEN_BUILD_IN_CONDITIONS_TOOLTIP,"equals expected: 2, actual: currentBuild.number"),
 
-	EXPRESSION("expression",ExtraTooltip.WHEN_BUILD_IN_CONDITIONS_TOOLTIP),
-	
-	TAG("tag",ExtraTooltip.WHEN_BUILD_IN_CONDITIONS_TOOLTIP),
+	TAG("tag",ExtraTooltip.WHEN_BUILD_IN_CONDITIONS_TOOLTIP,"tag \"release-*\""),
 
 	;
 
@@ -176,6 +164,10 @@ public enum JenkinsSpecialVariableKeyWords implements JenkinsfileKeyword {
 	private JenkinsSpecialVariableKeyWords(String text, String linkToDocumentation) {
 		this(text, linkToDocumentation, null,null);
 	}
+	
+	private JenkinsSpecialVariableKeyWords(String text, String linkToDocumentation, String code) {
+		this(text, linkToDocumentation, null,code);
+	}
 
 	private JenkinsSpecialVariableKeyWords(String text, ExtraTooltip extraTooltip) {
 		this(text, null, extraTooltip,null);
@@ -187,6 +179,7 @@ public enum JenkinsSpecialVariableKeyWords implements JenkinsfileKeyword {
 	private JenkinsSpecialVariableKeyWords(String text, String linkToDocumentation, ExtraTooltip extraTooltip, String code) {
 		this.text = text;
 		this.code= code== null ? text: code;
+		
 		if (linkToDocumentation == null) {
 			this.linkToDocumentation = extraTooltip.getLinkToDocumentation();
 		} else {

@@ -118,6 +118,8 @@ public enum JenkinsDefaultClosureKeyWords implements JenkinsfileKeyword {
 	
 	ANYOF("anyOf",ExtraTooltip.WHEN_BUILD_IN_CONDITIONS_TOOLTIP),
 	
+	EXPRESSION("expression",ExtraTooltip.WHEN_BUILD_IN_CONDITIONS_TOOLTIP,createExpressionClosure()),
+	
 	;
 	private String text;
 	private String tooltip;
@@ -126,6 +128,14 @@ public enum JenkinsDefaultClosureKeyWords implements JenkinsfileKeyword {
 
 	private JenkinsDefaultClosureKeyWords(String text) {
 		this(text,null,null,null);
+	}
+	private static List<String> createExpressionClosure() {
+
+		List<String> list = new ArrayList<>();
+		list.add("expression {");
+		list.add("   return params.DEBUG_BUILD");
+		list.add("}");
+		return list;
 	}
 	private static List<String> createStageTemplate() {
 		ArrayList<String> list = new ArrayList<>();

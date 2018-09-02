@@ -1,0 +1,14 @@
+pipeline {
+    agent any
+	stages {
+	    stage('Build CLI') {
+    	   options {
+   	           retry(3)
+
+   	       }
+
+    	}
+
+	}
+
+}
