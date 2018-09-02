@@ -111,6 +111,12 @@ public enum JenkinsDefaultClosureKeyWords implements JenkinsfileKeyword {
 
 	WHEN("when","https://jenkins.io/doc/book/pipeline/syntax/#when"),
 	
+	/* when not built in conditions - being closures */	
+	NOT("not",ExtraTooltip.WHEN_BUILD_IN_CONDITIONS_TOOLTIP),
+
+	ALLOF("allOf",ExtraTooltip.WHEN_BUILD_IN_CONDITIONS_TOOLTIP),
+	
+	ANYOF("anyOf",ExtraTooltip.WHEN_BUILD_IN_CONDITIONS_TOOLTIP),
 	
 	;
 	private String text;

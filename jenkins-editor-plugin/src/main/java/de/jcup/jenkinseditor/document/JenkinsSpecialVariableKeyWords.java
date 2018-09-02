@@ -138,6 +138,7 @@ public enum JenkinsSpecialVariableKeyWords implements JenkinsfileKeyword {
 
 	INPUT_SUBMITTER_PARAM("submitterParameter",ExtraTooltip.INPUT),
 	
+	WHEN_ENVIRONMENT("environment", ExtraTooltip.ENVIRONMENT, "environment name: 'DEPLOY_TO', value: 'production'"),
 	
 	/* -------------------------------------------- */
 	/* ---------------- when built-in-conditions -- */
@@ -161,13 +162,6 @@ public enum JenkinsSpecialVariableKeyWords implements JenkinsfileKeyword {
 	
 	TAG("tag",ExtraTooltip.WHEN_BUILD_IN_CONDITIONS_TOOLTIP),
 
-	NOT("not",ExtraTooltip.WHEN_BUILD_IN_CONDITIONS_TOOLTIP),
-
-	ALLOF("allOf",ExtraTooltip.WHEN_BUILD_IN_CONDITIONS_TOOLTIP),
-	
-	ANYOF("anyOf",ExtraTooltip.WHEN_BUILD_IN_CONDITIONS_TOOLTIP),
-	
-	
 	;
 
 	private String text;
