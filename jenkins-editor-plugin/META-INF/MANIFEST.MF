@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Jenkins Editor
 Bundle-SymbolicName: de.jcup.jenkinseditor.plugin;singleton:=true
-Bundle-Version: 1.4.0.beta1
+Bundle-Version: 1.4.0
 Bundle-Activator: de.jcup.jenkinseditor.JenkinsEditorActivator
 Bundle-Vendor: Albert Tregnaghi
 Require-Bundle: org.eclipse.ui,
