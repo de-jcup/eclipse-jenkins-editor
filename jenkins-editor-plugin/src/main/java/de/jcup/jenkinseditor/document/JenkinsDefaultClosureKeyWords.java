@@ -130,6 +130,15 @@ public enum JenkinsDefaultClosureKeyWords implements JenkinsfileKeyword {
 		this(text,null,null,null);
 	}
 
+	private static List<String> createDirClosure() {
+		List<String> list = new ArrayList<>();
+		list.add("dir ('path/to/new/currentDirectory') {");
+		list.add("   "+SourceCodeBuilder.CURSOR_TAG);
+		list.add("}");
+		
+		return list;
+	}
+
 	private static List<String> createExpressionClosure() {
 
 		List<String> list = new ArrayList<>();

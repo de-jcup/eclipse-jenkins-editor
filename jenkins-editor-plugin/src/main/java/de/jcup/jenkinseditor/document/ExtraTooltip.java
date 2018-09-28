@@ -12,6 +12,7 @@ class ExtraTooltip{
 	static ExtraTooltip TOOLS = new ExtraTooltip("tools","https://jenkins.io/doc/book/pipeline/syntax/#tools");
 	static ExtraTooltip ENVIRONMENT = new ExtraTooltip("environment","https://jenkins.io/doc/book/pipeline/syntax/#environment");
 	static ExtraTooltip INPUT = new ExtraTooltip("input","https://jenkins.io/doc/book/pipeline/syntax/#input");
+	static ExtraTooltip WORKFLOW_BASIC_STEPS= new ExtraTooltip("basic_steps", "https://jenkins.io/doc/pipeline/steps/workflow-basic-steps/");
 	
 	private String identifier;
 	private String linkToDocumentation;

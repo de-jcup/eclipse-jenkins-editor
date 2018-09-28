@@ -40,8 +40,10 @@ public enum JenkinsSpecialVariableKeyWords implements JenkinsfileKeyword {
 	IS_UNIX("isUnix",
 			"https://jenkins.io/doc/pipeline/steps/workflow-basic-steps/#isunix-checks-if-running-on-a-unix-like-node"),
 
-	MAIL("mail", "https://jenkins.io/doc/pipeline/steps/workflow-basic-steps/#mail-mail"),
+	MAIL("mail", "https://jenkins.io/doc/pipeline/steps/workflow-basic-steps/#mail-mail","mail to: team@example.com, subject: 'A special subject', body:'Interesting things have been done...'"),
 
+	PWD("pwd",ExtraTooltip.WORKFLOW_BASIC_STEPS.getLinkToDocumentation(),"pwd"),
+	
 	STEP("step", "https://jenkins.io/doc/pipeline/steps/workflow-basic-steps/#step-general-build-step"),
 
 	ANY("any",ExtraTooltip.AGENT_PARAMETERS),
@@ -59,8 +61,19 @@ public enum JenkinsSpecialVariableKeyWords implements JenkinsfileKeyword {
 	REUSE_NODE("reuseNode",ExtraTooltip.AGENT_PARAMETERS),
 
 
+	/* basic steps */
+	DELETE_DIR("deleteDir", ExtraTooltip.WORKFLOW_BASIC_STEPS.getLinkToDocumentation(),"deleteDir()"),
+
+	DIR("dir", ExtraTooltip.WORKFLOW_BASIC_STEPS.getLinkToDocumentation(),"dir 'newCurrentDirPath'"),
+
 	ECHO("echo", "https://jenkins.io/doc/pipeline/steps/workflow-basic-steps/#echo-print-message","echo 'Hello Jenkins!'"),
 
+	ERROR("error", ExtraTooltip.WORKFLOW_BASIC_STEPS.getLinkToDocumentation(),"error 'custom failure message'"),
+
+	FILE_EXISTS("fileExists",ExtraTooltip.WORKFLOW_BASIC_STEPS.getLinkToDocumentation(),"fileExists '/pathToFileToCheck'"),
+	
+	READ_FILE("readFile",ExtraTooltip.WORKFLOW_BASIC_STEPS.getLinkToDocumentation(), "readFile file:'/pathToFileToRead' encoding:'UTF-8'"),
+	
 	SH("sh", "https://jenkins.io/doc/pipeline/steps/workflow-durable-task-step/#sh-shell-script","sh 'gradlew build'"),
 
 	BAT("bat", "https://jenkins.io/doc/pipeline/steps/workflow-durable-task-step/#-bat-%20windows%20batch%20script","sh 'gradlew build'"),
@@ -69,7 +82,7 @@ public enum JenkinsSpecialVariableKeyWords implements JenkinsfileKeyword {
 			"https://jenkins.io/doc/pipeline/steps/workflow-durable-task-step/#powershell-powershell-script"),
 
 
-	CREDENTIALS("credentials", ExtraTooltip.ENVIRONMENT, "credentials()"),
+	CREDENTIALS("credentials", ExtraTooltip.ENVIRONMENT, "AN_ACCESSKEY = credentials('my-predefined-secret')"),
 
 	/* available parameters */
 	PARAM_STRING("string", ExtraTooltip.PARAMETERS,"string(name: '"+SourceCodeBuilder.CURSOR_TAG+"DEPLOY_ENV', defaultValue: 'staging', description: '')"),
@@ -111,8 +124,12 @@ public enum JenkinsSpecialVariableKeyWords implements JenkinsfileKeyword {
 
 	PRESERVE_STASHES("preserveStashes", ExtraTooltip.OPTIONS_AVAILABLE_TOOLTIP,"preserveStashes(1)"),
 
-	RETRY("retry", ExtraTooltip.OPTIONS_AVAILABLE_TOOLTIP,"retry(3)"),
+	RETRY("retry", ExtraTooltip.OPTIONS_AVAILABLE_TOOLTIP.getLinkToDocumentation(),"retry 3"),
 
+	SLEEP("sleep", ExtraTooltip.OPTIONS_AVAILABLE_TOOLTIP.getLinkToDocumentation(),"sleep time:10, unit:SECONDS"),
+
+	STASH("stash", ExtraTooltip.OPTIONS_AVAILABLE_TOOLTIP.getLinkToDocumentation(), "stash name:'Stash some files for later build' includes:'**/*.adoc'"),
+	
 	SKIP_DEFAULT_CHECKOUT("skipDefaultCheckout", ExtraTooltip.OPTIONS_AVAILABLE_TOOLTIP,"skipDefaultCheckout()"),
 
 	SKIP_STAGES_AFTER_UNSTABLE("skipStagesAfterUnstable", ExtraTooltip.OPTIONS_AVAILABLE_TOOLTIP,"skipStagesAfterUnstable()"),
@@ -148,7 +165,8 @@ public enum JenkinsSpecialVariableKeyWords implements JenkinsfileKeyword {
 
 	EQUALS("equals",ExtraTooltip.WHEN_BUILD_IN_CONDITIONS_TOOLTIP,"equals expected: 2, actual: currentBuild.number"),
 
-	TAG("tag",ExtraTooltip.WHEN_BUILD_IN_CONDITIONS_TOOLTIP,"tag \"release-*\""),
+	TAG("tag",ExtraTooltip.WHEN_BUILD_IN_CONDITIONS_TOOLTIP,"tag \"release-*\""), 
+	
 
 	;
 
@@ -176,6 +194,7 @@ public enum JenkinsSpecialVariableKeyWords implements JenkinsfileKeyword {
 	private JenkinsSpecialVariableKeyWords(String text, ExtraTooltip extraTooltip, String code) {
 		this(text, null, extraTooltip,code);
 	}
+	
 	private JenkinsSpecialVariableKeyWords(String text, String linkToDocumentation, ExtraTooltip extraTooltip, String code) {
 		this.text = text;
 		this.code= code== null ? text: code;

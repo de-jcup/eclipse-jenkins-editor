@@ -1,0 +1,234 @@
+<h2>Workflow basic steps</h2>
+<div class="sect2">
+<h3 id="deletedir-recursively-delete-the-current-directory-from-the-workspace"><a class="anchor" href="#deletedir-recursively-delete-the-current-directory-from-the-workspace"></a><code>deleteDir</code>: Recursively delete the current directory from the workspace<a class="anchorjs-link " href="#deletedir-recursively-delete-the-current-directory-from-the-workspace" aria-label="Anchor link for: deletedir recursively delete the current directory from the workspace" data-anchorjs-icon="" style="font: 1em/1 anchorjs-icons; padding-left: 0.375em;"></a></h3>
+<div><div>
+  Recursively deletes the current directory and its contents. Symbolic links and junctions will not be followed but will be removed. To delete a specific directory of a workspace wrap the
+ <code>deleteDir</code> step in a
+ <code>dir</code> step.
+</div></div>
+<ul></ul>
+</div>
+<div class="sect2">
+<h3 id="dir-change-current-directory"><a class="anchor" href="#dir-change-current-directory"></a><code>dir</code>: Change current directory<a class="anchorjs-link " href="#dir-change-current-directory" aria-label="Anchor link for: dir change current directory" data-anchorjs-icon="" style="font: 1em/1 anchorjs-icons; padding-left: 0.375em;"></a></h3>
+<div><div>
+  Change current directory. Any step inside the
+ <code>dir</code> block will use this directory as current and any relative path will use it as base path.
+</div></div>
+<ul><li><code>path</code>
+<ul><li><b>Type:</b> <code>String</code></li></ul></li>
+</ul>
+</div>
+<div class="sect2">
+<h3 id="echo-print-message"><a class="anchor" href="#echo-print-message"></a><code>echo</code>: Print Message<a class="anchorjs-link " href="#echo-print-message" aria-label="Anchor link for: echo print message" data-anchorjs-icon="" style="font: 1em/1 anchorjs-icons; padding-left: 0.375em;"></a></h3>
+<ul><li><code>message</code>
+<ul><li><b>Type:</b> <code>String</code></li></ul></li>
+</ul>
+</div>
+<div class="sect2">
+<h3 id="error-error-signal"><a class="anchor" href="#error-error-signal"></a><code>error</code>: Error signal<a class="anchorjs-link " href="#error-error-signal" aria-label="Anchor link for: error error signal" data-anchorjs-icon="" style="font: 1em/1 anchorjs-icons; padding-left: 0.375em;"></a></h3>
+<div><div>
+  Signals an error. Useful if you want to conditionally abort some part of your program. You can also just
+ <code>throw new Exception()</code>, but this step will avoid printing a stack trace.
+</div></div>
+<ul><li><code>message</code>
+<ul><li><b>Type:</b> <code>String</code></li></ul></li>
+</ul>
+</div>
+<div class="sect2">
+<h3 id="fileexists-verify-if-file-exists-in-workspace"><a class="anchor" href="#fileexists-verify-if-file-exists-in-workspace"></a><code>fileExists</code>: Verify if file exists in workspace<a class="anchorjs-link " href="#fileexists-verify-if-file-exists-in-workspace" aria-label="Anchor link for: fileexists verify if file exists in workspace" data-anchorjs-icon="" style="font: 1em/1 anchorjs-icons; padding-left: 0.375em;"></a></h3>
+<div><div>
+  Checks if the given file (as relative path to current directory) exists. Returns
+ <code>true | false</code>.
+</div></div>
+<ul><li><code>file</code>
+<div><div>
+  Relative (
+ <code>/</code>-separated) path to file within a workspace to verify its existence.
+</div></div>
+
+<ul><li><b>Type:</b> <code>String</code></li></ul></li>
+</ul>
+</div>
+<div class="sect2">
+<h3 id="isunix-checks-if-running-on-a-unix-like-node"><a class="anchor" href="#isunix-checks-if-running-on-a-unix-like-node"></a><code>isUnix</code>: Checks if running on a Unix-like node<a class="anchorjs-link " href="#isunix-checks-if-running-on-a-unix-like-node" aria-label="Anchor link for: isunix checks if running on a unix like node" data-anchorjs-icon="" style="font: 1em/1 anchorjs-icons; padding-left: 0.375em;"></a></h3>
+<div><div>
+  Returns true if enclosing
+ <code>node</code> is running on a Unix-like system (such as Linux or Mac OS X), false if Windows.
+</div></div>
+<ul></ul>
+</div>
+<div class="sect2">
+<h3 id="mail-mail"><a class="anchor" href="#mail-mail"></a><code>mail</code>: Mail<a class="anchorjs-link " href="#mail-mail" aria-label="Anchor link for: mail mail" data-anchorjs-icon="" style="font: 1em/1 anchorjs-icons; padding-left: 0.375em;"></a></h3>
+<div><div>
+  Simple step for sending email.
+</div></div>
+<ul><li><code>subject</code>
+<div><div>
+  Email subject line.
+</div></div>
+
+<ul><li><b>Type:</b> <code>String</code></li></ul></li>
+<li><code>body</code>
+<div><div>
+  Email body.
+</div></div>
+
+<ul><li><b>Type:</b> <code>String</code></li></ul></li>
+<li><code>bcc</code> (optional)
+<div><div>
+  BCC email address list. Comma separated list of email addresses.
+</div></div>
+
+<ul><li><b>Type:</b> <code>String</code></li></ul></li>
+<li><code>cc</code> (optional)
+<div><div>
+  CC email address list. Comma separated list of email addresses.
+</div></div>
+
+<ul><li><b>Type:</b> <code>String</code></li></ul></li>
+<li><code>charset</code> (optional)
+<div><div>
+  Email body character encoding. Defaults to
+ <code>UTF-8</code>
+</div></div>
+
+<ul><li><b>Type:</b> <code>String</code></li></ul></li>
+<li><code>from</code> (optional)
+<div><div>
+  From email address. Defaults to the admin address globally configured for the Jenkins instance.
+</div></div>
+
+<ul><li><b>Type:</b> <code>String</code></li></ul></li>
+<li><code>mimeType</code> (optional)
+<div><div>
+  Email body MIME type. Defaults to
+ <code>text/plain</code>.
+</div></div>
+
+<ul><li><b>Type:</b> <code>String</code></li></ul></li>
+<li><code>replyTo</code> (optional)
+<div><div>
+  Reploy-To email address. Defaults to the admin address globally configured for the Jenkins instance.
+</div></div>
+
+<ul><li><b>Type:</b> <code>String</code></li></ul></li>
+<li><code>to</code> (optional)
+<div><div>
+  To email address list. Comma separated list of email addresses.
+</div></div>
+
+<ul><li><b>Type:</b> <code>String</code></li></ul></li>
+</ul>
+</div>
+<div class="sect2">
+<h3 id="pwd-determine-current-directory"><a class="anchor" href="#pwd-determine-current-directory"></a><code>pwd</code>: Determine current directory<a class="anchorjs-link " href="#pwd-determine-current-directory" aria-label="Anchor link for: pwd determine current directory" data-anchorjs-icon="" style="font: 1em/1 anchorjs-icons; padding-left: 0.375em;"></a></h3>
+<div><div>
+  Returns the current directory path as a string.
+</div></div>
+<ul><li><code>tmp</code> (optional)
+<div><div>
+  If selected, return a temporary directory associated with the workspace rather than the workspace itself. This is an appropriate place to put temporary files which should not clutter a source checkout; local repositories or caches; etc.
+</div></div>
+
+<ul><li><b>Type:</b> <code>boolean</code></li></ul></li>
+</ul>
+</div>
+<div class="sect2">
+<h3 id="readfile-read-file-from-workspace"><a class="anchor" href="#readfile-read-file-from-workspace"></a><code>readFile</code>: Read file from workspace<a class="anchorjs-link " href="#readfile-read-file-from-workspace" aria-label="Anchor link for: readfile read file from workspace" data-anchorjs-icon="" style="font: 1em/1 anchorjs-icons; padding-left: 0.375em;"></a></h3>
+<div><div>
+  Reads a file from a relative path (with root in current directory, usually workspace) and returns its content as a plain string.
+</div></div>
+<ul><li><code>file</code>
+<div><div>
+  Relative (
+ <code>/</code>-separated) path to file within a workspace to read.
+</div></div>
+
+<ul><li><b>Type:</b> <code>String</code></li></ul></li>
+<li><code>encoding</code> (optional)
+<div><div>
+  The encoding to use when reading the file. If left blank, the platform default encoding will be used. Binary files can be read into a Base64-encoded string by specifying "Base64" as the encoding.
+</div></div>
+
+<ul><li><b>Type:</b> <code>String</code></li></ul></li>
+</ul>
+</div>
+<div class="sect2">
+<h3 id="retry-retry-the-body-up-to-n-times"><a class="anchor" href="#retry-retry-the-body-up-to-n-times"></a><code>retry</code>: Retry the body up to N times<a class="anchorjs-link " href="#retry-retry-the-body-up-to-n-times" aria-label="Anchor link for: retry retry the body up to n times" data-anchorjs-icon="" style="font: 1em/1 anchorjs-icons; padding-left: 0.375em;"></a></h3>
+<div><div>
+  Retry the block (up to N times) if any exception happens during its body execution. If an exception happens on the final attempt then it will lead to aborting the build (unless it is caught and processed somehow). User aborts of the build are
+ <em>not</em> caught.
+</div></div>
+<ul><li><code>count</code>
+<ul><li><b>Type:</b> <code>int</code></li></ul></li>
+</ul>
+</div>
+<div class="sect2">
+<h3 id="sleep-sleep"><a class="anchor" href="#sleep-sleep"></a><code>sleep</code>: Sleep<a class="anchorjs-link " href="#sleep-sleep" aria-label="Anchor link for: sleep sleep" data-anchorjs-icon="" style="font: 1em/1 anchorjs-icons; padding-left: 0.375em;"></a></h3>
+<div><div>
+  Simply pauses the Pipeline build until the given amount of time has expired. Equivalent to (on Unix)
+ <code>sh 'sleep …'</code>. May be used to pause one branch of
+ <code>parallel</code> while another proceeds.
+</div></div>
+<ul><li><code>time</code>
+<ul><li><b>Type:</b> <code>int</code></li></ul></li>
+<li><code>unit</code> (optional)
+<ul><li><b>Values:</b> <code>NANOSECONDS</code>, <code>MICROSECONDS</code>, <code>MILLISECONDS</code>, <code>SECONDS</code>, <code>MINUTES</code>, <code>HOURS</code>, <code>DAYS</code></li></ul></li>
+</ul>
+</div>
+<div class="sect2">
+<h3 id="stash-stash-some-files-to-be-used-later-in-the-build"><a class="anchor" href="#stash-stash-some-files-to-be-used-later-in-the-build"></a><code>stash</code>: Stash some files to be used later in the build<a class="anchorjs-link " href="#stash-stash-some-files-to-be-used-later-in-the-build" aria-label="Anchor link for: stash stash some files to be used later in the build" data-anchorjs-icon="" style="font: 1em/1 anchorjs-icons; padding-left: 0.375em;"></a></h3>
+<div><div>
+  Saves a set of files for use later in the same build, generally on another node/workspace. Stashed files are not otherwise available and are generally discarded at the end of the build.
+ <strong>Note</strong> that the
+ <code>stash</code> and
+ <code>unstash</code> steps are designed for use with small files. For large data transfers, use the External Workspace Manager plugin, or use an external repository manager such as Nexus or Artifactory. This is because stashed files are archived in a compressed TAR, and with large files this demands considerable on-master resources, particularly CPU time. There's not a hard stash size limit, but between 5-100 MB you should probably consider alternatives.
+</div></div>
+<ul><li><code>name</code>
+<div><div>
+  Name of a stash. Should be a simple identifier akin to a job name.
+</div></div>
+
+<ul><li><b>Type:</b> <code>String</code></li></ul></li>
+<li><code>allowEmpty</code> (optional)
+<ul><li><b>Type:</b> <code>boolean</code></li></ul></li>
+<li><code>excludes</code> (optional)
+<div><div>
+  Optional set of
+ <a href="https://ant.apache.org/manual/dirtasks.html#patterns" rel="nofollow">Ant-style exclude patterns</a>.
+ <br> Use a comma separated list to add more than one expression.
+ <br> If blank, no files will be excluded.
+</div></div>
+
+<ul><li><b>Type:</b> <code>String</code></li></ul></li>
+<li><code>includes</code> (optional)
+<div><div>
+  Optional set of
+ <a href="https://ant.apache.org/manual/dirtasks.html#patterns" rel="nofollow">Ant-style include patterns</a>.
+ <br> Use a comma separated list to add more than one expression.
+ <br> If blank, treated like
+ <code>**</code>: all files.
+ <br> The current working directory is the base directory for the saved files, which will later be restored in the same relative locations, so if you want to use a subdirectory wrap this in
+ <a href="https://jenkins.io/doc/pipeline/steps/workflow-basic-steps/#code-dir-code-change-current-directory" rel="nofollow"><code>dir</code></a>.
+</div></div>
+
+<ul><li><b>Type:</b> <code>String</code></li></ul></li>
+<li><code>useDefaultExcludes</code> (optional)
+<div><div>
+  If selected, use the default excludes from Ant - see
+ <a href="http://ant.apache.org/manual/dirtasks.html#defaultexcludes" rel="nofollow">here</a> for the list.
+</div></div>
+
+<ul><li><b>Type:</b> <code>boolean</code></li></ul></li>
+</ul>
+</div>
+
+<h3 id="step-general-build-step">
+<a class="anchor" href="#step-general-build-step">
+</a><code>step</code>: General Build Step<a class="anchorjs-link " href="#step-general-build-step" aria-label="Anchor link for: step general build step" data-anchorjs-icon="" style="font: 1em/1 anchorjs-icons; padding-left: 0.375em;"></a>
+</h3>
+<div><div>
+ <p> This is a special step that allows to call builders or post-build actions (as in freestyle or similar projects), in general "build steps". Just select the build step to call from the dropdown list and configure it as needed. </p>
+ <p> Note that only Pipeline-compatible steps will be shown in the list. </p>
+</div></div>
+<i>More information about the general build step can be found at online variant...</i>
