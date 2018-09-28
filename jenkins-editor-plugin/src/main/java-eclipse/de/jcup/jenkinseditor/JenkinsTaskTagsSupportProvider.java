@@ -7,7 +7,7 @@ import de.jcup.eclipse.commons.tasktags.AbstractConfigurableTaskTagsSupportProvi
 public class JenkinsTaskTagsSupportProvider extends AbstractConfigurableTaskTagsSupportProvider{
 
 	public JenkinsTaskTagsSupportProvider(JenkinsEditorActivator plugin) {
-		super(plugin, plugin.getPluginID());
+		super(plugin);
 	}
 
 	@Override
@@ -33,7 +33,14 @@ public class JenkinsTaskTagsSupportProvider extends AbstractConfigurableTaskTags
 	
 	@Override
 	public boolean isFileHandled(IFile file) {
-		return file.getName().equals("Jenkinsfile");
+		if (file==null){
+			return false;
+		}
+		String name = file.getName();
+		if (name==null){
+			return false;
+		}
+		return name.equals("Jenkinsfile") || name.endsWith(".jenkins") || name.endsWith(".jenkinsfile");
 	}
 
 	

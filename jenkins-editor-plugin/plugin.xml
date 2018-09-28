@@ -33,6 +33,7 @@
          point="org.eclipse.ui.editors">
       <editor
       		name="Jenkins Editor"
+      		extensions="jenkins,jenkinsfile"
             filenames="Jenkinsfile"
             icon="icons/jenkinseditor/jenkins-editor.png"
             contributorClass="org.eclipse.ui.texteditor.BasicTextEditorActionContributor"
