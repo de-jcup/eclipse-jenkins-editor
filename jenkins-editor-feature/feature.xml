@@ -2,12 +2,15 @@
 <feature
       id="de.jcup.jenkinseditor.feature"
       label="Jenkins Editor"
-      version="1.4.1"
+      version="1.5.0"
       provider-name="Albert Tregnaghi">
 
    <description url="https://github.com/de-jcup/eclipse-jenkins-editor">
-      Jenkis Editor is a plugin for eclipse to edit jenkins build files
-(Jenkinsfile)
+      Jenkins Editor is a plugin for eclipse to edit jenkins build files
+(named Jenkinsfile, *.jenkins, *.jenkinsfile)
+
+For more information please visit https://github.com/de-jcup/eclipse-jenkins-editor 
+or https://marketplace.eclipse.org/content/jenkins-editor
    </description>
 
    <copyright>
