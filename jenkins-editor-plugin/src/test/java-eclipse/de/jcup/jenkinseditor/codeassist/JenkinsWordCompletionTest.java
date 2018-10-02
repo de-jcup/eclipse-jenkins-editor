@@ -60,6 +60,27 @@ public class JenkinsWordCompletionTest {
 	}
 	
 	@Test
+	public void an_pip_source_will_result_in_pipeline() {
+		/* execute */
+		Set<ProposalProvider> result = completion.calculate("pip", 0);
+		
+		/* test */
+		assertFalse(result.isEmpty());
+		assertEquals(1,result.size());
+		
+		ProposalProvider provider = result.iterator().next();
+		assertTrue(provider.getLabel().equals("pipeline"));
+		List<String> template = provider.getCodeTemplate();
+		assertEquals(3, template.size());
+		
+		Iterator<String> it = template.iterator();
+		assertEquals(it.next(), "pipeline {");
+		assertEquals(it.next(), "    "+SourceCodeBuilder.CURSOR_TAG);
+		assertEquals(it.next(), "}");
+	
+	}
+	
+	@Test
 	public void after_pipeline_agent_is_suggested() {
 		/* execute */
 		Set<ProposalProvider> result = completion.calculate(source1, source1_pipeline_block_index);
