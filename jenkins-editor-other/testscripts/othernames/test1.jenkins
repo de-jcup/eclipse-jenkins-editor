@@ -1,0 +1,9 @@
+// TODO from test1.jenkins
+pipeline {
+	
+    options {
+        retry 3
+
+    }
+
+}
