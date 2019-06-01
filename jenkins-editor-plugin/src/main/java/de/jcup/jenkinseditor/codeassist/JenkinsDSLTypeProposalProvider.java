@@ -5,7 +5,7 @@ import java.util.List;
 import de.jcup.eclipse.commons.codeassist.ProposalProvider;
 import de.jcup.jenkinseditor.document.JenkinsfileKeyword;
 
-public class JenkinsDSLTypeProposalProvider implements ProposalProvider, Comparable<JenkinsDSLTypeProposalProvider>{
+public class JenkinsDSLTypeProposalProvider implements ProposalProvider{
 
 	private JenkinsfileKeyword keyword;
 
@@ -24,7 +24,7 @@ public class JenkinsDSLTypeProposalProvider implements ProposalProvider, Compara
 	}
 
 	@Override
-	public int compareTo(JenkinsDSLTypeProposalProvider o) {
+	public int compareTo(ProposalProvider o) {
 		return getLabel().compareTo(o.getLabel());
 	}
 
