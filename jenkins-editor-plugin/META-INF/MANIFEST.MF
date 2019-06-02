@@ -15,11 +15,15 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.ui.workbench,
  org.eclipse.ui.editors,
  org.eclipse.ui.ide,
- de.jcup.egradle.eclipse.plugin.main;bundle-version="2.5.0",
  org.eclipse.equinox.security,
  org.eclipse.core.net
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Bundle-ActivationPolicy: lazy
 Import-Package: org.eclipse.ui
 Bundle-ClassPath: .,
- lib/de-jcup-eclipse-commons.jar
+ lib/jcup/de-jcup-eclipse-commons.jar,
+ lib/jcup/de.jcup.egradle.eclipse.plugin.main_2.6.0.jar,
+ lib/antlr-2.7.7.jar,
+ lib/commons-lang3-3.4.jar,
+ lib/groovy-all-2.4.7.jar,
+ lib/jenkins-cli.jar

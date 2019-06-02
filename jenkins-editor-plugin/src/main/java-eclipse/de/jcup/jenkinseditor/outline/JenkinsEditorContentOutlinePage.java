@@ -24,7 +24,7 @@ import de.jcup.egradle.eclipse.api.GroovyBasedModelType;
 import de.jcup.egradle.eclipse.ui.AbstractGroovyBasedContentOutlinePage;
 import de.jcup.egradle.eclipse.ui.AbstractGroovyBasedEditorOutlineContentProvider;
 import de.jcup.egradle.eclipse.util.EclipseDevelopmentSettings;
-import de.jcup.egradle.eclipse.util.EclipseUtil;
+import de.jcup.eclipse.commons.ui.EclipseUtil;
 import de.jcup.jenkinseditor.JenkinsEditorActivator;
 
 public class JenkinsEditorContentOutlinePage extends AbstractGroovyBasedContentOutlinePage {

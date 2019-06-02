@@ -26,6 +26,7 @@ import org.osgi.util.tracker.ServiceTracker;
 import de.jcup.eclipse.commons.PluginContextProvider;
 import de.jcup.eclipse.commons.keyword.TooltipTextSupport;
 import de.jcup.eclipse.commons.resource.EclipseResourceInputStreamProvider;
+import de.jcup.egradle.eclipse.MainActivator;
 import de.jcup.egradle.eclipse.util.ColorManager;
 import de.jcup.egradle.eclipse.util.EclipseResourceHelper;
 import de.jcup.jenkins.util.JenkinsLogAdapter;
@@ -65,6 +66,7 @@ public class JenkinsEditorActivator extends AbstractUIPlugin implements PluginCo
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
 		plugin = this;
+		MainActivator.delegate(plugin);
 		taskSupportProvider.getTodoTaskSupport().install();
 	}
 

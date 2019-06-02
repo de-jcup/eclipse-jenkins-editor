@@ -26,7 +26,7 @@ import org.eclipse.jface.dialogs.ProgressMonitorDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.text.IDocument;
 
-import de.jcup.egradle.eclipse.util.EclipseUtil;
+import de.jcup.eclipse.commons.ui.EclipseUtil;
 import de.jcup.jenkins.cli.JenkinsCLIConfiguration;
 import de.jcup.jenkins.cli.JenkinsDefaultURLProvider;
 import de.jcup.jenkins.cli.JenkinsLinterCLICommand;

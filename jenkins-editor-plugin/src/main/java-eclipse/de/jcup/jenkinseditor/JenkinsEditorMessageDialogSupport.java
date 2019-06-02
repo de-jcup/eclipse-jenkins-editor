@@ -15,7 +15,7 @@
  */
 package de.jcup.jenkinseditor;
 
-import static de.jcup.egradle.eclipse.util.EclipseUtil.*;
+import static de.jcup.eclipse.commons.ui.EclipseUtil.*;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -23,7 +23,7 @@ import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Shell;
 
-import de.jcup.egradle.eclipse.util.EclipseUtil;
+import de.jcup.eclipse.commons.ui.EclipseUtil;
 import de.jcup.jenkinseditor.preferences.UserCredentials;
 import de.jcup.jenkinseditor.preferences.UserCredentialsDialog;
 
