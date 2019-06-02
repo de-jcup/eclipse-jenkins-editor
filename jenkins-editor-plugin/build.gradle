@@ -6,5 +6,6 @@
 
 dependencies {
     compile fileTree(dir: 'lib', include: '*.jar')
+    compile fileTree(dir: 'lib/jcup', include: '*.jar')
 }
 
