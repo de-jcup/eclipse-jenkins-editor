@@ -17,22 +17,8 @@
 
 import static de.jcup.jenkins.cli.JenkinsExitCodes.*;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
 public class JenkinsLinterCLIResult extends AbstractJenkinsCLIResult{
 	
-	private List<String> list = new ArrayList<>();
-	
-
-	void appendOutput(String line) {
-		list.add(line);
-	}
-	
-	public List<String> getLines(){
-		return Collections.unmodifiableList(list);
-	}
 	
 	@Override
 	public String toString() {
@@ -44,7 +30,7 @@ public class JenkinsLinterCLIResult extends AbstractJenkinsCLIResult{
 		sb.append("- failureMessage:"+getCLICallFailureMessage());
 		sb.append("\n-Output was:\n");
 		
-		for (String string: list){
+		for (String string: getLines()){
 			sb.append(string);
 			sb.append('\n');
 		}

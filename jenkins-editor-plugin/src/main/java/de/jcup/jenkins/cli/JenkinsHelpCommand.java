@@ -20,40 +20,41 @@ import java.io.IOException;
 import de.jcup.jenkins.util.JenkinsLogAdapter;
 
 /**
- * Transfers given code on execution time to jenkins server for validation
+ * Get help output
  * 
  * @author Albert Tregnaghi
  *
  */
-public class JenkinsLinterCLICommand extends AbstractJenkinsCLICommand<JenkinsLinterCLIResult, String> {
+public class JenkinsHelpCommand extends AbstractJenkinsCLICommand<DefaultJenkinsCLIResult, String> {
 
     @Override
     public String[] getCLICommands() {
-        return new String[] {"declarative-linter"};
+        return new String[] {"help"};
     }
 
     @Override
-    protected JenkinsLinterCLIResult handleStartedProcess(Process process, String code, CLIJarCommandMessageBuilder<String> mb) throws IOException {
+    protected DefaultJenkinsCLIResult handleStartedProcess(Process process, String code, CLIJarCommandMessageBuilder<String> mb) throws IOException {
 
-        JenkinsLinterCLIResult result = new JenkinsLinterCLIResult();
-
+        DefaultJenkinsCLIResult result = new DefaultJenkinsCLIResult();
+        
         if (!process.isAlive()) {
             int exitValue = process.exitValue();
             result.exitCode = exitValue;
-            result.cliCallFailureMessage = "Was not able to start linter process.linter.\nMaybe server is down or CLI credentials are not set correctly.";
+            result.cliCallFailureMessage = "Was not able to start help.\nMaybe server is down or CLI credentials are not set correctly.";
             return result;
         }
         int exitValue = result.exitCode;
         try {
-            writeCode(process, code);
             fetchResult(process, result);
             waitForProcessTermination(process);
             exitValue = process.exitValue();
         } catch (IOException e) {
-            JenkinsLogAdapter.INSTANCE.logError("IO problems on executing jenkins linter command", e);
+            JenkinsLogAdapter.INSTANCE.logError("IO problems on executing jenkins help command", e);
         }
         handleExitCode(mb, result, exitValue);
         return result;
     }
+
+    
 
 }

@@ -17,10 +17,11 @@
 
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.ILog;
+import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
 
+import de.jcup.eclipse.commons.ui.EclipseUtil;
 import de.jcup.egradle.eclipse.ui.UnpersistedMarkerHelper;
 import de.jcup.jenkins.linter.JenkinsLinterError;
 
@@ -69,8 +70,8 @@ public class JenkinsEditorUtil {
 
 	}
 
-	private static ILog getLog() {
-		ILog log = JenkinsEditorActivator.getDefault().getLog();
-		return log;
-	}
+	
+    public static ImageDescriptor createImageDescriptor(String path) {
+        return EclipseUtil.createImageDescriptor(path, JenkinsEditorActivator.PLUGIN_ID);
+    }
 }

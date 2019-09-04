@@ -54,6 +54,8 @@ public class JenkinsEditorPreferenceInitializer extends AbstractPreferenceInitia
 		store.setDefault(P_USE_ECLIPSE_PROXY_SETTINGS_ENABLED.getId(), false);// false so user have same setup as before the feature.
 		store.setDefault(JENKINS_LINTER_ERROR_LEVEL.getId(), JenkinsLinterErrorLevel.ERROR.getId());
 		
+		store.setDefault(P_WAIT_FOR_JENKINS_LOGS_UNTIL_REFERSH_IN_SECONDS.getId(), JenkinsEditorPreferences.DEFAULT_VALUE_WAITING_FOR_NEXT_LOG_IN_SECONDS);
+		
 		/* bracket color */
 		preferences.setDefaultColor(P_EDITOR_MATCHING_BRACKETS_COLOR, JenkinsEditorColorConstants.GRAY_JAVA);
 		
@@ -74,6 +76,8 @@ public class JenkinsEditorPreferenceInitializer extends AbstractPreferenceInitia
 		
 		preferences.setDefaultColor(COLOR_JENKINS_VARIABLES, JenkinsEditorColorConstants.DARK_BLUE);
 		preferences.setDefaultColor(COLOR_JAVA_LITERAL, JenkinsEditorColorConstants.KEYWORD_DEFAULT_PURPLE);
+		
+		
 	}
 
 	private JenkinsEditorPreferences getPreferences() {

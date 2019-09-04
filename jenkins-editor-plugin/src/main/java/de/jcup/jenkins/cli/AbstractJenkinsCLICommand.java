@@ -15,11 +15,16 @@
  */
 package de.jcup.jenkins.cli;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import de.jcup.jenkins.cli.JenkinsCLIConfiguration.AuthMode;
 
@@ -27,7 +32,7 @@ public abstract class AbstractJenkinsCLICommand<T extends JenkinsCLIResult, P> i
 	private static final String PROXY_PASSWORD = "proxyPassword=";
 	private final static boolean DEBUG = Boolean.valueOf(System.getProperty("de.jcup.jenkins.cli.command.debug"));
 
-	protected abstract String getCLICommand();
+	protected abstract String[] getCLICommands();
 
 	/**
 	 * Execute the jenkins CLI command
@@ -44,7 +49,7 @@ public abstract class AbstractJenkinsCLICommand<T extends JenkinsCLIResult, P> i
 			debug("execute:" + mb.buildMessage());
 		}
 		String[] commands = createCommands(configuration, parameter, false);
-		List<String> list = Arrays.asList(commands);
+		List<String> list = Arrays.asList(commands).stream().filter(content -> content!=null && !content.isEmpty()).collect(Collectors.toList());
 
 		ProcessBuilder pb = new ProcessBuilder();
 		pb.command(list);
@@ -54,7 +59,7 @@ public abstract class AbstractJenkinsCLICommand<T extends JenkinsCLIResult, P> i
 		if (timeOut > 0) {
 			JenkinsCommandTimeoutChecker timeOutChecker = new JenkinsCommandTimeoutChecker(process, timeOut);
 			Thread t = new Thread(timeOutChecker);
-			t.setName("Jenkins command [" + getCLICommand() + "] timeout checker[" + timeOut + " seconds]");
+			t.setName("Jenkins command [" + getCLICommands() + "] timeout checker[" + timeOut + " seconds]");
 			t.start();
 		}
 		T result = handleStartedProcess(process, parameter, mb);
@@ -65,6 +70,13 @@ public abstract class AbstractJenkinsCLICommand<T extends JenkinsCLIResult, P> i
 		System.out.println("DEBUG: execute:" + string);
 	}
 
+	  protected void writeCode(Process process, String code) throws IOException {
+	        /* give code data as input */
+	        try (BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(process.getOutputStream()))) {
+	            bw.write(code);
+	        }
+	    }
+	
 	protected abstract T handleStartedProcess(Process process, P parameter, CLIJarCommandMessageBuilder<P> mb)
 			throws IOException;
 
@@ -86,8 +98,6 @@ public abstract class AbstractJenkinsCLICommand<T extends JenkinsCLIResult, P> i
 		}
 
 		addOptions(configuration, hidePasswords, list);
-
-		list.add(getCLICommand());
 		// special handling for secret auth mode
 		if (AuthMode.PASSWORD.equals(configuration.getAuthMode())) {
 			list.add("--username");
@@ -100,7 +110,13 @@ public abstract class AbstractJenkinsCLICommand<T extends JenkinsCLIResult, P> i
 				list.add("" + configuration.getPassword());
 			}
 		}
-		addParameters(list, hidePasswords, parameters);
+		for (String cliCommand: getCLICommands()) {
+		    if (cliCommand==null || cliCommand.isEmpty()) {
+		        continue;
+		    }
+            list.add(cliCommand);
+        }
+		addParameters(list, parameters);
 
 		return list.toArray(new String[list.size()]);
 	}
@@ -125,7 +141,7 @@ public abstract class AbstractJenkinsCLICommand<T extends JenkinsCLIResult, P> i
 
 	}
 
-	protected void addParameters(List<String> list, boolean hidePassords, String... parameters) {
+	protected void addParameters(List<String> list, String... parameters) {
 		for (String parameter : parameters) {
 			if (parameter == null) {
 				continue;
@@ -181,6 +197,50 @@ public abstract class AbstractJenkinsCLICommand<T extends JenkinsCLIResult, P> i
 
 		}
 	}
+	
+	protected void waitForProcessTermination(Process process) {
+        while (process.isAlive()) {
+            try {
+                Thread.sleep(100);
+            } catch (InterruptedException e) {
+                break;
+            }
+        }
+    }
+
+    
+    protected void fetchResult(Process process, AbstractJenkinsCLIResult result) throws IOException {
+        /* fetch output to result */
+        try (BufferedReader br = new BufferedReader(new InputStreamReader(process.getInputStream()))) {
+            String line = null;
+            while ((line = br.readLine()) != null) {
+                result.appendOutput(line);
+            }
+        }
+        try (BufferedReader br = new BufferedReader(new InputStreamReader(process.getErrorStream()))) {
+            String line = null;
+            while ((line = br.readLine()) != null) {
+                result.appendOutput(line);
+            }
+        }
+    }
+    
+    protected void handleExitCode(CLIJarCommandMessageBuilder<String> mb, AbstractJenkinsCLIResult result, int exitValue) {
+        result.exitCode = exitValue;
+        if (!result.wasCLICallSuccessFul()) {
+
+            result.cliCallFailureMessage = buildNoAccessToJenkinsMessage(mb);
+        }
+    }
+
+    protected String buildNoAccessToJenkinsMessage(CLIJarCommandMessageBuilder<String> mb) {
+        StringBuilder sb = new StringBuilder();
+        sb.append("Access to Jenkins was not possible by command:\n\n");
+        sb.append(mb.buildMessage()).append("\n\n");
+        sb.append("Maybe credentials not valid or hostname/firewall problems.\n");
+        sb.append("Please check Jenkins CLI setup in preferences");
+        return sb.toString();
+    }
 
 	private class JenkinsCommandTimeoutChecker implements Runnable {
 

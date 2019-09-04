@@ -30,7 +30,7 @@ public class JenkinsCLIHelpTestMain {
 	public void test() throws Exception{
 		// https://jenkins.io/doc/book/managing/cli/
 		
-		HelpCommand cmd = new HelpCommand();
+		TestHelpCommand cmd = new TestHelpCommand();
 		JenkinsCLIConfiguration config = new JenkinsCLIConfiguration();
 		config.setTimeoutInSeconds(10);
 		config.setPathToJenkinsCLIJar("./lib/jenkins-cli.jar");
@@ -40,22 +40,22 @@ public class JenkinsCLIHelpTestMain {
 		System.out.println("result:"+ result.toString());
 	}
 	
-	private class HelpCommand extends AbstractJenkinsCLICommand<JenkinsCLIResult, String>{
+	private class TestHelpCommand extends AbstractJenkinsCLICommand<JenkinsCLIResult, String>{
 
 		@Override
-		protected String getCLICommand() {
-			return "help";
+		protected String[] getCLICommands() {
+			return new String[] {"help"};
 		}
 
 		@Override
 		protected JenkinsCLIResult handleStartedProcess(Process process, String parameter,
 				CLIJarCommandMessageBuilder<String> mb) throws IOException {
-			return new JenkinsHelpResult();
+			return new JenkinsTestHelpResult();
 		}
 		
 	}
 	
-	private class JenkinsHelpResult extends AbstractJenkinsCLIResult{
+	private class JenkinsTestHelpResult extends AbstractJenkinsCLIResult{
 
 		@Override
 		public boolean wasCLICallSuccessFul() {

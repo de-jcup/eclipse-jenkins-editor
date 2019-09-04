@@ -16,41 +16,50 @@
 package de.jcup.jenkins.cli;
 
 import java.io.IOException;
+import java.util.Arrays;
 
 import de.jcup.jenkins.util.JenkinsLogAdapter;
 
 /**
- * Transfers given code on execution time to jenkins server for validation
+ * Get help output
  * 
  * @author Albert Tregnaghi
  *
  */
-public class JenkinsLinterCLICommand extends AbstractJenkinsCLICommand<JenkinsLinterCLIResult, String> {
+public class JenkinsCustomCLICommand extends AbstractJenkinsCLICommand<DefaultJenkinsCLIResult, String> {
 
-    @Override
-    public String[] getCLICommands() {
-        return new String[] {"declarative-linter"};
+    private String[] commands;
+
+    public JenkinsCustomCLICommand(String... commands) {
+        this.commands = commands;
     }
 
     @Override
-    protected JenkinsLinterCLIResult handleStartedProcess(Process process, String code, CLIJarCommandMessageBuilder<String> mb) throws IOException {
+    public String[] getCLICommands() {
+        return commands;
+    }
 
-        JenkinsLinterCLIResult result = new JenkinsLinterCLIResult();
+    @Override
+    protected DefaultJenkinsCLIResult handleStartedProcess(Process process, String code, CLIJarCommandMessageBuilder<String> mb) throws IOException {
+
+        DefaultJenkinsCLIResult result = new DefaultJenkinsCLIResult();
 
         if (!process.isAlive()) {
             int exitValue = process.exitValue();
             result.exitCode = exitValue;
-            result.cliCallFailureMessage = "Was not able to start linter process.linter.\nMaybe server is down or CLI credentials are not set correctly.";
+            result.cliCallFailureMessage = "Was not able to start commands:"+Arrays.asList(commands)+".\nMaybe command is invalid, server is down or CLI credentials are not set correctly.";
             return result;
         }
         int exitValue = result.exitCode;
         try {
-            writeCode(process, code);
+            if (code!=null) {
+                writeCode(process, code);
+            }
             fetchResult(process, result);
             waitForProcessTermination(process);
             exitValue = process.exitValue();
         } catch (IOException e) {
-            JenkinsLogAdapter.INSTANCE.logError("IO problems on executing jenkins linter command", e);
+            JenkinsLogAdapter.INSTANCE.logError("IO problems on executing jenkins custom command:"+Arrays.asList(commands), e);
         }
         handleExitCode(mb, result, exitValue);
         return result;

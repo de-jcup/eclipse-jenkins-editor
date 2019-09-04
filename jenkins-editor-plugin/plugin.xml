@@ -27,6 +27,23 @@
      </keyword>
    </extension>
    <!-- ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
+   <!--                          CONSOLE                                     -->
+   <!-- ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
+   <extension point="org.eclipse.ui.console.consoleFactories">
+       <consoleFactory
+             class="de.jcup.jenkinseditor.console.JenkinsEditorConsoleFactory"
+             icon="icons/jenkinseditor/jenkins-editor.png"
+             label="Jenkins Editor Console">
+       </consoleFactory>
+   </extension>
+   <extension point="org.eclipse.ui.console.consolePageParticipants">
+    <consolePageParticipant class="de.jcup.jenkinseditor.console.JenkinsEditorConsolePageParticipant" id="de.jcup.jenkinseditor.console.participant">
+        <enablement>
+            <instanceof value="de.jcup.jenkinseditor.console.JenkinsEditorConsole" />
+        </enablement>
+    </consolePageParticipant>
+   </extension>
+   <!-- ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
    <!--                          EDITOR                                      -->
    <!-- ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
    <extension
@@ -115,9 +132,27 @@
       		categoryId="jenkinseditor.commands.category"
       		id="jenkinseditor.editor.commands.callLinter">
       </command>
+      
+      <command
+            name="Replay pipeline script"
+            description="Replay pipeline script on jenkins server"
+            categoryId="jenkinseditor.commands.category"
+            id="jenkinseditor.editor.commands.replayPipeline">
+      </command>
+      <command
+            name="Execute custom cli command"
+            description="Executes a jenkins cli command."
+            categoryId="jenkinseditor.commands.category"
+            id="jenkinseditor.editor.commands.callCustomCLI">
+      </command>
+      <command
+            name="Fetch last build log"
+            description="Fetches last build logs of former build"
+            categoryId="jenkinseditor.commands.category"
+            id="jenkinseditor.editor.commands.fetchLastBuildLogs">
+      </command>
 	
 	</extension>
-	
 	
 	<extension point="org.eclipse.ui.handlers">
       <handler
@@ -135,6 +170,18 @@
       <handler
       		commandId="jenkinseditor.editor.commands.callLinter"
       		class="de.jcup.jenkinseditor.handlers.CallLinterHandler">
+      </handler>
+      <handler
+            commandId="jenkinseditor.editor.commands.replayPipeline"
+            class="de.jcup.jenkinseditor.handlers.ReplayPipelineHandler">
+      </handler>
+      <handler
+            commandId="jenkinseditor.editor.commands.callCustomCLI"
+            class="de.jcup.jenkinseditor.handlers.CallCustomCommandHandler">
+      </handler>
+      <handler
+            commandId="jenkinseditor.editor.commands.fetchLastBuildLogs"
+            class="de.jcup.jenkinseditor.handlers.RestoreBuildLogToConsoleHandler">
       </handler>
     </extension> 
     
@@ -227,6 +274,51 @@
                             value="de.jcup.jenkinseditor.JenkinsEditor"/>
                      </with>
     	           </visibleWhen>
+                  
+            </command>
+            <!-- Currently not enabled, because too much noise inside toolbar. 
+                 But is available inside dedicated jenkins console.
+            <command
+                  commandId="jenkinseditor.editor.commands.callCustomCLI"
+                  icon="icons/jenkinseditor/console/cli-exec.png"
+                  id="jenkinseditor.toolbar.editor.commands.callCustomCLI"
+                  >
+	    
+	            <visibleWhen checkEnabled="true">
+                     <with variable="activeEditor">
+                     	<instanceof
+                            value="de.jcup.jenkinseditor.JenkinsEditor"/>
+                     </with>
+    	           </visibleWhen>
+                  
+            </command>
+            -->
+            <command
+                  commandId="jenkinseditor.editor.commands.replayPipeline"
+                  icon="icons/jenkinseditor/console/replay-pipeline.png"
+                  id="jenkinseditor.toolbar.editor.commands.replayPipeline"
+                  >
+        
+                <visibleWhen checkEnabled="true">
+                     <with variable="activeEditor">
+                        <instanceof
+                            value="de.jcup.jenkinseditor.JenkinsEditor"/>
+                     </with>
+                   </visibleWhen>
+                  
+            </command>
+            <command
+                  commandId="jenkinseditor.editor.commands.fetchLastBuildLogs"
+                  icon="icons/jenkinseditor/console/restore_log.png"
+                  id="jenkinseditor.toolbar.editor.commands.fetchLastBuildLogs"
+                  >
+        
+                <visibleWhen checkEnabled="true">
+                     <with variable="activeEditor">
+                        <instanceof
+                            value="de.jcup.jenkinseditor.JenkinsEditor"/>
+                     </with>
+                   </visibleWhen>
                   
             </command>
          </toolbar>

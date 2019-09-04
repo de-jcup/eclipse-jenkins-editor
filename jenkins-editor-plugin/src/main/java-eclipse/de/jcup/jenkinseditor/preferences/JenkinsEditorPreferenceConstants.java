@@ -49,6 +49,8 @@ public enum JenkinsEditorPreferenceConstants implements PreferenceIdentifiable{
 	
 	JENKINS_LINTER_ERROR_LEVEL("jenkinsLinterErrorLevel"),
 	
+	P_WAIT_FOR_JENKINS_LOGS_UNTIL_REFERSH_IN_SECONDS("waitForNextFetchOfJenkinsLogFileInSeconds"),
+	
 	;
 
 	private String id;

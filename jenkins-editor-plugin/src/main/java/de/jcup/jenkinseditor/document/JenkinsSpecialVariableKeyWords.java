@@ -153,7 +153,7 @@ public enum JenkinsSpecialVariableKeyWords implements JenkinsfileKeyword {
 	/* -------------------------------------------- */
 	/* ---------------- when built-in-conditions -- */
 	/* -------------------------------------------- */
-	BRANCH("branch",ExtraTooltip.WHEN_BUILD_IN_CONDITIONS_TOOLTIP),
+	BRANCH("branchName",ExtraTooltip.WHEN_BUILD_IN_CONDITIONS_TOOLTIP),
 	
 	BUILDING_TAG("buildingTag",ExtraTooltip.WHEN_BUILD_IN_CONDITIONS_TOOLTIP,"buildingTag()"),
 

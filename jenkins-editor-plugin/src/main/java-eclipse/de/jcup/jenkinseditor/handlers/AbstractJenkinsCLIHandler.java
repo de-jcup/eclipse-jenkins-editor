@@ -15,10 +15,39 @@
  */
  package de.jcup.jenkinseditor.handlers;
 
+import java.io.IOException;
+
+import de.jcup.jenkins.cli.JenkinsCLIConfiguration;
+import de.jcup.jenkins.cli.JenkinsDefaultURLProvider;
+import de.jcup.jenkinseditor.JenkinsEditorLogSupport;
+import de.jcup.jenkinseditor.JenkinsEditorMessageDialogSupport;
+
 public abstract class AbstractJenkinsCLIHandler extends AbstractJenkinsEditorHandler {
 
-	
-	
+    protected JenkinsDefaultURLProvider jenkinsDefaultURLprovider = new JenkinsDefaultURLProvider();
+    protected ConfigurationBuilder configBuilder = new ConfigurationBuilder();
+    
+    /**
+     * Builds a valid jenkins cli configuration
+     * @return configuration or <code>null</code>
+     */
+    protected final JenkinsCLIConfiguration buildConfiguration() {
+        try {
+            JenkinsCLIConfiguration configuration = configBuilder.createConfiguration(jenkinsDefaultURLprovider);
+            return configuration;
+        } catch (IOException e) {
+            StringBuilder sb = new StringBuilder();
+            sb.append("Was not able to build valid jenkins cli configuration");
+            handleIOError(e, sb);
+            return null;
+        }
+    }
+
+    protected void handleIOError(IOException e, StringBuilder sb) {
+        JenkinsEditorMessageDialogSupport.INSTANCE.showErrorWithDetails(e.getMessage(),sb.toString());
+        
+        JenkinsEditorLogSupport.INSTANCE.logError(sb.toString(), e);
+    }
 	
 	
 }

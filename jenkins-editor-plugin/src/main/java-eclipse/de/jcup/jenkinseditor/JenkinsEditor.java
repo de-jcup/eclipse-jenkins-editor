@@ -26,6 +26,7 @@ import de.jcup.egradle.eclipse.ui.AbstractGroovyBasedEditor;
 import de.jcup.egradle.eclipse.ui.AbstractGroovyBasedEditorOutlineContentProvider;
 import de.jcup.egradle.eclipse.ui.AbstractGroovyBasedQuickOutline;
 import de.jcup.egradle.eclipse.util.ColorManager;
+import de.jcup.jenkins.cli.PipelineConfigData;
 import de.jcup.jenkinseditor.document.JenkinsFileDocumentProvider;
 import de.jcup.jenkinseditor.document.JenkinsTextFileDocumentProvider;
 import de.jcup.jenkinseditor.outline.JenkinsEditorContentOutlinePage;
@@ -40,6 +41,8 @@ public class JenkinsEditor extends AbstractGroovyBasedEditor {
 	public static final String EDITOR_CONTEXT_MENU_ID = EDITOR_ID + ".context";
 	/** The COMMAND_ID of the editor ruler context menu */
 	public static final String EDITOR_RULER_CONTEXT_MENU_ID = EDITOR_CONTEXT_MENU_ID + ".ruler";
+	
+    private PipelineConfigData pipelineConfigData = new PipelineConfigData();
 
 	@Override
 	public ILogSupport getLogSupport() {
@@ -106,4 +109,12 @@ public class JenkinsEditor extends AbstractGroovyBasedEditor {
 	protected String getEditorIconPathOnError() {
 		return "icons/jenkinseditor/jenkins-editor-with-error.png";
 	}
+
+	/**
+	 * 
+	 * @return replay data for this script, never <code>null</code>
+	 */
+    public PipelineConfigData getReplayData() {
+        return pipelineConfigData;
+    }
 }

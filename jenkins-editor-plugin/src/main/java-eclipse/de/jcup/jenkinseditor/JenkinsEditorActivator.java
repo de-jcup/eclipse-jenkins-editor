@@ -17,8 +17,14 @@ package de.jcup.jenkinseditor;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
 import org.eclipse.core.net.proxy.IProxyService;
+import org.eclipse.swt.custom.StyledText;
+import org.eclipse.ui.console.IConsolePageParticipant;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 import org.osgi.util.tracker.ServiceTracker;
@@ -30,6 +36,7 @@ import de.jcup.egradle.eclipse.MainActivator;
 import de.jcup.egradle.eclipse.util.ColorManager;
 import de.jcup.egradle.eclipse.util.EclipseResourceHelper;
 import de.jcup.jenkins.util.JenkinsLogAdapter;
+import de.jcup.jenkinseditor.console.JenkinsEditorConsolePageParticipant;
 
 /**
  * The activator class controls the plug-in life cycle
@@ -42,7 +49,7 @@ public class JenkinsEditorActivator extends AbstractUIPlugin implements PluginCo
 	// The shared instance
 	private static JenkinsEditorActivator plugin;
 	private ColorManager colorManager;
-
+	private Map<StyledText, IConsolePageParticipant> viewers = new HashMap<StyledText, IConsolePageParticipant>();
 	private ServiceTracker<IProxyService, ?> proxyTracker;
 
 	private JenkinsTaskTagsSupportProvider taskSupportProvider;
@@ -114,5 +121,24 @@ public class JenkinsEditorActivator extends AbstractUIPlugin implements PluginCo
 	public JenkinsTaskTagsSupportProvider getTaskSupportProvider() {
 		return taskSupportProvider;
 	}
+
+    public void addViewer(StyledText viewer, JenkinsEditorConsolePageParticipant participant) {
+        viewers.put(viewer, participant);
+    }
+
+    public void removeViewerWithPageParticipant(JenkinsEditorConsolePageParticipant participant) {
+        Set<StyledText> toRemove = new HashSet<StyledText>();
+
+        for (StyledText viewer : viewers.keySet()) {
+            if (viewers.get(viewer) == participant){
+                toRemove.add(viewer);
+            }
+        }
+
+        for (StyledText viewer : toRemove){
+            viewers.remove(viewer);
+        }
+        
+    }
 
 }

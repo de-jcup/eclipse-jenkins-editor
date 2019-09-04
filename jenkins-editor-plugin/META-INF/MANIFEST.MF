@@ -19,7 +19,8 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.core.net
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Bundle-ActivationPolicy: lazy
-Import-Package: org.eclipse.ui
+Import-Package: org.eclipse.ui,
+ org.eclipse.ui.console
 Bundle-ClassPath: .,
  lib/jcup/de-jcup-eclipse-commons.jar,
  lib/jcup/de.jcup.egradle.eclipse.plugin.main_2.6.0.jar,

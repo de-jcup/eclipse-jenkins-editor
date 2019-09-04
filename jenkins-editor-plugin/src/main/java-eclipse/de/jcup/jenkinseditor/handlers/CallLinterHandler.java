@@ -28,7 +28,6 @@ import org.eclipse.jface.text.IDocument;
 
 import de.jcup.eclipse.commons.ui.EclipseUtil;
 import de.jcup.jenkins.cli.JenkinsCLIConfiguration;
-import de.jcup.jenkins.cli.JenkinsDefaultURLProvider;
 import de.jcup.jenkins.cli.JenkinsLinterCLICommand;
 import de.jcup.jenkins.cli.JenkinsLinterCLIResult;
 import de.jcup.jenkins.linter.JenkinsLinterError;
@@ -42,8 +41,6 @@ import de.jcup.jenkinseditor.preferences.JenkinsEditorPreferences;
 public class CallLinterHandler extends AbstractJenkinsCLIHandler {
 
 	private JenkinsLinterErrorBuilder errorBuilder = new JenkinsLinterErrorBuilder();
-	private JenkinsDefaultURLProvider jenkinsDefaultURLprovider = new JenkinsDefaultURLProvider();
-	private ConfigurationBuilder configBuilder = new ConfigurationBuilder();
 
 	@Override
 	protected void executeOnActiveJenkinsEditor(JenkinsEditor editor) {
@@ -60,16 +57,7 @@ public class CallLinterHandler extends AbstractJenkinsCLIHandler {
 	}
 
 	protected void executeLinterFor(String code, JenkinsEditor editor) {
-		JenkinsCLIConfiguration configuration;
-		try {
-			configuration = configBuilder.createConfiguration(jenkinsDefaultURLprovider);
-		} catch (IOException e) {
-			StringBuilder sb = new StringBuilder();
-			sb.append("Was not able to build valid jenkins cli configuration");
-			handleIOError(e, sb);
-			
-			return;
-		}
+		JenkinsCLIConfiguration configuration = buildConfiguration();
 		if (configuration == null) {
 			return;
 		}
@@ -144,10 +132,6 @@ public class CallLinterHandler extends AbstractJenkinsCLIHandler {
 		
 	}
 	
-	private void handleIOError(IOException e, StringBuilder sb) {
-		JenkinsEditorMessageDialogSupport.INSTANCE.showErrorWithDetails(e.getMessage(),sb.toString());
-		
-		JenkinsEditorLogSupport.INSTANCE.logError(sb.toString(), e);
-	}
+	
 
 }

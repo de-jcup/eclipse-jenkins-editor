@@ -179,8 +179,8 @@ public class AbstractJenkinsCLICommandTest {
 	class TestCommand extends AbstractJenkinsCLICommand<JenkinsCLIResult, String> {
 
 		@Override
-		protected String getCLICommand() {
-			return "theCommand";
+		protected String[] getCLICommands() {
+			return new String[] {"theCommand"};
 		}
 
 		@Override

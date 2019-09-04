@@ -30,11 +30,6 @@ public class UserCredentialsDialog extends Dialog {
 	
 	private String labelForSecrectKey;
 
-	public UserCredentialsDialog(Shell parentShell, String labelForSecrectKey, UserCredentials data) {
-		super(parentShell);
-		this.labelForSecrectKey=labelForSecrectKey;
-		this.result=data;
-	}
 
 	private static final int RESET_ID = IDialogConstants.NO_TO_ALL_ID + 1;
 
@@ -43,6 +38,12 @@ public class UserCredentialsDialog extends Dialog {
 	private Text secretField;
 
 	private UserCredentials result;
+
+	public UserCredentialsDialog(Shell parentShell, String labelForSecrectKey, UserCredentials data) {
+	    super(parentShell);
+	    this.labelForSecrectKey=labelForSecrectKey;
+	    this.result=data;
+	}
 
 	protected Control createDialogArea(Composite parent) {
 		Composite comp = (Composite) super.createDialogArea(parent);
