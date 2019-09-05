@@ -276,27 +276,12 @@
     	           </visibleWhen>
                   
             </command>
-            <!-- Currently not enabled, because too much noise inside toolbar. 
-                 But is available inside dedicated jenkins console.
-            <command
-                  commandId="jenkinseditor.editor.commands.callCustomCLI"
-                  icon="icons/jenkinseditor/console/cli-exec.png"
-                  id="jenkinseditor.toolbar.editor.commands.callCustomCLI"
-                  >
-	    
-	            <visibleWhen checkEnabled="true">
-                     <with variable="activeEditor">
-                     	<instanceof
-                            value="de.jcup.jenkinseditor.JenkinsEditor"/>
-                     </with>
-    	           </visibleWhen>
-                  
-            </command>
-            -->
+	  
             <command
                   commandId="jenkinseditor.editor.commands.replayPipeline"
                   icon="icons/jenkinseditor/console/replay-pipeline.png"
                   id="jenkinseditor.toolbar.editor.commands.replayPipeline"
+                  tooltip="Replay former pipeline build with current editor content\n and fetch logs from last build (means triggered replay build)."
                   >
         
                 <visibleWhen checkEnabled="true">
@@ -309,8 +294,10 @@
             </command>
             <command
                   commandId="jenkinseditor.editor.commands.fetchLastBuildLogs"
-                  icon="icons/jenkinseditor/console/restore_log.png"
+                  icon="icons/jenkinseditor/console/restore-log.png"
                   id="jenkinseditor.toolbar.editor.commands.fetchLastBuildLogs"
+                  tooltip="Fetch logs from last build"
+                  
                   >
         
                 <visibleWhen checkEnabled="true">

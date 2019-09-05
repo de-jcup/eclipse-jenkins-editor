@@ -49,6 +49,7 @@ import org.eclipse.ui.IWorkbenchPreferencePage;
 
 import de.jcup.egradle.eclipse.preferences.AbstractEditorPreferences;
 import de.jcup.egradle.eclipse.ui.SWTFactory;
+import de.jcup.egradle.eclipse.util.EclipseDevelopmentSettings;
 import de.jcup.jenkins.cli.AbstractJenkinsCLIResult;
 import de.jcup.jenkins.cli.JenkinsDefaultURLProvider;
 import de.jcup.jenkins.cli.JenkinsHelpCommand;
@@ -372,17 +373,19 @@ public class JenkinsEditorPreferencePage extends FieldEditorPreferencePage imple
         credentialsButton.setLayoutData(data);
 
         Button connectionTestButton = new Button(jenkinsCLIComposite, SWT.PUSH);
-        connectionTestButton.setText("Test linter");
+        connectionTestButton.setText("Test connection");
         connectionTestButton.addSelectionListener(new JenkinsTestCommandExecutionListener(this, new JenkinsLinterCLICommand(), null));
 
-        Button showCommandsTestButton = new Button(jenkinsCLIComposite, SWT.PUSH);
-        showCommandsTestButton.setText("Show commands");
 
-        JenkinsTestCommandExecutionListener listener = new JenkinsTestCommandExecutionListener(this, new JenkinsHelpCommand(), new HelpCommandResultHandler());
-        listener.setErrorMessage("Was not able to fetch commands");
-        listener.setStartMessage("Try to fetch commands from server");
-        listener.setSuccessmessage("Fetched commands from server look at console");
-        showCommandsTestButton.addSelectionListener(listener);
+        if (EclipseDevelopmentSettings.DEBUG_ADD_SPECIAL_MENUS) {
+            Button showCommandsTestButton = new Button(jenkinsCLIComposite, SWT.PUSH);
+            JenkinsTestCommandExecutionListener listener = new JenkinsTestCommandExecutionListener(this, new JenkinsHelpCommand(), new HelpCommandResultHandler());
+            listener.setErrorMessage("Was not able to fetch commands");
+            listener.setStartMessage("Try to fetch commands from server");
+            listener.setSuccessmessage("Fetched commands from server look at console");
+            showCommandsTestButton.setText("Show commands");
+            showCommandsTestButton.addSelectionListener(listener);
+        }
 
     }
 
