@@ -16,4 +16,4 @@ if [ -z "$BINTRAY_API_KEY" ]; then
 	echo "bintray api key not set"
 	show_help_and_exit;
 fi
-./pushToBintray.sh ${BINTRAY_USER} ${BINTRAY_API_KEY} de-jcup jenkinseditor update-site current ./jenkins-editor-updatesite/
+./pushToBintray.sh ${BINTRAY_USER} ${BINTRAY_API_KEY} de-jcup jenkinseditor update-site 1.7.0 ./jenkins-editor-updatesite/
