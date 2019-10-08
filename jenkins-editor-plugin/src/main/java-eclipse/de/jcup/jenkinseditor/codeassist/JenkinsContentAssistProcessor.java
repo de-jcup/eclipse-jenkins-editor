@@ -21,6 +21,6 @@ import de.jcup.jenkinseditor.JenkinsEditorActivator;
 public class JenkinsContentAssistProcessor extends SupportableContentAssistProcessor {
 
 	public JenkinsContentAssistProcessor(){
-		super(new JenkinsDSLContentAssistSupport(JenkinsEditorActivator.getDefault()));
+		super(new JenkinsDSLContentAssistSupport(JenkinsEditorActivator.getDefault()), new JenkinsEveryDSLPartContentAssistSupport(JenkinsEditorActivator.getDefault()));
 	}
 }
