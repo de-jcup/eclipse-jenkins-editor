@@ -48,6 +48,8 @@ public class JenkinsEditorPreferenceInitializer extends AbstractPreferenceInitia
 		store.setDefault(P_EDITOR_CODEASSIST_PROPOSALS_ENABLED.getId(), true);
 		store.setDefault(P_EDITOR_CODEASSIST_NO_PROPOSALS_FOR_GETTER_OR_SETTERS.getId(), true);
 		store.setDefault(P_EDITOR_CODEASSIST_TOOLTIPS_ENABLED.getId(), true);
+
+		store.setDefault(P_EDITOR_SHOW_ALSO_NON_STRICT_CODE_PROPOSALS.getId(), false);
 		
 		/* CLI setup */
 		store.setDefault(P_CERTIFICATE_CHECK_DISABLED.getId(), false);
