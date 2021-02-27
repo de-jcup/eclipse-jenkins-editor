@@ -102,6 +102,8 @@ public class JenkinsEditorPreferencePage extends FieldEditorPreferencePage imple
 
     BooleanFieldEditor certificateCheckDisabled;
 
+    private BooleanFieldEditor onlyStrictCodeCompletion;
+
     public JenkinsEditorPreferencePage() {
         super(GRID);
         setPreferenceStore(JenkinsEditorPreferences.getInstance().getPreferenceStore());
@@ -306,6 +308,10 @@ public class JenkinsEditorPreferencePage extends FieldEditorPreferencePage imple
 
         autoCreateEndBrackets = new BooleanFieldEditor(P_EDITOR_AUTO_CREATE_END_BRACKETSY.getId(), "Auto create ending brackets", getFieldEditorParent());
         addField(autoCreateEndBrackets);
+        
+        onlyStrictCodeCompletion = new BooleanFieldEditor(P_EDITOR_SHOW_ALSO_NON_STRICT_CODE_PROPOSALS.getId(), "Show also NON strict code proposals", getFieldEditorParent());
+        onlyStrictCodeCompletion.getDescriptionControl(getFieldEditorParent()).setToolTipText("When enabled even code proposals for not correct context situations are proposed (but with a warn icon).\n\nYou need to close editors and open again when changing this value!");
+        addField(onlyStrictCodeCompletion);
 
     }
 

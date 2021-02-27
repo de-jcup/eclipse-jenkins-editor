@@ -34,6 +34,7 @@ import org.eclipse.jface.text.presentation.PresentationReconciler;
 import org.eclipse.jface.text.source.ISourceViewer;
 import org.eclipse.swt.SWT;
 
+import de.jcup.eclipse.commons.codeassist.SupportableContentAssistProcessor;
 import de.jcup.eclipse.commons.keyword.DocumentKeyWord;
 import de.jcup.eclipse.commons.keyword.DocumentKeywordTextHover;
 import de.jcup.eclipse.commons.keyword.TooltipTextSupportPreferences;
@@ -43,6 +44,7 @@ import de.jcup.egradle.eclipse.AbstractGroovySourceViewerConfiguration;
 import de.jcup.egradle.eclipse.document.GroovyDocumentIdentifiers;
 import de.jcup.egradle.eclipse.preferences.IEditorPreferences;
 import de.jcup.jenkinseditor.codeassist.JenkinsContentAssistProcessor;
+import de.jcup.jenkinseditor.codeassist.JenkinsContentAssistProcessor2;
 import de.jcup.jenkinseditor.document.JenkinsDefaultClosureKeyWords;
 import de.jcup.jenkinseditor.document.JenkinsDocumentIdentifiers;
 import de.jcup.jenkinseditor.document.JenkinsSpecialVariableKeyWords;
@@ -59,13 +61,17 @@ public class JenkinsSourceViewerConfiguration extends AbstractGroovySourceViewer
 		allKeywords=list.toArray(new DocumentKeyWord[list.size()]);
 	}
 
-	private JenkinsContentAssistProcessor contentAssistProcessor;
+	private SupportableContentAssistProcessor contentAssistProcessor;
 
 	public JenkinsSourceViewerConfiguration(JenkinsEditor jenkinsEditor) {
 		super(jenkinsEditor,COLOR_NORMAL_TEXT);
 		
 		this.contentAssistant = new ContentAssistant();
-		contentAssistProcessor = new JenkinsContentAssistProcessor();
+		if (JenkinsEditorPreferences.getInstance().isOnlyStrictCodeCopmletion()) {
+		    contentAssistProcessor = new JenkinsContentAssistProcessor();
+		}else {
+		    contentAssistProcessor = new JenkinsContentAssistProcessor2();
+		}
 		contentAssistant.enableColoredLabels(true);
 		
 		contentAssistant.setContentAssistProcessor(contentAssistProcessor, IDocument.DEFAULT_CONTENT_TYPE);

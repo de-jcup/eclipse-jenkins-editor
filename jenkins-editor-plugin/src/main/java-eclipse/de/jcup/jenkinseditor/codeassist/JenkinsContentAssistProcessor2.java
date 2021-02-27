@@ -18,9 +18,9 @@ package de.jcup.jenkinseditor.codeassist;
 import de.jcup.eclipse.commons.codeassist.SupportableContentAssistProcessor;
 import de.jcup.jenkinseditor.JenkinsEditorActivator;
 
-public class JenkinsContentAssistProcessor extends SupportableContentAssistProcessor {
+public class JenkinsContentAssistProcessor2 extends SupportableContentAssistProcessor {
 
-	public JenkinsContentAssistProcessor(){
-		super(new JenkinsDSLContentAssistSupport(JenkinsEditorActivator.getDefault()));
+	public JenkinsContentAssistProcessor2(){
+		super(new JenkinsDSLContentAssistSupport(JenkinsEditorActivator.getDefault()), new JenkinsEveryDSLPartContentAssistSupport(JenkinsEditorActivator.getDefault()));
 	}
 }

@@ -90,6 +90,10 @@ public class JenkinsEditorPreferences extends AbstractEditorPreferences {
     public boolean isLinkOutlineWithEditorEnabled() {
         return getBooleanPreference(P_LINK_OUTLINE_WITH_EDITOR);
     }
+    
+    public boolean isOnlyStrictCodeCopmletion() {
+        return ! getBooleanPreference(P_EDITOR_SHOW_ALSO_NON_STRICT_CODE_PROPOSALS);
+    }
 
     @Override
     public PreferenceIdentifiable getP_EDITOR_MATCHING_BRACKETS_ENABLED() {
