@@ -35,86 +35,91 @@ import de.jcup.jenkinseditor.outline.JenkinsQuickOutlineDialog;
 import de.jcup.jenkinseditor.preferences.JenkinsEditorPreferences;
 
 public class JenkinsEditor extends AbstractGroovyBasedEditor {
-	/** The COMMAND_ID of this editor as defined in plugin.xml */
-	public static final String EDITOR_ID = "de.jcup.jenkinseditor.editors.JenkinsEditor";
-	/** The COMMAND_ID of the editor context menu */
-	public static final String EDITOR_CONTEXT_MENU_ID = EDITOR_ID + ".context";
-	/** The COMMAND_ID of the editor ruler context menu */
-	public static final String EDITOR_RULER_CONTEXT_MENU_ID = EDITOR_CONTEXT_MENU_ID + ".ruler";
-	
+    /** The COMMAND_ID of this editor as defined in plugin.xml */
+    public static final String EDITOR_ID = "de.jcup.jenkinseditor.editors.JenkinsEditor";
+    /** The COMMAND_ID of the editor context menu */
+    public static final String EDITOR_CONTEXT_MENU_ID = EDITOR_ID + ".context";
+    /** The COMMAND_ID of the editor ruler context menu */
+    public static final String EDITOR_RULER_CONTEXT_MENU_ID = EDITOR_CONTEXT_MENU_ID + ".ruler";
+
+    private static final JenkinsTextFileDocumentProvider SHARED_TEXT_FILE_DOCUMENT_PROVIDER = new JenkinsTextFileDocumentProvider();
+    private static final JenkinsFileDocumentProvider SHARED_FILE_DOCUMENT_PROVIDER = new JenkinsFileDocumentProvider();
+
     private PipelineConfigData pipelineConfigData = new PipelineConfigData();
 
-	@Override
-	public ILogSupport getLogSupport() {
-		return JenkinsEditorLogSupport.INSTANCE;
-	}
+   
+    @Override
+    public ILogSupport getLogSupport() {
+        return JenkinsEditorLogSupport.INSTANCE;
+    }
 
-	@Override
-	public IEditorPreferences getPreferences() {
-		return JenkinsEditorPreferences.getInstance();
-	}
+    @Override
+    public IEditorPreferences getPreferences() {
+        return JenkinsEditorPreferences.getInstance();
+    }
 
-	@Override
-	protected AbstractGroovyBasedContentOutlinePage createContentOutlinePage() {
-		return new JenkinsEditorContentOutlinePage(this);
-	}
+    @Override
+    protected AbstractGroovyBasedContentOutlinePage createContentOutlinePage() {
+        return new JenkinsEditorContentOutlinePage(this);
+    }
 
-	@Override
-	protected IDocumentProvider createFileStoreEditorInputProvider() {
-		return new JenkinsTextFileDocumentProvider();
-	}
+    @Override
+    protected IDocumentProvider resolveFileStoreEditorInputProvider() {
+        return SHARED_TEXT_FILE_DOCUMENT_PROVIDER;
+    }
 
-	@Override
-	protected AbstractGroovyBasedEditorOutlineContentProvider createOutlineContentProvider() {
-		return new JenkinsEditorOutlineContentProvider(this);
-	}
+    @Override
+    protected IDocumentProvider resolveStandardEditorInputProvider() {
+        return SHARED_FILE_DOCUMENT_PROVIDER;
+    }
 
-	@Override
-	protected AbstractGroovyBasedQuickOutline createQuickOutlineDialog(Shell shell) {
-		return new JenkinsQuickOutlineDialog(this, shell, "Quick outline");
-	}
+    @Override
+    protected AbstractGroovyBasedEditorOutlineContentProvider createOutlineContentProvider() {
+        return new JenkinsEditorOutlineContentProvider(this);
+    }
 
-	@Override
-	protected SourceViewerConfiguration createSourceViewerConfiguration() {
-		return new JenkinsSourceViewerConfiguration(this);
-	}
+    @Override
+    protected AbstractGroovyBasedQuickOutline createQuickOutlineDialog(Shell shell) {
+        return new JenkinsQuickOutlineDialog(this, shell, "Quick outline");
+    }
 
-	@Override
-	protected IDocumentProvider createStandardEditorInputProvider() {
-		return new JenkinsFileDocumentProvider();
-	}
+    @Override
+    protected SourceViewerConfiguration createSourceViewerConfiguration() {
+        return new JenkinsSourceViewerConfiguration(this);
+    }
 
-	@Override
-	protected ColorManager getColorManager() {
-		return JenkinsEditorActivator.getDefault().getColorManager();
-	}
+    @Override
+    protected ColorManager getColorManager() {
+        return JenkinsEditorActivator.getDefault().getColorManager();
+    }
 
-	protected String getEditorInstanceRulerContextId() {
-		return EDITOR_RULER_CONTEXT_MENU_ID;
-	}
+    protected String getEditorInstanceRulerContextId() {
+        return EDITOR_RULER_CONTEXT_MENU_ID;
+    }
 
-	protected String getEditorInstanceContextId() {
-		return EDITOR_CONTEXT_MENU_ID;
-	}
+    protected String getEditorInstanceContextId() {
+        return EDITOR_CONTEXT_MENU_ID;
+    }
 
-	@Override
-	protected String getPluginId() {
-		return JenkinsEditorActivator.PLUGIN_ID;
-	}
+    @Override
+    protected String getPluginId() {
+        return JenkinsEditorActivator.PLUGIN_ID;
+    }
 
-	protected String getEditorIconPath() {
-		return "icons/jenkinseditor/jenkins-editor.png";
-	}
+    protected String getEditorIconPath() {
+        return "icons/jenkinseditor/jenkins-editor.png";
+    }
 
-	protected String getEditorIconPathOnError() {
-		return "icons/jenkinseditor/jenkins-editor-with-error.png";
-	}
+    protected String getEditorIconPathOnError() {
+        return "icons/jenkinseditor/jenkins-editor-with-error.png";
+    }
 
-	/**
-	 * 
-	 * @return replay data for this script, never <code>null</code>
-	 */
+    /**
+     * 
+     * @return replay data for this script, never <code>null</code>
+     */
     public PipelineConfigData getReplayData() {
         return pipelineConfigData;
     }
+
 }
