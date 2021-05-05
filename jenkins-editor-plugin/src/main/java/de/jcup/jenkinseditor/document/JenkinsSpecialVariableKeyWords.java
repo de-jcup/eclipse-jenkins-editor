@@ -124,11 +124,11 @@ public enum JenkinsSpecialVariableKeyWords implements JenkinsfileKeyword {
 
 	PRESERVE_STASHES("preserveStashes", ExtraTooltip.OPTIONS_AVAILABLE_TOOLTIP,"preserveStashes(1)"),
 
-	RETRY("retry", ExtraTooltip.OPTIONS_AVAILABLE_TOOLTIP.getLinkToDocumentation(),"retry 3"),
+	RETRY("retry", ExtraTooltip.OPTIONS_AVAILABLE_TOOLTIP,"retry 3"),
 
-	SLEEP("sleep", ExtraTooltip.OPTIONS_AVAILABLE_TOOLTIP.getLinkToDocumentation(),"sleep time:10, unit:SECONDS"),
+	SLEEP("sleep", ExtraTooltip.OPTIONS_AVAILABLE_TOOLTIP,"sleep time:10, unit:SECONDS"),
 
-	STASH("stash", ExtraTooltip.OPTIONS_AVAILABLE_TOOLTIP.getLinkToDocumentation(), "stash name:'Stash some files for later build' includes:'**/*.adoc'"),
+	STASH("stash", ExtraTooltip.OPTIONS_AVAILABLE_TOOLTIP, "stash name:'Stash some files for later build' includes:'**/*.adoc'"),
 	
 	SKIP_DEFAULT_CHECKOUT("skipDefaultCheckout", ExtraTooltip.OPTIONS_AVAILABLE_TOOLTIP,"skipDefaultCheckout()"),
 
@@ -188,23 +188,20 @@ public enum JenkinsSpecialVariableKeyWords implements JenkinsfileKeyword {
 	}
 
 	private JenkinsSpecialVariableKeyWords(String text, ExtraTooltip extraTooltip) {
-		this(text, null, extraTooltip,null);
+		this(text, extraTooltip.getLinkToDocumentation(), extraTooltip,null);
 	}
 	
 	private JenkinsSpecialVariableKeyWords(String text, ExtraTooltip extraTooltip, String code) {
-		this(text, null, extraTooltip,code);
+		this(text, extraTooltip.getLinkToDocumentation(), extraTooltip,code);
 	}
 	
 	private JenkinsSpecialVariableKeyWords(String text, String linkToDocumentation, ExtraTooltip extraTooltip, String code) {
 		this.text = text;
 		this.code= code== null ? text: code;
 
-		if (linkToDocumentation == null) {
-			this.linkToDocumentation = extraTooltip.getLinkToDocumentation();
-		} else {
+		if (linkToDocumentation != null) {
 			this.linkToDocumentation = linkToDocumentation;
-		}
-		if (this.linkToDocumentation == null) {
+		}else {
 			this.linkToDocumentation = "https://jenkins.io/doc/book/pipeline/syntax";
 		}
 		String identifier = null;

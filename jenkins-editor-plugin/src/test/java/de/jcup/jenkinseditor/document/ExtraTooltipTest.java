@@ -15,4 +15,13 @@ public class ExtraTooltipTest {
         assertEquals("https://jenkins.io/doc/book/pipeline/syntax/#post-conditions", fetchedLink);
     }
 
+    @Test
+    public void input_tooltip_link_as_expected() {
+        /* execute */
+        String fetchedLink = ExtraTooltip.INPUT.getLinkToDocumentation();
+        
+        /* test */
+        assertEquals("https://jenkins.io/doc/book/pipeline/syntax/#input", fetchedLink);
+    }
+    
 }
