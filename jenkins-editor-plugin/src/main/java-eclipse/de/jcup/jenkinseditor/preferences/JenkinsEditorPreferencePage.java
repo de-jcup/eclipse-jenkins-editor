@@ -360,7 +360,7 @@ public class JenkinsEditorPreferencePage extends FieldEditorPreferencePage imple
         addField(useEclipseProxySettingsEnabled);
         
         String name = JenkinsEditorPreferenceConstants.JENKINS_AUTH_MODE.getId();
-        String labelText = "Jenkins validation failures are shown as ";
+        String labelText = "Authentication done by";
 
         /* @formatter:off */
         String[][] entryNamesAndValues = 
