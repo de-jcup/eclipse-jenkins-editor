@@ -20,7 +20,6 @@ import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
@@ -37,7 +36,6 @@ public class PipelineDataDialog extends Dialog {
 
     private Text jobNameText;
     private Text branchNameText;
-    private Button multibranchCheckBox;
     private Spinner buildNrSpinner;
 
     private PipelineConfigData result;
@@ -73,16 +71,13 @@ public class PipelineDataDialog extends Dialog {
         Composite comp = (Composite) super.createDialogArea(parent);
         GridLayout layout = (GridLayout) comp.getLayout();
         layout.numColumns = 2;
-      
-//        multibranchCheckBox = appendCheckbox("Multibranch","When enabled this is marked as a multibranch pipeline build",comp);
-//        multibranchCheckBox.setEnabled(false);
         
         jobNameText = appendTextField("Job: ", "Define jobName name", comp);
         jobNameText.setText(result.jobName);
         
         branchNameText = appendTextField("Branch: ", "Only necessary for multibranch pipeline builds!",comp);
         branchNameText.setText(result.branchName);
-        branchNameText.setMessage("For multibranch pipelines");
+        branchNameText.setMessage("No branch defined");
         
         if (type!=Type.GET_LAST_CONSOLE_OUTPUT) {
             buildNrSpinner = appendSpinner("BuildNr.", "Build number where replay will start", comp);
@@ -102,20 +97,6 @@ public class PipelineDataDialog extends Dialog {
 
         Text text = new Text(comp, SWT.SINGLE);
         text.setToolTipText(tooltip);
-        GridData data = new GridData(GridData.FILL_HORIZONTAL);
-        text.setLayoutData(data);
-        
-        return text;
-
-    }
-    
-    private Button appendCheckbox(String labelText, String tooltip, Composite comp) {
-
-        Label label = new Label(comp, SWT.RIGHT);
-        label.setText(labelText);
-        label.setToolTipText(tooltip);
-
-        Button text = new Button(comp, SWT.CHECK);
         GridData data = new GridData(GridData.FILL_HORIZONTAL);
         text.setLayoutData(data);
         
@@ -159,8 +140,8 @@ public class PipelineDataDialog extends Dialog {
         if (buildNrSpinner!=null) {
             result.buildNr = buildNrSpinner.getSelection();
         }
-        result.branchName = branchNameText.getText();
-        result.jobName = jobNameText.getText();
+        result.branchName = branchNameText.getText().trim();
+        result.jobName = jobNameText.getText().trim();
         super.okPressed();
     }
 
