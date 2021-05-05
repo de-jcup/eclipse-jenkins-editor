@@ -235,6 +235,7 @@ public class JenkinsDSLModel {
 		postNodes.add(addNode(JenkinsDefaultClosureKeyWords.ABORTED, post));
 		postNodes.add(addNode(JenkinsDefaultClosureKeyWords.FAILURE, post));
 		postNodes.add(addNode(JenkinsDefaultClosureKeyWords.SUCCESS, post));
+		postNodes.add(addNode(JenkinsDefaultClosureKeyWords.UNSUCCESSFUL, post));
 		postNodes.add(addNode(JenkinsDefaultClosureKeyWords.UNSTABLE, post));
 		postNodes.add(addNode(JenkinsDefaultClosureKeyWords.CLEANUP, post));
 		
