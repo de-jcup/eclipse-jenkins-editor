@@ -18,6 +18,33 @@ public class AuthModeCheckerTest {
         checkerToTest = new AuthModeChecker();
         config = new JenkinsCLIConfiguration();
     }
+    
+    @Test
+    public void user_set_ssh_does_NOT_fail() {
+        /* prepare */
+        config.setAuthMode(AuthMode.SSH);
+        config.setUser("myuser");
+        
+        /* execute */
+        AuthModeCheckResult result = checkerToTest.checkAuthModeDataAvailable(config);
+        
+        /* test*/
+        assertFalse(result.failed);
+        assertEquals("",result.message);
+    }
+    
+    @Test
+    public void user_not_set_ssh_does_fail() {
+        /* prepare */
+        config.setAuthMode(AuthMode.SSH);
+
+        /* execute */
+        AuthModeCheckResult result = checkerToTest.checkAuthModeDataAvailable(config);
+        
+        /* test*/
+        assertTrue(result.failed);
+        assertTrue(result.message.contains("Username"));
+    }
 
     @Test
     public void user_and_token_set_api_token_does_NOT_fail() {

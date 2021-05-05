@@ -24,6 +24,7 @@ import org.eclipse.ui.preferences.ScopedPreferenceStore;
 
 import de.jcup.egradle.eclipse.preferences.AbstractEditorPreferences;
 import de.jcup.egradle.eclipse.util.PreferenceIdentifiable;
+import de.jcup.jenkins.cli.JenkinsCLIConfiguration.AuthMode;
 import de.jcup.jenkinseditor.JenkinsEditor;
 import de.jcup.jenkinseditor.JenkinsEditorActivator;
 
@@ -144,6 +145,11 @@ public class JenkinsEditorPreferences extends AbstractEditorPreferences {
             value = MAX_VALUE_WAITING_FOR_NEXT_LOG_IN_SECONDS;
         }
         return value;
+    }
+
+    public AuthMode getAuthMode() {
+        String value = getStringPreference(JENKINS_AUTH_MODE);
+        return AuthMode.fromString(value);
     }
 
 }

@@ -54,6 +54,7 @@ import de.jcup.jenkins.cli.AbstractJenkinsCLIResult;
 import de.jcup.jenkins.cli.JenkinsDefaultURLProvider;
 import de.jcup.jenkins.cli.JenkinsHelpCommand;
 import de.jcup.jenkins.cli.JenkinsLinterCLICommand;
+import de.jcup.jenkins.cli.JenkinsCLIConfiguration.AuthMode;
 import de.jcup.jenkins.linter.JenkinsLinterErrorLevel;
 import de.jcup.jenkinseditor.JenkinsEditorLogSupport;
 import de.jcup.jenkinseditor.JenkinsEditorMessageDialogSupport;
@@ -182,6 +183,10 @@ public class JenkinsEditorPreferencePage extends FieldEditorPreferencePage imple
 
     private String[] getLabelAndValue(JenkinsLinterErrorLevel errorLevel) {
         return new String[] { errorLevel.name(), errorLevel.getId() };
+    }
+    
+    private String[] getLabelAndValue(AuthMode authMode) {
+        return new String[] { authMode.name(), authMode.getId() };
     }
 
     @Override
@@ -353,6 +358,21 @@ public class JenkinsEditorPreferencePage extends FieldEditorPreferencePage imple
 
         BooleanFieldEditor useEclipseProxySettingsEnabled = new BooleanFieldEditor(P_USE_ECLIPSE_PROXY_SETTINGS_ENABLED.getId(), "Use eclipse proxy settings", jenkinsCLIComposite);
         addField(useEclipseProxySettingsEnabled);
+        
+        String name = JenkinsEditorPreferenceConstants.JENKINS_AUTH_MODE.getId();
+        String labelText = "Jenkins validation failures are shown as ";
+
+        /* @formatter:off */
+        String[][] entryNamesAndValues = 
+                new String[][] { 
+            getLabelAndValue(AuthMode.API_TOKEN),
+            getLabelAndValue(AuthMode.SSH)
+        };
+        /* @formatter:on */
+        ComboFieldEditor comboFieldEditor = new ComboFieldEditor(name, labelText, entryNamesAndValues, jenkinsCLIComposite);
+        addField(comboFieldEditor);
+        
+        
 
         jarFileLocation = new FileFieldEditor(P_PATH_TO_JENKINS_CLI_JAR.getId(), "Path to jenkins-cli.jar (optional)", jenkinsCLIComposite);
         jarFileLocation.setFileExtensions(new String[] { "*.jar" });

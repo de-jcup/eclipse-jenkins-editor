@@ -108,7 +108,7 @@ public abstract class AbstractJenkinsCLICommand<T extends JenkinsCLIResult, P> i
 
 		addOptions(configuration, hidePasswords, list);
 		// special handling for secret auth mode
-		if (AuthMode.PASSWORD.equals(configuration.getAuthMode())) {
+		if (AuthMode.SECRET.equals(configuration.getAuthMode())) {
 			list.add("--username");
 			list.add("" + configuration.getUser());
 			list.add("--secret");
@@ -166,8 +166,11 @@ public abstract class AbstractJenkinsCLICommand<T extends JenkinsCLIResult, P> i
 		String pathToPrivateKeyFile = configuration.getPathToPrivateKeyFile();
 		String user = configuration.getUser();
 
-		if (configuration.isSSHenabled()) {
+		AuthMode authMode = configuration.getAuthMode();
+		if (authMode==AuthMode.SSH) {
 			list.add("-ssh");
+            list.add("-user");
+            list.add(user);
 		} else {
 			list.add("-http");
 		}
@@ -180,7 +183,6 @@ public abstract class AbstractJenkinsCLICommand<T extends JenkinsCLIResult, P> i
 			list.add("-noCertificateCheck");
 		}
 
-		AuthMode authMode = configuration.getAuthMode();
 		switch (authMode) {
 		case API_TOKEN:
 			String apiToken = configuration.getAPIToken();
@@ -194,7 +196,9 @@ public abstract class AbstractJenkinsCLICommand<T extends JenkinsCLIResult, P> i
 			}
 			list.add(authSb.toString());
 			break;
-		case PASSWORD:
+		case SSH:
+            break;
+		case SECRET:
 			// done later:
 			break;
 		case PRIVATE_KEY:

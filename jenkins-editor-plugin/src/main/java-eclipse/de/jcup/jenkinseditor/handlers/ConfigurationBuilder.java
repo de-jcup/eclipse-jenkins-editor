@@ -34,7 +34,6 @@ import org.eclipse.equinox.security.storage.SecurePreferencesFactory;
 import org.eclipse.equinox.security.storage.StorageException;
 
 import de.jcup.jenkins.cli.JenkinsCLIConfiguration;
-import de.jcup.jenkins.cli.JenkinsCLIConfiguration.AuthMode;
 import de.jcup.jenkins.cli.JenkinsDefaultURLProvider;
 import de.jcup.jenkins.util.SystemPropertyListBuilder;
 import de.jcup.jenkinseditor.JenkinsEditorActivator;
@@ -82,12 +81,7 @@ public class ConfigurationBuilder {
 		}
 		configuration.setCertificateCheckDisabled(certificateCheckDisabled);
 		configuration.setJenkinsURL(linterJenkinsURL);
-		configuration.setAuthMode(AuthMode.API_TOKEN);// currently we support
-														// only
-														// API KEY- in future
-														// maybe
-														// more/ changeable in
-														// preferences
+		configuration.setAuthMode(editorPreferences.getAuthMode());
 		configuration.setPathToJenkinsCLIJar(pathToJenkinsCLIJar);
 
 		configuration.setTimeoutInSeconds(10);

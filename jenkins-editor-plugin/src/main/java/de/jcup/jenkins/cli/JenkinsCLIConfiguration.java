@@ -26,16 +26,17 @@ public class JenkinsCLIConfiguration {
 	private String user;
 
 	private int timeoutInSeconds;
-	private boolean sshEnabled;
 	private String apiToken;
 	private String password;
 
 	public enum AuthMode {
 		API_TOKEN("apitoken"),
 
-		PASSWORD("secret"),
+		SECRET("secret"),
 
 		PRIVATE_KEY("privatekey"),
+		
+		SSH("ssh"),
 
 		ANONYMOUS("anonymous");
 
@@ -48,6 +49,20 @@ public class JenkinsCLIConfiguration {
 		public String getId() {
 			return id;
 		}
+
+		/**
+		 * Resolves corresponding authentication mode
+		 * @param value
+		 * @return authentication mode or {@link AuthMode#API_TOKEN} as fallback
+		 */
+        public static AuthMode fromString(String value) {
+            for (AuthMode mode: values()) {
+                if (mode.getId().equalsIgnoreCase(value)) {
+                    return mode;
+                }
+            }
+            return AuthMode.API_TOKEN;
+        }
 
 	}
 
@@ -65,14 +80,6 @@ public class JenkinsCLIConfiguration {
 			authMode = AuthMode.API_TOKEN;
 		}
 		return authMode;
-	}
-
-	public void setSSHenabled(boolean sshEnabled) {
-		this.sshEnabled = sshEnabled;
-	}
-
-	public boolean isSSHenabled() {
-		return sshEnabled;
 	}
 
 	public void setUser(String user) {

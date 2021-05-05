@@ -20,11 +20,14 @@ public class AuthModeChecker {
         switch(authMode) {
         case ANONYMOUS:
             break; // no failures at all
+        case SSH:
+            userMayNotBenull(result, config);
+            break;
         case API_TOKEN:
             userMayNotBenull(result,config);
             apiTokenMayNotBenull(result, config);
             break;
-        case PASSWORD:
+        case SECRET:
             userMayNotBenull(result,config);
             passwordMayNotBenull(result, config);
             break;
