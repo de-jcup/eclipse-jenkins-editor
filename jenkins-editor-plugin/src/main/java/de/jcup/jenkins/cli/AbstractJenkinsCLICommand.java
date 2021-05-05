@@ -26,6 +26,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import de.jcup.jenkins.cli.AuthModeChecker.AuthModeCheckResult;
 import de.jcup.jenkins.cli.JenkinsCLIConfiguration.AuthMode;
 
 public abstract class AbstractJenkinsCLICommand<T extends JenkinsCLIResult, P> implements JenkinsCLICommand<T, P> {
@@ -43,11 +44,19 @@ public abstract class AbstractJenkinsCLICommand<T extends JenkinsCLIResult, P> i
 	 *            parameter for the command
 	 */
 	public final T execute(JenkinsCLIConfiguration configuration, P parameter) throws IOException {
+	    AuthModeChecker checker = new AuthModeChecker();
+	    AuthModeCheckResult authModeCheckResult = checker.checkAuthModeDataAvailable(configuration);
+	    if (authModeCheckResult.failed) {
+	        throw new AuthModeCheckResultIOException(authModeCheckResult);
+	    }
 		CLIJarCommandMessageBuilder<P> mb = new CLIJarCommandMessageBuilder<P>(this, configuration, parameter);
 
 		if (DEBUG) {
 			debug("execute:" + mb.buildMessage());
 		}
+		
+		
+		
 		String[] commands = createCommands(configuration, parameter, false);
 		List<String> list = Arrays.asList(commands).stream().filter(content -> content!=null && !content.isEmpty()).collect(Collectors.toList());
 

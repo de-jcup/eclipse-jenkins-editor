@@ -5,7 +5,7 @@ import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
 
-import de.jcup.jenkins.cli.AuthModeChecker.CheckResult;
+import de.jcup.jenkins.cli.AuthModeChecker.AuthModeCheckResult;
 import de.jcup.jenkins.cli.JenkinsCLIConfiguration.AuthMode;
 
 public class AuthModeCheckerTest {
@@ -27,7 +27,7 @@ public class AuthModeCheckerTest {
         config.setAPIToken("apitoken1234");
         
         /* execute */
-        CheckResult result = checkerToTest.checkAuthModeDataAvailable(config);
+        AuthModeCheckResult result = checkerToTest.checkAuthModeDataAvailable(config);
         
         /* test*/
         assertFalse(result.failed);
@@ -40,7 +40,7 @@ public class AuthModeCheckerTest {
         config.setAuthMode(AuthMode.API_TOKEN);
 
         /* execute */
-        CheckResult result = checkerToTest.checkAuthModeDataAvailable(config);
+        AuthModeCheckResult result = checkerToTest.checkAuthModeDataAvailable(config);
         
         /* test*/
         assertTrue(result.failed);
@@ -55,7 +55,7 @@ public class AuthModeCheckerTest {
         config.setAPIToken("apitoken1234");
         
         /* execute */
-        CheckResult result = checkerToTest.checkAuthModeDataAvailable(config);
+        AuthModeCheckResult result = checkerToTest.checkAuthModeDataAvailable(config);
         
         /* test*/
         assertTrue(result.failed);
@@ -71,7 +71,7 @@ public class AuthModeCheckerTest {
         config.setUser("myuser");
         
         /* execute */
-        CheckResult result = checkerToTest.checkAuthModeDataAvailable(config);
+        AuthModeCheckResult result = checkerToTest.checkAuthModeDataAvailable(config);
         
         /* test*/
         assertTrue(result.failed);
@@ -86,7 +86,7 @@ public class AuthModeCheckerTest {
         config.setAPIToken("");
         
         /* execute */
-        CheckResult result = checkerToTest.checkAuthModeDataAvailable(config);
+        AuthModeCheckResult result = checkerToTest.checkAuthModeDataAvailable(config);
         
         /* test*/
         assertTrue(result.failed);
