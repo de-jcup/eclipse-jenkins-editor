@@ -62,7 +62,9 @@ public enum JenkinsDefaultClosureKeyWords implements JenkinsfileKeyword {
 	
 	SUCCESS("success",ExtraTooltip.POST_CONDITIONS_TOOLTIP),
 	
-	UNSTABLE("unstable",ExtraTooltip.POST_CONDITIONS_TOOLTIP),
+	UNSUCCESSFUL("success",ExtraTooltip.POST_CONDITIONS_TOOLTIP),
+	
+	UNSTABLE("unsuccessful",ExtraTooltip.POST_CONDITIONS_TOOLTIP),
 	
 	CLEANUP("cleanup",ExtraTooltip.POST_CONDITIONS_TOOLTIP),
 	
@@ -128,15 +130,6 @@ public enum JenkinsDefaultClosureKeyWords implements JenkinsfileKeyword {
 
 	private JenkinsDefaultClosureKeyWords(String text) {
 		this(text,null,null,null);
-	}
-
-	private static List<String> createDirClosure() {
-		List<String> list = new ArrayList<>();
-		list.add("dir ('path/to/new/currentDirectory') {");
-		list.add("   "+SourceCodeBuilder.CURSOR_TAG);
-		list.add("}");
-		
-		return list;
 	}
 
 	private static List<String> createExpressionClosure() {

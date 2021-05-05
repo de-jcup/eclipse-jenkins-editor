@@ -39,6 +39,12 @@ run has a "success" status, typically denoted by blue or green in the web UI.</p
 </dd>
 <dt class="hdlist1"><code>unstable</code></dt>
 <dd>
+<p>Only run the steps in <code>post</code> if current Pipeline’s or stage’s 
+run has not a "success" status. This is typically denoted in the web UI depending 
+on the status previously mentioned.</p>
+</dd>
+<dt class="hdlist1"><code>unsuccessful</code></dt>
+<dd>
 <p>Only run the steps in <code>post</code> if the current Pipeline's or stage's
 run has an "unstable" status, usually caused by test failures, code violations,
 etc. This is typically denoted by yellow in the web UI.</p>
