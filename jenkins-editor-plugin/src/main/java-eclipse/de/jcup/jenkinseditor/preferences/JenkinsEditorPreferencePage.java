@@ -393,7 +393,7 @@ public class JenkinsEditorPreferencePage extends FieldEditorPreferencePage imple
 
             @Override
             public void widgetSelected(SelectionEvent e) {
-                temporaryCredentials = JenkinsEditorMessageDialogSupport.INSTANCE.showUsernamePassword("API Key");
+                temporaryCredentials = JenkinsEditorMessageDialogSupport.INSTANCE.showUsernamePassword("API Key", temporaryCredentials);
             }
         });
         credentialsButton.setLayoutData(data);

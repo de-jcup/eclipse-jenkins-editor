@@ -44,7 +44,7 @@ public class JenkinsEditorMessageDialogSupport {
 		});
 
 	}
-	
+
 	public void showInfo(String message) {
 		EclipseUtil.safeAsyncExec(new Runnable() {
 
@@ -70,14 +70,15 @@ public class JenkinsEditorMessageDialogSupport {
 		});
 
 	}
-	
-	public void showErrorWithDetails(String message,String details) {
+
+	public void showErrorWithDetails(String message, String details) {
 		EclipseUtil.safeAsyncExec(new Runnable() {
 
 			@Override
 			public void run() {
 				Shell shell = getActiveWorkbenchShell();
-				IStatus status = new Status(IStatus.ERROR,JenkinsEditorActivator.PLUGIN_ID,message, new Throwable(details));
+				IStatus status = new Status(IStatus.ERROR, JenkinsEditorActivator.PLUGIN_ID, message,
+						new Throwable(details));
 				ErrorDialog.openError(shell, JENKINS_EDITOR, null, status);
 			}
 
@@ -85,21 +86,21 @@ public class JenkinsEditorMessageDialogSupport {
 
 	}
 
-	public UserCredentials showUsernamePassword(String labelForPassword) {
-		final UserCredentials result = new UserCredentials();
+	public UserCredentials showUsernamePassword(String labelForPassword, UserCredentials credentials) {
+		final UserCredentials result = credentials == null ? new UserCredentials() : credentials;
 		EclipseUtil.safeSyncExec(new Runnable() {
 
 			@Override
 			public void run() {
 				Shell shell = getActiveWorkbenchShell();
-				
-				UserCredentialsDialog dialog = new UserCredentialsDialog(shell,labelForPassword,result);
+
+				UserCredentialsDialog dialog = new UserCredentialsDialog(shell, labelForPassword, result);
 				dialog.open();
 			}
 
 		});
 		return result;
-		
+
 	}
 
 }
