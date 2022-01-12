@@ -44,6 +44,9 @@ public class JenkinsDSLModel {
 		Node stage = addNode(JenkinsDefaultClosureKeyWords.STAGE, stages);
 		Node when = addNode(JenkinsDefaultClosureKeyWords.WHEN, stage);
 		buildWhen(when);
+		
+		List<Node> pluginEmailExtNodeParents = new ArrayList<JenkinsDSLModel.Node>();
+		
 		Node parallel = addNode(JenkinsDefaultClosureKeyWords.PARALLEL, stage);
 		parallel.children.add(stage);// parallel can contain stages again, see https://jenkins.io/doc/book/pipeline/syntax/#parallel
 		
@@ -75,6 +78,9 @@ public class JenkinsDSLModel {
 		Node post = addNode(JenkinsDefaultClosureKeyWords.POST, pipelineNode, stage);
 		List<Node> postConditions = buildPostConditions(post);
 		
+		pluginEmailExtNodeParents.addAll(postConditions);
+		
+		
 		List<Node> stepParents = new ArrayList<>();
 		stepParents.add(steps);
 		stepParents.addAll(postConditions);
@@ -84,9 +90,11 @@ public class JenkinsDSLModel {
 		Node triggers = addNode(JenkinsDefaultClosureKeyWords.TRIGGERS, pipelineNode);
 		buildTriggers(triggers);
 		
-		
+		addNode(JenkinsDefaultClosureKeyWords.PLUGIN_EMAILEXT, pluginEmailExtNodeParents.toArray(new Node[pluginEmailExtNodeParents.size()]));
 		
 	}
+		
+		
 	private void buildWhen(Node when) {
 		/* see https://jenkins.io/doc/book/pipeline/syntax/#when */
 		addNode(JenkinsSpecialVariableKeyWords.BRANCH, when);

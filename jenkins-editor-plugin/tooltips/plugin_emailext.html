@@ -1,0 +1,19 @@
+Here just a simple example howto use the email extension plugin inside pipeline:
+<h5 id="example1">Example 1</h5>
+
+ <pre>pipeline {
+    post {
+        failure {
+            emailext (
+                subject:"[ BUILD FAILED ] Build:${env.BUILD_NUMBER}, branch: $currentBranch",
+                body:"CI build for branch '$currentBranch' failed.\n"+
+                     "${env.BUILD_URL}",
+                to: '$DEFAULT_RECIPIENTS'
+            )
+        }
+        fixed {
+...
+    }
+}</code></pre>
+
+</div>

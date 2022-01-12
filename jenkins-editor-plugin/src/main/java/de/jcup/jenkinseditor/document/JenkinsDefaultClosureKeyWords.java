@@ -80,6 +80,10 @@ public enum JenkinsDefaultClosureKeyWords implements JenkinsfileKeyword {
     /* ---------------- Other --------------------- */
     /* -------------------------------------------- */
 
+    /* ---------------- Wellknown plugins --------- */
+    /* -------------------------------------------- */
+    PLUGIN_EMAILEXT("emailext", ExtraTooltip.PLUGIN_EMAILEXT_TOOLTIP),
+
     /* -------------------------------------------- */
     /* ---------------- PARALLEL parts ------------ */
     /* -------------------------------------------- */
