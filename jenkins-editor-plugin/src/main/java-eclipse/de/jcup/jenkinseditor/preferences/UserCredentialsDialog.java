@@ -57,6 +57,7 @@ public class UserCredentialsDialog extends Dialog {
 		usernameField = new Text(comp, SWT.SINGLE);
 		GridData data = new GridData(GridData.FILL_HORIZONTAL);
 		usernameField.setLayoutData(data);
+		usernameField.setText(result.getUsername());
 
 		Label passwordLabel = new Label(comp, SWT.RIGHT);
 		passwordLabel.setText(labelForSecrectKey+": ");
@@ -64,6 +65,7 @@ public class UserCredentialsDialog extends Dialog {
 		secretField = new Text(comp, SWT.SINGLE | SWT.PASSWORD);
 		data = new GridData(GridData.FILL_HORIZONTAL);
 		secretField.setLayoutData(data);
+		secretField.setText(result.getSecret());
 
 		return comp;
 	}
