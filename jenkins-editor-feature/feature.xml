@@ -2,7 +2,7 @@
 <feature
       id="de.jcup.jenkinseditor.feature"
       label="Jenkins Editor"
-      version="1.8.0"
+      version="1.9.0"
       provider-name="Albert Tregnaghi">
 
    <description url="https://github.com/de-jcup/eclipse-jenkins-editor">
