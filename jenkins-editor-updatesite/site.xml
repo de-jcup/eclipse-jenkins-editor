@@ -6,5 +6,8 @@
    <feature url="features/de.jcup.jenkinseditor.feature_1.9.0.jar" id="de.jcup.jenkinseditor.feature" version="1.9.0">
       <category name="de.jcup.jenkinseditor.category"/>
    </feature>
+   <feature url="features/de.jcup.jenkinseditor.feature_1.9.1.jar" id="de.jcup.jenkinseditor.feature" version="1.9.1">
+      <category name="de.jcup.jenkinseditor.category"/>
+   </feature>
    <category-def name="de.jcup.jenkinseditor.category" label="Stable"/>
 </site>
