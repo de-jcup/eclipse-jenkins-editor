@@ -23,7 +23,7 @@ Import-Package: org.eclipse.ui,
  org.eclipse.ui.console
 Bundle-ClassPath: .,
  lib/jcup/de-jcup-eclipse-commons.jar,
- lib/jcup/de.jcup.egradle.eclipse.plugin.main_3.0.0.jar,
+ lib/jcup/de.jcup.egradle.eclipse.plugin.main_3.1.0.jar,
  lib/antlr-2.7.7.jar,
  lib/commons-lang3-3.4.jar,
  lib/groovy-all-2.4.7.jar,
