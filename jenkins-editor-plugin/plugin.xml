@@ -25,6 +25,14 @@
    		id="jenkinseditor.preferences.keyword.editor"
    		label="editor">
      </keyword>
+     <keyword
+   		id="jenkinseditor.preferences.keyword.format"
+   		label="format">
+     </keyword>
+     <keyword
+   		id="jenkinseditor.preferences.keyword.formatter"
+   		label="formatter">
+     </keyword>
    </extension>
    <!-- ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
    <!--                          CONSOLE                                     -->
@@ -151,6 +159,12 @@
             categoryId="jenkinseditor.commands.category"
             id="jenkinseditor.editor.commands.fetchLastBuildLogs">
       </command>
+      <command
+            name="Format"
+            description="Formats descriptive jenkins pipeline sourcecode"
+            categoryId="jenkinseditor.commands.category"
+            id="jenkinseditor.editor.commands.source.format">
+      </command>
 	
 	</extension>
 	
@@ -183,6 +197,10 @@
             commandId="jenkinseditor.editor.commands.fetchLastBuildLogs"
             class="de.jcup.jenkinseditor.handlers.RestoreBuildLogToConsoleHandler">
       </handler>
+      <handler
+            commandId="jenkinseditor.editor.commands.source.format"
+            class="de.jcup.jenkinseditor.handlers.FormatJenkinsSourceHandler">
+      </handler>
     </extension> 
     
    <!-- ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
@@ -207,6 +225,12 @@
             commandId="jenkinseditor.editor.commands.quickoutline"
             schemeId="org.eclipse.ui.defaultAcceleratorConfiguration">	  
 		</key>
+		<key
+            sequence="M1+SHIFT+F"
+            contextId="de.jcup.jenkinseditor.editors.JenkinsEditor.context"
+            commandId="jenkinseditor.editor.commands.source.format"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration">    
+        </key>
     </extension> 
     
    <!-- ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
@@ -244,7 +268,8 @@
                             value="de.jcup.jenkinseditor.JenkinsEditor"/>
                      </with>
                </visibleWhen>
-            <command commandId="jenkinseditor.editor.commands.source.toggleComment">
+                <command commandId="jenkinseditor.editor.commands.source.format"></command>
+                <command commandId="jenkinseditor.editor.commands.source.toggleComment">
             </command>
          </menu>
       </menuContribution>
@@ -354,6 +379,21 @@
          </keywordReference>
          <keywordReference
                id="jenkinseditor.preferences.keyword.tasks">
+         </keywordReference>
+      </page>
+      <page
+         id="jenkinseditor.eclipse.gradleeditor.preferences.JenkinsEditorFormatterPreferencePage"
+         class="de.jcup.jenkinseditor.preferences.JenkinsEditorFormatterPreferencePage"
+         name="Formatter"
+         category="jenkinseditor.eclipse.gradleeditor.preferences.JenkinsEditorEditorPreferencePage">
+         <keywordReference
+               id="jenkinseditor.preferences.keyword.jenkins">
+         </keywordReference>
+         <keywordReference
+               id="jenkinseditor.preferences.keyword.format">
+         </keywordReference>
+         <keywordReference
+               id="jenkinseditor.preferences.keyword.formatter">
          </keywordReference>
       </page>
     </extension>

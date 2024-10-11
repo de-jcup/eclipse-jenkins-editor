@@ -49,6 +49,8 @@ public class JenkinsEditorPreferenceInitializer extends AbstractPreferenceInitia
 		store.setDefault(P_EDITOR_CODEASSIST_PROPOSALS_ENABLED.getId(), true);
 		store.setDefault(P_EDITOR_CODEASSIST_NO_PROPOSALS_FOR_GETTER_OR_SETTERS.getId(), true);
 		store.setDefault(P_EDITOR_CODEASSIST_TOOLTIPS_ENABLED.getId(), true);
+		
+		store.setDefault(P_SOURCE_FORMAT_INDENT.getId(), 3);
 
 		store.setDefault(P_EDITOR_SHOW_ALSO_NON_STRICT_CODE_PROPOSALS.getId(), false);
 		
@@ -80,7 +82,6 @@ public class JenkinsEditorPreferenceInitializer extends AbstractPreferenceInitia
 		
 		preferences.setDefaultColor(COLOR_JENKINS_VARIABLES, JenkinsEditorColorConstants.DARK_BLUE);
 		preferences.setDefaultColor(COLOR_JAVA_LITERAL, JenkinsEditorColorConstants.KEYWORD_DEFAULT_PURPLE);
-		
 		
 	}
 

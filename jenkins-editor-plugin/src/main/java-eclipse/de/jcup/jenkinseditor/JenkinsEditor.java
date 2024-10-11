@@ -15,6 +15,7 @@
  */
 package de.jcup.jenkinseditor;
 
+import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.source.SourceViewerConfiguration;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.texteditor.IDocumentProvider;
@@ -46,6 +47,8 @@ public class JenkinsEditor extends AbstractGroovyBasedEditor {
     private static final JenkinsFileDocumentProvider SHARED_FILE_DOCUMENT_PROVIDER = new JenkinsFileDocumentProvider();
 
     private PipelineConfigData pipelineConfigData = new PipelineConfigData();
+    
+    private static final SimpleJenkinsDeclartivePipelineSourceFormatter sourceFormatter = new SimpleJenkinsDeclartivePipelineSourceFormatter();
 
    
     @Override
@@ -113,13 +116,26 @@ public class JenkinsEditor extends AbstractGroovyBasedEditor {
     protected String getEditorIconPathOnError() {
         return "icons/jenkinseditor/jenkins-editor-with-error.png";
     }
-
+    String getText() {
+        IDocument doc = getDocument();
+        if (doc == null) {
+            return "";
+        }
+        return doc.get();
+    }
     /**
      * 
      * @return replay data for this script, never <code>null</code>
      */
     public PipelineConfigData getReplayData() {
         return pipelineConfigData;
+    }
+
+    public void formatSourceCode() {
+        String code = getText();
+        sourceFormatter.setIndent(JenkinsEditorPreferences.getInstance().getSourceFormatIndention());
+        String formatted = sourceFormatter.format(code);
+        getDocument().set(formatted);
     }
 
 }
