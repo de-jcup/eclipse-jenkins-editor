@@ -1,0 +1,5 @@
+pipeline {
+ agent any
+  environment { 
+        CC = 'clang'
+}}

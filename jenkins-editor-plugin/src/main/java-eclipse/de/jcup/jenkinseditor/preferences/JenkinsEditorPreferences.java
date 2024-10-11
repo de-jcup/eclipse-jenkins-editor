@@ -81,6 +81,10 @@ public class JenkinsEditorPreferences extends AbstractEditorPreferences {
     public String getJenkinsURL() {
         return getStringPreference(JenkinsEditorPreferenceConstants.P_JENKINS_URL);
     }
+    
+    public int getSourceFormatIndention() {
+        return getPreferenceStore().getInt(P_SOURCE_FORMAT_INDENT.getId());
+    }
 
     @Override
     public boolean isEditorAutoCreateEndBracketsEnabled() {
