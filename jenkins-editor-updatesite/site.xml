@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <site>
-   <feature url="features/de.jcup.jenkinseditor.feature_1.10.0.jar" id="de.jcup.jenkinseditor.feature" version="1.10.0">
+   <feature url="features/de.jcup.jenkinseditor.feature_1.11.0.jar" id="de.jcup.jenkinseditor.feature" version="1.11.0">
       <category name="de.jcup.jenkinseditor.category"/>
    </feature>
    <category-def name="de.jcup.jenkinseditor.category" label="Stable"/>
