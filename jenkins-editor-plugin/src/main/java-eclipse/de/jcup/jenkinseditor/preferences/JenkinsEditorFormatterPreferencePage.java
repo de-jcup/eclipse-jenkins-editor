@@ -39,7 +39,7 @@ public class JenkinsEditorFormatterPreferencePage extends FieldEditorPreferenceP
 		Composite parent = getFieldEditorParent();
 		  
         IntegerFieldEditor indentEditor = new IntegerFieldEditor(P_SOURCE_FORMAT_INDENT.getId(),
-                "Indent / Tab replacement", parent);
+                "Indentiont", parent);
         indentEditor.setValidRange(2, 10);
         addField(indentEditor);
         indentEditor.getLabelControl(parent).setToolTipText(
