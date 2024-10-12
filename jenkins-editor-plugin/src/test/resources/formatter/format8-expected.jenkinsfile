@@ -1,0 +1,11 @@
+pipeline {
+   agent any
+   environment
+   
+   aa ${env.var0}
+   xx ${env.var1} and ${env.var2} yy
+   
+   {
+      CC = 'clang'
+   }
+}

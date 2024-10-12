@@ -17,6 +17,7 @@
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 import java.util.regex.Pattern;
 
 /**
@@ -38,7 +39,7 @@ public class SimpleJenkinsDeclartivePipelineSourceFormatter {
     private static final String OPEN_BRACKET = String.valueOf(CHAR_OPEN_BRACKET);
     private static final String QUOTED_OPEN_BRACKET = Pattern.quote(OPEN_BRACKET);
     
-    VariableEscapeSupport variableEscapeSupport = new VariableEscapeSupport();
+    VariableLineEscapeSupport variableLineEscapeSupport = new VariableLineEscapeSupport(UUID.randomUUID());
  
     private int indent = 3;
     
@@ -63,7 +64,7 @@ public class SimpleJenkinsDeclartivePipelineSourceFormatter {
     private void maskVariables(String[] linesArray) {
         for (int i = 0; i < linesArray.length; i++) {
             String line = linesArray[i];
-            linesArray[i]=variableEscapeSupport.escape(line);
+            linesArray[i]=variableLineEscapeSupport.escape(line);
         }
     }
 
@@ -222,7 +223,7 @@ public class SimpleJenkinsDeclartivePipelineSourceFormatter {
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < max; i++) {
             String line = list.get(i);
-            sb.append(variableEscapeSupport.unescape(line));
+            sb.append(variableLineEscapeSupport.unescape(line));
             if (i < max - 1) {
                 sb.append("\n");
             }

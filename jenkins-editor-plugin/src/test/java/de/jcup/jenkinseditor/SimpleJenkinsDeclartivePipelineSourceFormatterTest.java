@@ -35,21 +35,6 @@ public class SimpleJenkinsDeclartivePipelineSourceFormatterTest {
         toTest = new SimpleJenkinsDeclartivePipelineSourceFormatter();
     }
 
-    private void assertFormattedAsExpected(String filePartName) {
-        /* prepare */
-        Path originPath = FORMATTER_PARENT_FOLDER.resolve(filePartName + ".jenkinsfile");
-        Path expectedPath = FORMATTER_PARENT_FOLDER.resolve(filePartName + "-expected.jenkinsfile");
-
-        String origin = TestFileReader.DEFAULT.readTestFile(originPath);
-        String expected = TestFileReader.DEFAULT.readTestFile(expectedPath);
-
-        /* execute */
-        String formatted = toTest.format(origin);
-
-        /* test */
-        assertEquals(expected, formatted);
-    }
-
     @Test
     public void format1_file_formatted_as_expected() throws Exception {
         assertFormattedAsExpected("format1");
@@ -79,10 +64,16 @@ public class SimpleJenkinsDeclartivePipelineSourceFormatterTest {
     public void format6_file_formatted_as_expected() throws Exception {
         assertFormattedAsExpected("format6");
     }
+    
     @Test
     public void format7_indention_5_file_formatted_as_expected() throws Exception {
         toTest.setIndent(5);
         assertFormattedAsExpected("format7");
+    }
+    
+    @Test
+    public void format8_two_vars() throws Exception {
+        assertFormattedAsExpected("format8");
     }
 
     @Test
@@ -93,6 +84,11 @@ public class SimpleJenkinsDeclartivePipelineSourceFormatterTest {
     @Test
     public void format11_file_formatted_as_expected() throws Exception {
         assertFormattedAsExpected("format11");
+    }
+    
+    @Test
+    public void format12_file_formatted_as_expected() throws Exception {
+        assertFormattedAsExpected("format12");
     }
 
     @Test
@@ -113,6 +109,21 @@ public class SimpleJenkinsDeclartivePipelineSourceFormatterTest {
     @Test
     public void pipeline_empty_one_liner() {
         assertEquals("pipeline {\n}", toTest.format("pipeline {}"));
+    }
+
+    private void assertFormattedAsExpected(String filePartName) {
+        /* prepare */
+        Path originPath = FORMATTER_PARENT_FOLDER.resolve(filePartName + ".jenkinsfile");
+        Path expectedPath = FORMATTER_PARENT_FOLDER.resolve(filePartName + "-expected.jenkinsfile");
+    
+        String origin = TestFileReader.DEFAULT.readTestFile(originPath);
+        String expected = TestFileReader.DEFAULT.readTestFile(expectedPath);
+    
+        /* execute */
+        String formatted = toTest.format(origin);
+    
+        /* test */
+        assertEquals(expected, formatted);
     }
 
 }
